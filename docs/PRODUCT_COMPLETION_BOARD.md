@@ -319,34 +319,34 @@
 
 > Goal: All 6 pages are built with full loading/empty/error states and the blast radius animation works.
 
-- [ ] Create `src/components/service/ServiceBadge.tsx` — type badge (api/gateway/worker/database/cache/queue) and tier
+- [x] Create `src/components/service/ServiceBadge.tsx` — type badge (api/gateway/worker/database/cache/queue) and tier
       badge (critical/high/medium/low) using correct colors from design system
-- [ ] Create `src/components/service/ServiceCard.tsx` — renders name, type badge, tier badge, team name,
+- [x] Create `src/components/service/ServiceCard.tsx` — renders name, type badge, tier badge, team name,
       dependency/dependent counts; supports `variant` (default/compact/affected), `isHighlighted`, `animationDelay`
       props
-- [ ] Create `src/components/service/ServiceSkeleton.tsx` — `animate-pulse` skeleton cards matching ServiceCard
+- [x] Create `src/components/service/ServiceSkeleton.tsx` — `animate-pulse` skeleton cards matching ServiceCard
       dimensions
-- [ ] Create `src/components/service/ServiceGrid.tsx` — groups services by team, renders team label header + responsive
+- [x] Create `src/components/service/ServiceGrid.tsx` — groups services by team, renders team label header + responsive
       CSS grid of ServiceCards; dims non-selected cards when a service is selected
-- [ ] Create `src/pages/ServiceMapPage.tsx` — fetches all services with `useServices`, renders `<ServiceGrid>`; clicking
+- [x] Create `src/pages/ServiceMapPage.tsx` — fetches all services with `useServices`, renders `<ServiceGrid>`; clicking
       a service sets `selectedServiceId` in UIStore and opens `<BlastRadiusPanel>` slide-in panel; filter controls
       (type, tier dropdown)
-- [ ] Create `src/components/blast-radius/AffectedServiceCard.tsx` — compact card with CSS `opacity`/`translate-y`
+- [x] Create `src/components/blast-radius/AffectedServiceCard.tsx` — compact card with CSS `opacity`/`translate-y`
       transition controlled by `isVisible` and `animationDelay` props
-- [ ] Create `src/components/blast-radius/HopGroup.tsx` — labeled divider `"── Hop N ──"` + horizontal scroll of
+- [x] Create `src/components/blast-radius/HopGroup.tsx` — labeled divider `"── Hop N ──"` + horizontal scroll of
       AffectedServiceCards; staggered card reveal at 120ms intervals using `useEffect` + `setTimeout`
-- [ ] Create `src/components/blast-radius/TeamAlertBanner.tsx` — red-bordered banner listing teams + slack channels +
+- [x] Create `src/components/blast-radius/TeamAlertBanner.tsx` — red-bordered banner listing teams + slack channels +
       affected service names; fades in after all hops are revealed
-- [ ] Create `src/components/blast-radius/BlastRadiusPanel.tsx` — fetches blast radius with `useBlastRadius(serviceId)`;
+- [x] Create `src/components/blast-radius/BlastRadiusPanel.tsx` — fetches blast radius with `useBlastRadius(serviceId)`;
       manages `revealedHops` state (0 → totalHops at 700ms intervals); renders header, hop groups progressively,
       TeamAlertBanner, historical incidents; slides in from right with `translate-x-full → translate-x-0` transition
-- [ ] Implement and verify hop-by-hop animation timing: 700ms between hops, 120ms card stagger within each hop, 300ms
+- [x] Implement and verify hop-by-hop animation timing: 700ms between hops, 120ms card stagger within each hop, 300ms
       CSS transition, TeamAlertBanner appears 400ms after last hop
-- [ ] Create `src/components/dependency/UpstreamList.tsx` and `DownstreamList.tsx` — compact lists of
+- [x] Create `src/components/dependency/UpstreamList.tsx` and `DownstreamList.tsx` — compact lists of
       upstream/downstream services with criticality labels; warn if `dependentCount > 10`
-- [ ] Create `src/components/dependency/DependencyExplorer.tsx` — fetches dependencies with
+- [x] Create `src/components/dependency/DependencyExplorer.tsx` — fetches dependencies with
       `useDependencies(serviceId)`, renders UpstreamList and DownstreamList in 2-column layout (stacked on mobile)
-- [ ] Create `src/pages/ServiceDetailPage.tsx` — renders service header (name, badges, repo link),
+- [x] Create `src/pages/ServiceDetailPage.tsx` — renders service header (name, badges, repo link),
       `<DependencyExplorer>`, `<BlastRadiusPanel>` (always visible on this page, not toggled), historical incidents
       caused by this service
 - [ ] Create `src/components/team/TeamCard.tsx` — team name, slack channel, timezone, service count, active incident

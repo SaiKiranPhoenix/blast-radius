@@ -1,19 +1,21 @@
-import { ArrowPathIcon, ServerStackIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { Badge } from '../components/common/Badge';
-import { Card } from '../components/common/Card';
-import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { PageHeader } from '../components/common/PageHeader';
 import { Spinner } from '../components/common/Spinner';
 import { useServices } from '../hooks/useServices';
 import { SylvaHero } from '../threeui';
+import { ServiceGrid } from '../components/service/ServiceGrid';
+import { BlastRadiusPanel } from '../components/blast-radius/BlastRadiusPanel';
+import { useUI } from '../store/uiStore';
 
 export function ServiceMapPage(): JSX.Element {
   const servicesQuery = useServices();
   const services = servicesQuery.data ?? [];
+  const { selectedServiceId, setSelectedServiceId } = useUI();
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="relative min-h-[calc(100vh-4rem)] overflow-hidden flex">
       <div className="absolute inset-0 h-[52rem] max-h-screen">
         <div className="shader-frame">
           <SylvaHero
@@ -32,7 +34,7 @@ export function ServiceMapPage(): JSX.Element {
         <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.62),rgba(2,6,23,0.22)_44%,rgba(2,6,23,0.08))]" />
       </div>
 
-      <div className="relative px-4 py-8 sm:px-6 lg:px-8">
+      <div className="relative flex-1 min-w-0 overflow-y-auto px-4 py-8 sm:px-6 lg:px-8">
         <section className="flex min-h-[34rem] max-w-5xl flex-col justify-end pb-10">
           <Badge color="emerald" dot dotAnimate>
             Live topology
@@ -48,17 +50,13 @@ export function ServiceMapPage(): JSX.Element {
         <section className="animate-slide-in-up">
           <PageHeader
             title="Service Map"
-            subtitle="Phase 8 will turn these into the full grouped map and blast radius simulation."
+            subtitle="Explore microservices grouped by team and simulate their blast radius."
             badge={<Badge color="blue">{services.length || '...'} services</Badge>}
             actions={servicesQuery.isFetching ? <Spinner label="Refreshing" /> : null}
           />
 
           <div className="mt-6">
-            {servicesQuery.isLoading ? (
-              <Card className="flex min-h-72 items-center justify-center">
-                <Spinner label="Loading services" />
-              </Card>
-            ) : servicesQuery.isError ? (
+            {servicesQuery.isError ? (
               <ErrorState
                 action={
                   <button
@@ -73,40 +71,17 @@ export function ServiceMapPage(): JSX.Element {
                 description="The service map could not be loaded from the API."
                 title="Service map unavailable"
               />
-            ) : services.length === 0 ? (
-              <EmptyState
-                icon={ServerStackIcon}
-                title="No services yet"
-                description="Once seed data is available, services will appear here."
-              />
             ) : (
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {services.slice(0, 9).map((service) => (
-                  <Card key={service.id} interactive className="p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <h3 className="truncate font-semibold text-white">{service.name}</h3>
-                        <p className="mt-1 line-clamp-2 text-sm text-slate-400">
-                          {service.description}
-                        </p>
-                      </div>
-                      <Badge color={service.tier === 'critical' ? 'red' : 'slate'} size="sm">
-                        {service.tier}
-                      </Badge>
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <Badge color="blue" size="sm">
-                        {service.type}
-                      </Badge>
-                      {service.team ? <Badge size="sm">{service.team.name}</Badge> : null}
-                    </div>
-                  </Card>
-                ))}
-              </div>
+              <ServiceGrid services={services} isLoading={servicesQuery.isLoading} />
             )}
           </div>
         </section>
       </div>
+
+      <BlastRadiusPanel
+        serviceId={selectedServiceId}
+        onClose={() => setSelectedServiceId(null)}
+      />
     </div>
   );
 }
