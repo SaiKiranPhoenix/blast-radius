@@ -35,6 +35,10 @@ export default {
           '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        slideInUp: {
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         slideInRight: {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(0)' },
@@ -55,6 +59,7 @@ export default {
       animation: {
         'fade-in': 'fadeIn 300ms ease-out',
         'fade-in-up': 'fadeInUp 300ms ease-out',
+        'slide-in-up': 'slideInUp 300ms ease-out',
         'slide-in-right': 'slideInRight 300ms ease-out',
         'slide-in-left': 'slideInLeft 300ms ease-out',
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',

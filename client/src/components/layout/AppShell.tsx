@@ -1,0 +1,37 @@
+import { Outlet } from 'react-router-dom';
+import { Sidebar } from './Sidebar';
+import { TopBar } from './TopBar';
+import { useUI } from '../../store/uiStore';
+
+export function AppShell(): JSX.Element {
+  const { isSidebarOpen, setIsSidebarOpen } = useUI();
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-300">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-30 lg:block">
+        <Sidebar />
+      </div>
+
+      {isSidebarOpen ? (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <button
+            type="button"
+            className="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
+            aria-label="Close navigation"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+          <div className="relative h-full animate-slide-in-left">
+            <Sidebar />
+          </div>
+        </div>
+      ) : null}
+
+      <div className="lg:pl-72">
+        <TopBar />
+        <main className="min-h-[calc(100vh-4rem)]">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}

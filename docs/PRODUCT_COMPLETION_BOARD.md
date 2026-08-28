@@ -19,14 +19,14 @@
 | Phase 4 — Seed Script                     | 16      | 16     | 0         |
 | Phase 5 — Backend API                     | 24      | 24     | 0         |
 | Phase 6 — Backend Tests                   | 13      | 13     | 0         |
-| Phase 7 — Frontend Shell                  | 20      | 0      | 20        |
+| Phase 7 — Frontend Shell                  | 20      | 20     | 0         |
 | Phase 8 — Frontend Pages                  | 22      | 0      | 22        |
 | Phase 9 — Frontend Tests                  | 11      | 0      | 11        |
 | Phase 10 — Observability & Security       | 10      | 0      | 10        |
 | Phase 11 — Integration & E2E Verification | 12      | 0      | 12        |
 | Phase 12 — Deployment                     | 12      | 0      | 12        |
 | Phase 13 — Final Polish & Submission      | 9       | 0      | 9         |
-| **Total**                                 | **202** | **80** | **122**   |
+| **Total**                                 | **202** | **100** | **102**   |
 
 ---
 
@@ -268,50 +268,50 @@
 
 > Goal: App shell renders with correct dark theme, navigation works, design tokens are applied.
 
-- [ ] Scaffold `client/` using `npm create vite@latest . -- --template react-ts` (run inside `client/`)
-- [ ] Install Tailwind CSS, PostCSS, Autoprefixer:
+- [x] Scaffold `client/` using `npm create vite@latest . -- --template react-ts` (run inside `client/`)
+- [x] Install Tailwind CSS, PostCSS, Autoprefixer:
       `npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p`
-- [ ] Configure `tailwind.config.ts` — extend theme with `slate-950` background, `slate-800` card color,
+- [x] Configure `tailwind.config.ts` — extend theme with `slate-950` background, `slate-800` card color,
       `red-500`/`amber-500`/`blue-500` accent colors, `Inter` and `JetBrains Mono` font families, custom keyframes
       (`fadeIn`, `slideInRight`, `slideInUp`), custom animations (`fade-in`, `slide-in-right`, `slide-in-up`,
       `pulse-slow`)
-- [ ] Add
+- [x] Add
       `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap')`
       to `src/index.css` and configure Tailwind base/components/utilities directives
-- [ ] Install `react-router-dom`, `@tanstack/react-query`, `axios`
-- [ ] Install `@heroicons/react` for icons used in EmptyState, ErrorState, Sidebar, and badges
-- [ ] Create `src/main.tsx` — wrap `<App />` in `<QueryClientProvider>` (staleTime 60s, gcTime 5m, retry 3,
+- [x] Install `react-router-dom`, `@tanstack/react-query`, `axios`
+- [x] Install `@heroicons/react` for icons used in EmptyState, ErrorState, Sidebar, and badges
+- [x] Create `src/main.tsx` — wrap `<App />` in `<QueryClientProvider>` (staleTime 60s, gcTime 5m, retry 3,
       refetchOnWindowFocus false) and `<RouterProvider>`
-- [ ] Create `src/router.tsx` — define all 6 routes using `createBrowserRouter`: `/`, `/services/:id`, `/teams`,
+- [x] Create `src/router.tsx` — define all 6 routes using `createBrowserRouter`: `/`, `/services/:id`, `/teams`,
       `/teams/:id`, `/incidents`, `/incidents/:id`; wrap all in `<AppShell>`
-- [ ] Create `src/lib/api.ts` — Axios instance with `baseURL: import.meta.env.VITE_API_BASE_URL`, 15s timeout, response
+- [x] Create `src/lib/api.ts` — Axios instance with `baseURL: import.meta.env.VITE_API_BASE_URL`, 15s timeout, response
       interceptor that extracts `data` from `{ success: true, data }` and throws normalized `ApiError` on
       `success: false`
-- [ ] Create `src/lib/queryKeys.ts` — query key factories: `serviceKeys`, `teamKeys`, `incidentKeys`, `graphKeys` with
+- [x] Create `src/lib/queryKeys.ts` — query key factories: `serviceKeys`, `teamKeys`, `incidentKeys`, `graphKeys` with
       consistent key structures
-- [ ] Create `src/hooks/useServices.ts`, `useTeams.ts`, `useIncidents.ts`, `useGraph.ts` — React Query hooks wrapping
+- [x] Create `src/hooks/useServices.ts`, `useTeams.ts`, `useIncidents.ts`, `useGraph.ts` — React Query hooks wrapping
       API functions; `useBlastRadius` has `staleTime: 0`
-- [ ] Create `src/types/` — `service.types.ts`, `team.types.ts`, `incident.types.ts`, `graph.types.ts` mirroring backend
+- [x] Create `src/types/` — `service.types.ts`, `team.types.ts`, `incident.types.ts`, `graph.types.ts` mirroring backend
       interfaces exactly
-- [ ] Create `src/store/uiStore.ts` — React context with `isSidebarOpen`, `setIsSidebarOpen`, `selectedServiceId`,
+- [x] Create `src/store/uiStore.ts` — React context with `isSidebarOpen`, `setIsSidebarOpen`, `selectedServiceId`,
       `setSelectedServiceId`; export `UIProvider` and `useUI` hook
-- [ ] Create `src/components/common/Card.tsx` — base card with `bg-slate-800 border border-slate-700 rounded-xl` and
+- [x] Create `src/components/common/Card.tsx` — base card with `bg-slate-800 border border-slate-700 rounded-xl` and
       hover state
-- [ ] Create `src/components/common/Badge.tsx` — generic badge with `color`, `size`, `dot`, `dotAnimate` props
-- [ ] Create `src/components/common/Spinner.tsx` — animated SVG spinner in blue-500
-- [ ] Create `src/components/common/EmptyState.tsx` — centered icon + title + description + optional action button
-- [ ] Create `src/components/common/ErrorState.tsx` — centered alert icon + title + description + optional retry
+- [x] Create `src/components/common/Badge.tsx` — generic badge with `color`, `size`, `dot`, `dotAnimate` props
+- [x] Create `src/components/common/Spinner.tsx` — animated SVG spinner in blue-500
+- [x] Create `src/components/common/EmptyState.tsx` — centered icon + title + description + optional action button
+- [x] Create `src/components/common/ErrorState.tsx` — centered alert icon + title + description + optional retry
       button + optional error code in monospace
-- [ ] Create `src/components/common/ErrorBoundary.tsx` — class component catching render errors, renders `<ErrorState>`
+- [x] Create `src/components/common/ErrorBoundary.tsx` — class component catching render errors, renders `<ErrorState>`
       fallback
-- [ ] Create `src/components/common/PageHeader.tsx` — title, subtitle, optional badge, optional right-aligned actions
-- [ ] Create `src/components/layout/Sidebar.tsx` — fixed left nav with logo, 3 nav links (Service Map, Teams, Incidents)
+- [x] Create `src/components/common/PageHeader.tsx` — title, subtitle, optional badge, optional right-aligned actions
+- [x] Create `src/components/layout/Sidebar.tsx` — fixed left nav with logo, 3 nav links (Service Map, Teams, Incidents)
       with active route highlight, active incident count badge, GitHub external link at bottom
-- [ ] Create `src/components/layout/TopBar.tsx` — page title + breadcrumb + mobile hamburger button toggling
+- [x] Create `src/components/layout/TopBar.tsx` — page title + breadcrumb + mobile hamburger button toggling
       `isSidebarOpen`
-- [ ] Create `src/components/layout/AppShell.tsx` — renders `<Sidebar>` + `<main>` with `<Outlet>`; on mobile sidebar is
+- [x] Create `src/components/layout/AppShell.tsx` — renders `<Sidebar>` + `<main>` with `<Outlet>`; on mobile sidebar is
       a fixed overlay with backdrop; on desktop sidebar is always visible
-- [ ] Verify `npm run dev` in `client/` serves the dark-themed shell at `http://localhost:5173` with working nav links
+- [x] Verify `npm run dev` in `client/` serves the dark-themed shell at `http://localhost:5173` with working nav links
 
 ---
 

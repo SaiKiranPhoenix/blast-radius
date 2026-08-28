@@ -64,3 +64,4 @@ client/.vite/
 .cache/
 tmp/
 temp/
+.threeui-source/

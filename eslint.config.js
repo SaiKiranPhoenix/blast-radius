@@ -126,6 +126,7 @@ module.exports = tseslint.config(
       'node_modules/**',
       '**/node_modules/**',
       'client/dist/**',
+      'client/src/shaders/landing-pages/**',
     ],
   },
 );

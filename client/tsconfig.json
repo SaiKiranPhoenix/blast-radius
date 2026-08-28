@@ -38,5 +38,5 @@
     "skipLibCheck": true
   },
   "include": ["src/**/*", "src/tests/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "src/shaders/landing-pages/**/*.ts", "src/shaders/landing-pages/**/*.tsx"]
 }
