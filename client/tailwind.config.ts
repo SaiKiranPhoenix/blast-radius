@@ -23,6 +23,14 @@ export default {
         'slate-750': '#1e2a3a',
         // Slightly darker than slate-950 for the deepest backgrounds
         'slate-975': '#060a12',
+        // HUD specific colors
+        'hud-black': '#000000',
+        'hud-panel': '#0a0a0c',
+        'hud-border': '#1f2937',
+        'hud-cyan': '#22d3ee',
+        'hud-cyan-dim': 'rgba(34, 211, 238, 0.15)',
+        'hud-red': '#f87171',
+        'hud-red-dim': 'rgba(248, 113, 113, 0.15)',
       },
 
       // ─── Animations ────────────────────────────────────────────
@@ -72,6 +80,8 @@ export default {
         card: '0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4)',
         'card-hover': '0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4)',
         panel: '0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5)',
+        'hud-glow-cyan': '0 0 15px rgba(34, 211, 238, 0.4)',
+        'hud-glow-red': '0 0 15px rgba(248, 113, 113, 0.4)',
       },
 
       // ─── Border Radius ─────────────────────────────────────────

@@ -38,7 +38,7 @@
   }
 
   body {
-    @apply bg-slate-950 text-slate-300;
+    @apply bg-hud-black text-slate-300;
     min-height: 100vh;
     margin: 0;
   }
@@ -110,10 +110,27 @@
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
-    theme('colors.slate.800') 25%,
-    theme('colors.slate.700') 50%,
-    theme('colors.slate.800') 75%
+    theme('colors.hud-border') 25%,
+    theme('colors.hud-panel') 50%,
+    theme('colors.hud-border') 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@layer utilities {
+  .bg-tactical-grid {
+    background-size: 40px 40px;
+    background-image: linear-gradient(to right, rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+  }
+
+  .bg-radar {
+    background-image: repeating-radial-gradient(
+      circle at center,
+      transparent 0,
+      transparent 39px,
+      rgba(34, 211, 238, 0.1) 40px
+    );
+  }
 }
