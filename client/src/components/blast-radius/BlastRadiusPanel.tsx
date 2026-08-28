@@ -45,23 +45,24 @@ export function BlastRadiusPanel({ serviceId, onClose, inline = false }: BlastRa
   }, [serviceId]);
 
   const panelContent = (
-    <div className="h-full flex flex-col bg-slate-900 border-l border-slate-800 shadow-panel relative">
+    <div className="h-full flex flex-col bg-hud-black bg-radar border-l-2 border-hud-cyan shadow-[inset_20px_0_40px_-20px_rgba(34,211,238,0.15),0_0_50px_-12px_rgba(34,211,238,0.25)] relative font-mono">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 sm:p-6 border-b border-slate-800">
-        <div>
-          <h2 className="text-lg font-semibold text-slate-100">Blast Radius</h2>
+      <div className="flex items-center justify-between p-4 sm:p-6 border-b border-hud-border bg-hud-panel/80 backdrop-blur-md relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-hud-cyan to-transparent"></div>
+        <div className="relative z-10">
+          <h2 className="text-xl font-bold text-hud-cyan uppercase tracking-widest animate-pulse-slow">Blast Radius</h2>
           {data && (
-            <p className="text-sm text-slate-400 mt-1">
-              {data.totalAffected} service{data.totalAffected !== 1 ? 's' : ''} affected
+            <p className="text-xs text-hud-red mt-1 font-bold tracking-widest">
+              &gt; {data.totalAffected} NODE{data.totalAffected !== 1 ? 'S' : ''} COMPROMISED
             </p>
           )}
         </div>
         {!inline && (
           <button
             onClick={onClose}
-            className="p-2 -mr-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800 rounded-lg transition-colors"
+            className="p-2 -mr-2 text-hud-cyan/50 hover:text-hud-cyan hover:bg-hud-cyan/10 rounded-sm transition-colors relative z-10"
           >
-            <XMarkIcon className="w-5 h-5" />
+            <XMarkIcon className="w-6 h-6" />
           </button>
         )}
       </div>
@@ -143,7 +144,7 @@ export function BlastRadiusPanel({ serviceId, onClose, inline = false }: BlastRa
       {/* Backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-40 transition-opacity lg:hidden"
+          className="fixed inset-0 bg-hud-black/60 backdrop-blur-sm z-40 transition-opacity lg:hidden"
           onClick={onClose}
         />
       )}

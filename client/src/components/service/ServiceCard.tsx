@@ -39,9 +39,10 @@ export function ServiceCard({
   return (
     <Card
       className={`
-        flex flex-col gap-3 relative overflow-hidden transition-all duration-300
-        ${isHighlighted ? 'ring-2 ring-blue-500/50 bg-slate-750/50' : ''}
-        ${variant === 'affected' ? 'animate-fade-in-up fill-mode-both shadow-md' : ''}
+        flex flex-col gap-3 relative overflow-hidden transition-all duration-300 font-mono
+        rounded-sm border-hud-border bg-hud-panel hover:border-hud-cyan/50
+        ${isHighlighted ? 'border-hud-red bg-hud-red-dim shadow-hud-glow-red' : ''}
+        ${variant === 'affected' ? 'animate-fade-in-up fill-mode-both shadow-md border-hud-cyan bg-hud-cyan-dim' : ''}
         ${onClick ? 'cursor-pointer hover:-translate-y-0.5' : ''}
         ${isCompact ? 'p-3' : 'p-4'}
         ${className}
@@ -54,11 +55,11 @@ export function ServiceCard({
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className={`font-semibold text-slate-100 truncate ${isCompact ? 'text-sm' : 'text-base'}`}>
+          <h3 className={`font-bold text-slate-100 truncate uppercase tracking-wider ${isCompact ? 'text-xs' : 'text-sm'}`}>
             {service.name}
           </h3>
-          <p className="text-xs text-slate-400 truncate mt-0.5">
-            {service.team?.name || 'Unassigned'}
+          <p className="text-[10px] text-hud-cyan/80 uppercase truncate mt-1">
+            OWNER: {service.team?.name || 'UNASSIGNED'}
           </p>
         </div>
         {!isCompact && (
@@ -85,7 +86,7 @@ export function ServiceCard({
 
       {/* Decorative gradient for highlighted cards */}
       {isHighlighted && (
-        <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/5 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-hud-red-dim pointer-events-none animate-pulse-slow border border-hud-red" />
       )}
     </Card>
   );

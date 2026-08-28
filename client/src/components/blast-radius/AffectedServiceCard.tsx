@@ -11,8 +11,9 @@ export function AffectedServiceCard({ service, isVisible, animationDelay }: Affe
   return (
     <ServiceCard
       service={service}
-      variant="compact"
-      className="w-full shrink-0 sm:w-[280px] shadow-lg border-red-900/30 bg-slate-800/90"
+      variant="affected"
+      isHighlighted={true}
+      className="w-full shrink-0 sm:w-[280px]"
       style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(16px)',

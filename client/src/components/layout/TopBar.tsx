@@ -23,7 +23,7 @@ export function TopBar(): JSX.Element {
   const pageTitle = useMemo(() => titleFromPath(location.pathname), [location.pathname]);
 
   return (
-    <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-slate-800/80 bg-slate-950/85 px-4 backdrop-blur-xl lg:px-8">
+    <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-hud-border bg-hud-panel/85 px-4 backdrop-blur-xl lg:px-8">
       <button
         type="button"
         className="grid h-10 w-10 place-items-center rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white lg:hidden"
@@ -32,9 +32,12 @@ export function TopBar(): JSX.Element {
       >
         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
       </button>
-      <div className="min-w-0">
-        <p className="text-xs font-medium uppercase tracking-[0.18em] text-slate-500">BlastRadius</p>
-        <h2 className="truncate text-base font-semibold text-white">{pageTitle}</h2>
+      <div className="min-w-0 flex items-center gap-3">
+        <div className="h-4 w-1 bg-hud-cyan animate-pulse"></div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-hud-cyan/50">SYS.LINK</p>
+          <h2 className="truncate text-sm font-bold tracking-widest text-slate-100 uppercase">{pageTitle}</h2>
+        </div>
       </div>
     </header>
   );
