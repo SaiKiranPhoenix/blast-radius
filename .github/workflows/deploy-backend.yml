@@ -1,0 +1,51 @@
+name: Deploy Backend (Railway)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      # Only trigger when server code or config changes
+      - 'server/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-backend.yml'
+
+# Only one deploy at a time
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false   # Never cancel an in-progress deployment
+
+jobs:
+  deploy:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    environment: production     # Uses GitHub Environment secrets
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --service blast-radius-api --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Verify deployment health
+        run: |
+          echo "Waiting 30s for deployment to stabilize..."
+          sleep 30
+          HEALTH=$(curl -sf https://blast-radius-api.railway.app/health | jq -r '.status')
+          if [ "$HEALTH" != "ok" ]; then
+            echo "Health check failed: $HEALTH"
+            exit 1
+          fi
+          echo "Deployment healthy: $HEALTH"

@@ -1,0 +1,5 @@
+
+
+# Run lint-staged on staged files only
+# Fails the commit if any lint error or format issue is found
+npx lint-staged

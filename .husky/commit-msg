@@ -1,0 +1,8 @@
+
+
+# Validate commit message against conventional commits spec
+# Valid formats:
+#   feat: add blast radius animation
+#   fix(auth): handle missing token gracefully
+#   chore!: drop Node 18 support (breaking change)
+npx --no -- commitlint --edit "${1}"

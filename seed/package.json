@@ -1,0 +1,24 @@
+{
+  "name": "@blast-radius/seed",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BlastRadius database seed script — populates CognoDB with 40 services, 10 teams, 20 incidents, 15 deployments",
+  "scripts": {
+    "seed": "tsx src/seed.ts",
+    "seed:upsert": "tsx src/seed.ts --no-clear",
+    "seed:dry-run": "tsx src/seed.ts --dry-run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "neo4j-driver": "^5.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
