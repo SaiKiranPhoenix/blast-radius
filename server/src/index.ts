@@ -1,14 +1,21 @@
-/**
- * server/src/index.ts — HTTP server entry point
- *
- * Responsibilities:
- *  - Import the Express app from app.ts
- *  - Start the HTTP server on PORT
- *  - Register SIGTERM/SIGINT handlers for graceful shutdown
- *    (closes neo4j driver, drains in-flight requests)
- *
- * Implementation: Phase 5 — Backend API
- */
+import { app } from './app';
+import { env } from './config/env';
+import { closeDriver } from './config/neo4j';
 
-// Minimal stub so TypeScript compilation passes during Phase 0
-export {};
+const PORT = env.PORT || 3001;
+
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+const shutdown = async () => {
+  console.log('Shutting down server...');
+  await closeDriver();
+  server.close(() => {
+    console.log('HTTP server closed.');
+    process.exit(0);
+  });
+};
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);

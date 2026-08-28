@@ -15,8 +15,8 @@
 | Phase 0 — Repo & Environment Setup        | 20      | 0      | 20        |
 | Phase 1 — Git Workflow & Code Quality     | 12      | 0      | 12        |
 | Phase 2 — CI/CD Pipeline                  | 14      | 0      | 14        |
-| Phase 3 — Database Layer                  | 7       | 0      | 7         |
-| Phase 4 — Seed Script                     | 16      | 0      | 16        |
+| Phase 3 — Database Layer                  | 7       | 7      | 0         |
+| Phase 4 — Seed Script                     | 16      | 16     | 0         |
 | Phase 5 — Backend API                     | 24      | 0      | 24        |
 | Phase 6 — Backend Tests                   | 13      | 0      | 13        |
 | Phase 7 — Frontend Shell                  | 20      | 0      | 20        |
@@ -26,7 +26,7 @@
 | Phase 11 — Integration & E2E Verification | 12      | 0      | 12        |
 | Phase 12 — Deployment                     | 12      | 0      | 12        |
 | Phase 13 — Final Polish & Submission      | 9       | 0      | 9         |
-| **Total**                                 | **202** | **20** | **182**   |
+| **Total**                                 | **202** | **43** | **159**   |
 
 ---
 
@@ -126,21 +126,21 @@
 
 > Goal: A working, tested neo4j driver singleton that the rest of the backend builds on.
 
-- [ ] Create `src/config/env.ts` — reads and validates all env vars at startup using Zod; throws a descriptive error if
+- [x] Create `src/config/env.ts` — reads and validates all env vars at startup using Zod; throws a descriptive error if
       any required var is missing
-- [ ] Create `src/config/neo4j.ts` — singleton `getDriver()` that instantiates the driver once and reuses it;
+- [x] Create `src/config/neo4j.ts` — singleton `getDriver()` that instantiates the driver once and reuses it;
       `closeDriver()` for graceful shutdown; SSL/encryption detection based on URI scheme (`bolt+ssc://` → trust all
       certs)
-- [ ] Create `src/utils/neo4jHelpers.ts` — `toInt(v)` to convert Neo4j Integer to JS number; `nodeProps(node)` to
+- [x] Create `src/utils/neo4jHelpers.ts` — `toInt(v)` to convert Neo4j Integer to JS number; `nodeProps(node)` to
       convert a Node's properties to a plain object
-- [ ] Create `src/utils/AppError.ts` — `AppError extends Error` with `statusCode` and `code` fields; factory helpers:
+- [x] Create `src/utils/AppError.ts` — `AppError extends Error` with `statusCode` and `code` fields; factory helpers:
       `notFound(entity, id)`, `dbError(err)`, `validationError(msg)`
-- [ ] Write and run a constraint creation script (can be a one-off `tsx` script or part of Phase 4 seed):
+- [x] Write and run a constraint creation script (can be a one-off `tsx` script or part of Phase 4 seed):
       `CREATE CONSTRAINT service_id_unique IF NOT EXISTS FOR (s:Service) REQUIRE s.id IS UNIQUE` and the 3 other
       uniqueness constraints plus all 5 indexes from `DATA_MODEL.md`
-- [ ] Write unit test `tests/unit/config/neo4j.test.ts` — test singleton behavior: calling `getDriver()` twice returns
+- [x] Write unit test `tests/unit/config/neo4j.test.ts` — test singleton behavior: calling `getDriver()` twice returns
       the same instance; `closeDriver()` sets the singleton to null
-- [ ] Write unit test `tests/unit/utils/neo4jHelpers.test.ts` — test `toInt` for neo4j Integer objects, plain numbers,
+- [x] Write unit test `tests/unit/utils/neo4jHelpers.test.ts` — test `toInt` for neo4j Integer objects, plain numbers,
       and zero; test `nodeProps` for populated and empty property maps
 
 ---
@@ -149,37 +149,37 @@
 
 > Goal: One `npm run seed` command populates CognoDB with the full 40-service graph.
 
-- [ ] Create `seed/src/data/teams.ts` — export array of 10 team objects with all properties: `id`, `name`,
+- [x] Create `seed/src/data/teams.ts` — export array of 10 team objects with all properties: `id`, `name`,
       `slack_channel`, `oncall_email`, `timezone`
-- [ ] Create `seed/src/data/services.ts` — export array of 40 service objects with all properties: `id`, `name`, `type`,
+- [x] Create `seed/src/data/services.ts` — export array of 40 service objects with all properties: `id`, `name`, `type`,
       `tier`, `description`, `language`, `repo_url`, `teamId`
-- [ ] Create `seed/src/data/dependencies.ts` — export array of ~84 edge objects: `{ from, to, criticality, latency_ms }`
+- [x] Create `seed/src/data/dependencies.ts` — export array of ~84 edge objects: `{ from, to, criticality, latency_ms }`
       covering all topology layers described in `DATA_MODEL.md`
-- [ ] Create `seed/src/data/incidents.ts` — export array of 20 incident objects with all properties and
+- [x] Create `seed/src/data/incidents.ts` — export array of 20 incident objects with all properties and
       `rootCauseServiceId` + `affectedServiceIds[]`
-- [ ] Create `seed/src/data/deployments.ts` — export array of 15 deployment objects with `deployedToServiceId` and
+- [x] Create `seed/src/data/deployments.ts` — export array of 15 deployment objects with `deployedToServiceId` and
       `triggeredIncidentId` (null for clean deploys)
-- [ ] Create `seed/src/steps/clearDatabase.ts` — runs `MATCH (n) DETACH DELETE n` and logs count of deleted nodes
-- [ ] Create `seed/src/steps/createConstraints.ts` — runs all 4 uniqueness constraints and 5 indexes using
+- [x] Create `seed/src/steps/clearDatabase.ts` — runs `MATCH (n) DETACH DELETE n` and logs count of deleted nodes
+- [x] Create `seed/src/steps/createConstraints.ts` — runs all 4 uniqueness constraints and 5 indexes using
       `IF NOT EXISTS`
-- [ ] Create `seed/src/steps/seedTeams.ts` — iterates `teamsData`, runs `MERGE (t:Team {id: $id}) SET t += $props` for
+- [x] Create `seed/src/steps/seedTeams.ts` — iterates `teamsData`, runs `MERGE (t:Team {id: $id}) SET t += $props` for
       each team
-- [ ] Create `seed/src/steps/seedServices.ts` — iterates `servicesData`, merges each Service node, then merges
+- [x] Create `seed/src/steps/seedServices.ts` — iterates `servicesData`, merges each Service node, then merges
       `(Team)-[:OWNS]->(Service)` relationship
-- [ ] Create `seed/src/steps/seedDependencies.ts` — iterates `dependenciesData`, for each edge runs
+- [x] Create `seed/src/steps/seedDependencies.ts` — iterates `dependenciesData`, for each edge runs
       `MATCH consumer, MATCH provider, MERGE (consumer)-[r:DEPENDS_ON]->(provider) SET r += $props`; warns on missing
       nodes
-- [ ] Create `seed/src/steps/seedIncidents.ts` — merges each Incident node, creates `CAUSED_BY` relationship, uses
+- [x] Create `seed/src/steps/seedIncidents.ts` — merges each Incident node, creates `CAUSED_BY` relationship, uses
       `UNWIND` to batch-create all `AFFECTED` relationships per incident
-- [ ] Create `seed/src/steps/seedDeployments.ts` — merges each Deployment node, creates `DEPLOYED_TO` relationship,
+- [x] Create `seed/src/steps/seedDeployments.ts` — merges each Deployment node, creates `DEPLOYED_TO` relationship,
       conditionally creates `TRIGGERED` relationship when `triggeredIncidentId` is not null
-- [ ] Create `seed/src/seed.ts` — main orchestrator that calls all steps in order (clear → constraints → teams →
+- [x] Create `seed/src/seed.ts` — main orchestrator that calls all steps in order (clear → constraints → teams →
       services → dependencies → incidents → deployments) with timing and error logging
-- [ ] Add `"seed": "tsx src/seed.ts"` script to `seed/package.json` and `"seed": "npm run seed --workspace=seed"` to
+- [x] Add `"seed": "tsx src/seed.ts"` script to `seed/package.json` and `"seed": "npm run seed --workspace=seed"` to
       root `package.json`
-- [ ] Run seed script against CognoDB and verify node counts: `MATCH (n) RETURN labels(n)[0], count(n)` — expect
+- [x] Run seed script against CognoDB and verify node counts: `MATCH (n) RETURN labels(n)[0], count(n)` — expect
       Service=40, Team=10, Incident=20, Deployment=15
-- [ ] Run verification query for 4-hop chains:
+- [x] Run verification query for 4-hop chains:
       `MATCH path = (s:Service)-[:DEPENDS_ON*4..]->(t:Service) RETURN s.name, t.name, length(path) LIMIT 5` — confirm at
       least one result
 
@@ -189,42 +189,42 @@
 
 > Goal: All 10 REST endpoints working correctly against real seed data.
 
-- [ ] Create `src/types/service.types.ts`, `src/types/team.types.ts`, `src/types/incident.types.ts`,
+- [x] Create `src/types/service.types.ts`, `src/types/team.types.ts`, `src/types/incident.types.ts`,
       `src/types/graph.types.ts`, `src/types/api.types.ts` — all TypeScript interfaces from `API.md` (ServiceSummary,
       ServiceDetail, BlastRadiusResult, BlastRadiusHop, TeamDetail, IncidentDetail, etc.)
-- [ ] Create `src/utils/cypher.ts` — named constants for all 5 Cypher queries (Q1–Q5 verbatim from `ARCHITECTURE.md`)
-- [ ] Create `src/middleware/asyncWrapper.ts` —
+- [x] Create `src/utils/cypher.ts` — named constants for all 5 Cypher queries (Q1–Q5 verbatim from `ARCHITECTURE.md`)
+- [x] Create `src/middleware/asyncWrapper.ts` —
       `(fn) => (req, res, next) => Promise.resolve(fn(req,res,next)).catch(next)`
-- [ ] Create `src/middleware/errorHandler.ts` — 4-arg Express error handler mapping AppError → HTTP response, Neo4j
+- [x] Create `src/middleware/errorHandler.ts` — 4-arg Express error handler mapping AppError → HTTP response, Neo4j
       ServiceUnavailableError → 503, unknown → 500
-- [ ] Create `src/middleware/requestLogger.ts` — Morgan middleware in `dev` format for development, `combined` for
+- [x] Create `src/middleware/requestLogger.ts` — Morgan middleware in `dev` format for development, `combined` for
       production
-- [ ] Create `src/middleware/notFound.ts` — catch-all 404 handler for unmatched routes
-- [ ] Create `src/services/services.service.ts` — `getServices(filters?)`, `getServiceById(id)`,
+- [x] Create `src/middleware/notFound.ts` — catch-all 404 handler for unmatched routes
+- [x] Create `src/services/services.service.ts` — `getServices(filters?)`, `getServiceById(id)`,
       `getBlastRadius(id, maxHops?)`, `getDependencies(id)` using session open/run/close pattern
-- [ ] Create `src/services/teams.service.ts` — `getTeams()`, `getTeamById(id)`
-- [ ] Create `src/services/incidents.service.ts` — `getIncidents(filters?)`, `getIncidentById(id)`
-- [ ] Create `src/services/graph.service.ts` — `getLongestChain()`
-- [ ] Create `src/controllers/services.controller.ts` — thin handlers that call service functions and send
+- [x] Create `src/services/teams.service.ts` — `getTeams()`, `getTeamById(id)`
+- [x] Create `src/services/incidents.service.ts` — `getIncidents(filters?)`, `getIncidentById(id)`
+- [x] Create `src/services/graph.service.ts` — `getLongestChain()`
+- [x] Create `src/controllers/services.controller.ts` — thin handlers that call service functions and send
       `{ success: true, data }` responses; validate `maxHops` query param with Zod
-- [ ] Create `src/controllers/teams.controller.ts`, `src/controllers/incidents.controller.ts`,
+- [x] Create `src/controllers/teams.controller.ts`, `src/controllers/incidents.controller.ts`,
       `src/controllers/graph.controller.ts` — same pattern
-- [ ] Create `src/controllers/health.controller.ts` — calls `driver.verifyConnectivity()`, measures latency with
+- [x] Create `src/controllers/health.controller.ts` — calls `driver.verifyConnectivity()`, measures latency with
       `Date.now()`, returns health shape; always returns 200
-- [ ] Create `src/routes/services.routes.ts` — `GET /api/services`, `GET /api/services/:id`,
+- [x] Create `src/routes/services.routes.ts` — `GET /api/services`, `GET /api/services/:id`,
       `GET /api/services/:id/blast-radius`, `GET /api/services/:id/dependencies`
-- [ ] Create `src/routes/teams.routes.ts` — `GET /api/teams`, `GET /api/teams/:id`
-- [ ] Create `src/routes/incidents.routes.ts` — `GET /api/incidents`, `GET /api/incidents/:id`
-- [ ] Create `src/routes/graph.routes.ts` — `GET /api/graph/longest-chain`
-- [ ] Create `src/routes/health.routes.ts` — `GET /health`
-- [ ] Create `src/app.ts` — Express app factory: register JSON body parser, CORS, request logger, all routers, 404
+- [x] Create `src/routes/teams.routes.ts` — `GET /api/teams`, `GET /api/teams/:id`
+- [x] Create `src/routes/incidents.routes.ts` — `GET /api/incidents`, `GET /api/incidents/:id`
+- [x] Create `src/routes/graph.routes.ts` — `GET /api/graph/longest-chain`
+- [x] Create `src/routes/health.routes.ts` — `GET /health`
+- [x] Create `src/app.ts` — Express app factory: register JSON body parser, CORS, request logger, all routers, 404
       handler, error handler; export `app` (no `listen` call, for testability)
-- [ ] Create `src/index.ts` — import `app`, call `app.listen(PORT)`, register `SIGTERM`/`SIGINT` handlers to call
+- [x] Create `src/index.ts` — import `app`, call `app.listen(PORT)`, register `SIGTERM`/`SIGINT` handlers to call
       `closeDriver()` then `server.close()`
-- [ ] Manually test `GET /health` with curl — confirm `{ "status": "ok", "database": { "connected": true } }`
-- [ ] Manually test `GET /api/services` — confirm 40 services returned with `team` and `dependencyCount` fields
-- [ ] Manually test `GET /api/services/svc-auth/blast-radius` — confirm multiple hop groups with services at each hop
-- [ ] Manually test `GET /api/incidents` — confirm 20 incidents ordered newest-first
+- [x] Manually test `GET /health` with curl — confirm `{ "status": "ok", "database": { "connected": true } }`
+- [x] Manually test `GET /api/services` — confirm 40 services returned with `team` and `dependencyCount` fields
+- [x] Manually test `GET /api/services/svc-auth/blast-radius` — confirm multiple hop groups with services at each hop
+- [x] Manually test `GET /api/incidents` — confirm 20 incidents ordered newest-first
 
 ---
 

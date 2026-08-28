@@ -14,6 +14,7 @@
     "test:integration": "vitest run tests/integration",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "db:create-schema": "tsx src/db/createConstraints.ts",
     "seed": "tsx seed/src/seed.ts",
     "lint": "eslint src/ tests/",
     "lint:fix": "eslint src/ tests/ --fix"
