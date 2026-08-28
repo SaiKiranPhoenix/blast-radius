@@ -2,6 +2,7 @@ import { getDriver } from '../config/neo4j';
 import { env } from '../config/env';
 import { Q_LONGEST_CHAIN } from '../utils/cypher';
 import type { LongestChainEntry } from '../types/graph.types';
+import { toInt } from '../utils/neo4jHelpers';
 
 export const getLongestChain = async (): Promise<LongestChainEntry[]> => {
   const driver = getDriver();
@@ -9,10 +10,10 @@ export const getLongestChain = async (): Promise<LongestChainEntry[]> => {
   try {
     const result = await session.run(Q_LONGEST_CHAIN);
     
-    return result.records.map(record => ({
+    return result.records.map((record) => ({
       source: record.get('source'),
       sink: record.get('sink'),
-      depth: record.get('depth').toNumber(),
+      depth: toInt(record.get('depth')),
     }));
   } finally {
     await session.close();

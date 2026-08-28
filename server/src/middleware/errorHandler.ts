@@ -1,13 +1,27 @@
 import type { Request, Response, NextFunction } from 'express';
+import { ZodError } from 'zod';
 import { AppError } from '../utils/AppError';
 import type { ApiError } from '../types/api.types';
 import { env } from '../config/env';
 
+interface Neo4jLikeError {
+  name?: string;
+  code?: string;
+}
+
+function isNeo4jConnectionError(error: unknown): error is Neo4jLikeError {
+  if (typeof error !== 'object' || error === null) {
+    return false;
+  }
+
+  const candidate = error as Neo4jLikeError;
+  return candidate.name === 'Neo4jError' || candidate.code === 'ServiceUnavailable';
+}
+
 export const errorHandler = (
-  err: any,
+  err: unknown,
   _req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ): void => {
   let statusCode = 500;
@@ -18,14 +32,14 @@ export const errorHandler = (
     statusCode = err.statusCode;
     code = err.code;
     message = err.message;
-  } else if (err.name === 'Neo4jError' || err.code === 'ServiceUnavailable') {
+  } else if (isNeo4jConnectionError(err)) {
     statusCode = 503;
     code = 'DB_CONNECTION_ERROR';
     message = 'Database is currently unavailable';
-  } else if (err.name === 'ZodError') {
+  } else if (err instanceof ZodError) {
     statusCode = 400;
     code = 'VALIDATION_ERROR';
-    message = err.errors.map((e: any) => `${e.path.join('.')}: ${e.message}`).join(', ');
+    message = err.errors.map((error) => `${error.path.join('.')}: ${error.message}`).join(', ');
   } else if (err instanceof Error) {
     message = env.NODE_ENV === 'development' ? err.message : message;
   }

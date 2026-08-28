@@ -5,6 +5,7 @@ export type AppErrorCode =
   | 'DB_CONNECTION_ERROR'
   | 'QUERY_ERROR'
   | 'VALIDATION_ERROR'
+  | 'NOT_FOUND'
   | 'INTERNAL_ERROR';
 
 const notFoundCodes = {

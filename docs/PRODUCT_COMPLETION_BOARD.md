@@ -17,8 +17,8 @@
 | Phase 2 — CI/CD Pipeline                  | 14      | 0      | 14        |
 | Phase 3 — Database Layer                  | 7       | 7      | 0         |
 | Phase 4 — Seed Script                     | 16      | 16     | 0         |
-| Phase 5 — Backend API                     | 24      | 0      | 24        |
-| Phase 6 — Backend Tests                   | 13      | 0      | 13        |
+| Phase 5 — Backend API                     | 24      | 24     | 0         |
+| Phase 6 — Backend Tests                   | 13      | 13     | 0         |
 | Phase 7 — Frontend Shell                  | 20      | 0      | 20        |
 | Phase 8 — Frontend Pages                  | 22      | 0      | 22        |
 | Phase 9 — Frontend Tests                  | 11      | 0      | 11        |
@@ -26,7 +26,7 @@
 | Phase 11 — Integration & E2E Verification | 12      | 0      | 12        |
 | Phase 12 — Deployment                     | 12      | 0      | 12        |
 | Phase 13 — Final Polish & Submission      | 9       | 0      | 9         |
-| **Total**                                 | **202** | **43** | **159**   |
+| **Total**                                 | **202** | **80** | **122**   |
 
 ---
 
@@ -232,35 +232,35 @@
 
 > Goal: 80% coverage on service layer; all API routes tested with supertest.
 
-- [ ] Create `vitest.config.ts` in `server/` — configure `environment: node`, `coverage.provider: v8`,
+- [x] Create `vitest.config.ts` in `server/` — configure `environment: node`, `coverage.provider: v8`,
       `coverage.include: ["src/services/**", "src/utils/**"]`, `coverage.thresholds: { lines: 80, branches: 80 }`
-- [ ] Create `tests/fixtures/` directory with `services.fixture.ts`, `teams.fixture.ts`, `incidents.fixture.ts`,
+- [x] Create `tests/fixtures/` directory with `services.fixture.ts`, `teams.fixture.ts`, `incidents.fixture.ts`,
       `deployments.fixture.ts` — typed mock objects matching all TypeScript interfaces
-- [ ] Create `tests/unit/__mocks__/neo4j.ts` — `createMockRecord(data)`, `createMockSession(records)`,
+- [x] Create `tests/unit/__mocks__/neo4j.ts` — `createMockRecord(data)`, `createMockSession(records)`,
       `createMockDriver(session)` helpers
-- [ ] Create `tests/unit/services/services.service.test.ts` — test `getServices` (empty result, full mapping,
+- [x] Create `tests/unit/services/services.service.test.ts` — test `getServices` (empty result, full mapping,
       team=null), `getServiceById` (found, 404), `getBlastRadius` (hop grouping, empty hops, teams, historical
       incidents), `getDependencies` (upstream/downstream/team/incidents)
-- [ ] Create `tests/unit/services/teams.service.test.ts` — test `getTeams` (counts mapping), `getTeamById` (found with
+- [x] Create `tests/unit/services/teams.service.test.ts` — test `getTeams` (counts mapping), `getTeamById` (found with
       services + incidents, 404)
-- [ ] Create `tests/unit/services/incidents.service.test.ts` — test `getIncidents` (all, status filter, severity filter,
+- [x] Create `tests/unit/services/incidents.service.test.ts` — test `getIncidents` (all, status filter, severity filter,
       combined), `getIncidentById` (found with triggeredBy, triggeredBy=null, 404)
-- [ ] Create `tests/unit/services/graph.service.test.ts` — test `getLongestChain` (correct mapping, limited to 10, empty
+- [x] Create `tests/unit/services/graph.service.test.ts` — test `getLongestChain` (correct mapping, limited to 10, empty
       graph)
-- [ ] Create `tests/unit/utils/AppError.test.ts` — test that `notFound`, `dbError`, `validationError` factories produce
+- [x] Create `tests/unit/utils/AppError.test.ts` — test that `notFound`, `dbError`, `validationError` factories produce
       correct `statusCode`, `code`, and `message`
-- [ ] Create `tests/unit/middleware/errorHandler.test.ts` — test AppError passthrough, ServiceUnavailableError → 503,
+- [x] Create `tests/unit/middleware/errorHandler.test.ts` — test AppError passthrough, ServiceUnavailableError → 503,
       unknown error → 500, response envelope shape
-- [ ] Create `tests/integration/api/services.integration.test.ts` — supertest: GET `/api/services` 200, GET
+- [x] Create `tests/integration/api/services.integration.test.ts` — supertest: GET `/api/services` 200, GET
       `/api/services/:id` 200 and 404, GET `/api/services/:id/blast-radius` 200, GET `/api/services/:id/dependencies`
       200
-- [ ] Create `tests/integration/api/teams.integration.test.ts` — supertest: GET `/api/teams` 200, GET `/api/teams/:id`
+- [x] Create `tests/integration/api/teams.integration.test.ts` — supertest: GET `/api/teams` 200, GET `/api/teams/:id`
       200 and 404
-- [ ] Create `tests/integration/api/incidents.integration.test.ts` — supertest: GET `/api/incidents` 200 with filters,
+- [x] Create `tests/integration/api/incidents.integration.test.ts` — supertest: GET `/api/incidents` 200 with filters,
       GET `/api/incidents/:id` 200 and 404
-- [ ] Create `tests/integration/api/health.integration.test.ts` — mock driver healthy state → `status: ok`; mock driver
+- [x] Create `tests/integration/api/health.integration.test.ts` — mock driver healthy state → `status: ok`; mock driver
       throwing → `status: degraded` but still HTTP 200
-- [ ] Run `npm run test:coverage --workspace=server` and confirm output shows ≥80% line and branch coverage
+- [x] Run `npm run test:coverage --workspace=server` and confirm output shows ≥80% line and branch coverage
 
 ---
 

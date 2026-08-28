@@ -58,10 +58,13 @@ export function normalizeNeo4jValue(value: unknown): unknown {
   return value;
 }
 
-export function nodeProps<T extends Record<string, unknown> = Record<string, unknown>>(
-  node: Neo4jNodeLike | null | undefined,
+export function nodeProps<T = Record<string, unknown>>(
+  node: unknown,
 ): T {
-  const properties = node?.properties ?? {};
+  const properties =
+    typeof node === 'object' && node !== null && 'properties' in node
+      ? ((node as Neo4jNodeLike).properties ?? {})
+      : {};
 
   return normalizeNeo4jValue(properties) as T;
 }

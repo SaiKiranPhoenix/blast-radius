@@ -1,4 +1,5 @@
-import neo4j, { Driver } from 'neo4j-driver';
+import neo4j from 'neo4j-driver';
+import type { Driver } from 'neo4j-driver';
 import { env } from './env';
 
 let driver: Driver | null = null;

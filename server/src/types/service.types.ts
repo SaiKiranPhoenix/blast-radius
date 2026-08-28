@@ -16,6 +16,4 @@ export interface ServiceSummary {
   team: TeamSummary | null;
 }
 
-export interface ServiceDetail extends ServiceSummary {
-  // All fields from ServiceSummary plus inline team detail
-}
+export type ServiceDetail = ServiceSummary;

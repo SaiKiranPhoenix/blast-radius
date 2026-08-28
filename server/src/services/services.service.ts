@@ -1,20 +1,21 @@
 import { getDriver } from '../config/neo4j';
 import { env } from '../config/env';
-import {
-  Q_BLAST_RADIUS,
-  Q_SERVICE_DEPENDENCIES,
-} from '../utils/cypher';
+import { Q_BLAST_RADIUS, Q_SERVICE_DEPENDENCIES } from '../utils/cypher';
 import type {
   ServiceSummary,
   ServiceDetail,
 } from '../types/service.types';
 import type { BlastRadiusResult, DependencyResult } from '../types/graph.types';
 import { AppError } from '../utils/AppError';
-import { nodeProps } from '../utils/neo4jHelpers';
+import { nodeProps, toInt } from '../utils/neo4jHelpers';
 import type { IncidentSummary } from '../types/incident.types';
 import type { TeamSummary } from '../types/team.types';
 
-export const getServices = async (filters?: { tier?: string; type?: string; teamId?: string }): Promise<ServiceSummary[]> => {
+export const getServices = async (filters?: {
+  tier?: string;
+  type?: string;
+  teamId?: string;
+}): Promise<ServiceSummary[]> => {
   const driver = getDriver();
   const session = driver.session({ database: env.NEO4J_DATABASE });
   try {
@@ -23,7 +24,7 @@ export const getServices = async (filters?: { tier?: string; type?: string; team
       `;
 
     const whereClauses: string[] = [];
-    const params: Record<string, any> = {};
+    const params: Record<string, string> = {};
 
     if (filters?.tier) {
       whereClauses.push('s.tier = $tier');
@@ -57,13 +58,13 @@ export const getServices = async (filters?: { tier?: string; type?: string; team
 
     const result = await session.run(query, params);
     return result.records.map((record) => {
-      const s = nodeProps(record.get('s')) as ServiceSummary;
+      const s = nodeProps<ServiceSummary>(record.get('s'));
       const teamNode = record.get('team');
       return {
         ...s,
-        dependencyCount: record.get('dependencyCount').toNumber(),
-        dependentCount: record.get('dependentCount').toNumber(),
-        team: teamNode ? (nodeProps(teamNode) as TeamSummary) : null,
+        dependencyCount: toInt(record.get('dependencyCount')),
+        dependentCount: toInt(record.get('dependentCount')),
+        team: teamNode ? nodeProps<TeamSummary>(teamNode) : null,
       };
     });
   } finally {
@@ -83,20 +84,20 @@ export const getServiceById = async (id: string): Promise<ServiceDetail> => {
       RETURN s, team, count(DISTINCT upstream) AS dependencyCount, count(DISTINCT downstream) AS dependentCount
     `;
     const result = await session.run(query, { id });
-    
+
     if (result.records.length === 0) {
       throw AppError.notFound('service', id);
     }
-    
+
     const record = result.records[0];
-    const s = nodeProps(record.get('s')) as ServiceDetail;
+    const s = nodeProps<ServiceDetail>(record.get('s'));
     const teamNode = record.get('team');
-    
+
     return {
       ...s,
-      dependencyCount: record.get('dependencyCount').toNumber(),
-      dependentCount: record.get('dependentCount').toNumber(),
-      team: teamNode ? (nodeProps(teamNode) as TeamSummary) : null,
+      dependencyCount: toInt(record.get('dependencyCount')),
+      dependentCount: toInt(record.get('dependentCount')),
+      team: teamNode ? nodeProps<TeamSummary>(teamNode) : null,
     };
   } finally {
     await session.close();
@@ -113,14 +114,11 @@ export const getBlastRadius = async (id: string, maxHops: number = 5): Promise<B
     // 2. Q1 — Blast Radius
     const blastResult = await session.run(Q_BLAST_RADIUS, { serviceId: id, maxHops });
     const hopsMap: Record<number, ServiceSummary[]> = {};
-    let totalAffected = 0;
-    
-    blastResult.records.forEach(record => {
-      const hop = record.get('hops').toNumber();
-      const service = nodeProps(record.get('affected')) as ServiceSummary;
+    blastResult.records.forEach((record) => {
+      const hop = toInt(record.get('hops'));
+      const service = nodeProps<ServiceSummary>(record.get('affected'));
       if (!hopsMap[hop]) hopsMap[hop] = [];
       hopsMap[hop].push(service);
-      totalAffected++;
     });
 
     const hops = Object.entries(hopsMap).map(([hop, services]) => ({
@@ -129,27 +127,33 @@ export const getBlastRadius = async (id: string, maxHops: number = 5): Promise<B
     }));
 
     // 3. Q2 — Teams to Page
-    const teamsResult = await session.run(`
+    const teamsResult = await session.run(
+      `
       MATCH (root:Service {id: $serviceId})<-[:DEPENDS_ON*1..$maxHops]-(affected:Service)
       MATCH (team:Team)-[:OWNS]->(affected)
       RETURN DISTINCT team, collect(DISTINCT affected.name) AS affectedServices
-    `, { serviceId: id, maxHops });
-    
-    const teamsToPage = teamsResult.records.map(record => ({
-      team: nodeProps(record.get('team')) as TeamSummary,
+    `,
+      { serviceId: id, maxHops },
+    );
+
+    const teamsToPage = teamsResult.records.map((record) => ({
+      team: nodeProps<TeamSummary>(record.get('team')),
       affectedServices: record.get('affectedServices'),
     }));
 
     // 4. Q3 — Historical Incidents
-    const incidentsResult = await session.run(`
+    const incidentsResult = await session.run(
+      `
       MATCH (i:Incident)-[:CAUSED_BY]->(root:Service {id: $serviceId})
       OPTIONAL MATCH (i)-[:AFFECTED]->(s:Service)
       RETURN i, collect(DISTINCT s.name) AS affectedServices
       ORDER BY i.started_at DESC
-    `, { serviceId: id });
+    `,
+      { serviceId: id },
+    );
 
-    const historicalIncidents = incidentsResult.records.map(record => {
-      const i = nodeProps(record.get('i')) as IncidentSummary;
+    const historicalIncidents = incidentsResult.records.map((record) => {
+      const i = nodeProps<IncidentSummary>(record.get('i'));
       const affected = record.get('affectedServices');
       return {
         ...i,
@@ -161,7 +165,7 @@ export const getBlastRadius = async (id: string, maxHops: number = 5): Promise<B
     return {
       rootService,
       hops,
-      totalAffected,
+      totalAffected: blastResult.records.length,
       teamsToPage,
       historicalIncidents,
     };
@@ -178,35 +182,40 @@ export const getDependencies = async (id: string): Promise<DependencyResult> => 
     if (result.records.length === 0) {
       throw AppError.notFound('service', id);
     }
-    
+
     const record = result.records[0];
-    const service = nodeProps(record.get('s')) as ServiceSummary;
+    const service = nodeProps<ServiceSummary>(record.get('s'));
     const teamNode = record.get('team');
     const upstreamNodes = record.get('upstream');
     const downstreamNodes = record.get('downstream');
     
-    const upstream = upstreamNodes.map((n: any) => nodeProps(n)) as ServiceSummary[];
-    const downstream = downstreamNodes.map((n: any) => nodeProps(n)) as ServiceSummary[];
-    
+    const upstream = upstreamNodes.map((n: unknown) => nodeProps<ServiceSummary>(n));
+    const downstream = downstreamNodes.map((n: unknown) => nodeProps<ServiceSummary>(n));
+
     // Also fetch incidents caused by this service
-    const incidentsResult = await session.run(`
+    const incidentsResult = await session.run(
+      `
       MATCH (i:Incident)-[:CAUSED_BY]->(s:Service {id: $id})
       RETURN i
       ORDER BY i.started_at DESC
-    `, { id });
-    
-    const incidents = incidentsResult.records.map(r => nodeProps(r.get('i'))) as IncidentSummary[];
+    `,
+      { id },
+    );
+
+    const incidents = incidentsResult.records.map((record) =>
+      nodeProps<IncidentSummary>(record.get('i')),
+    );
 
     return {
       service: {
         ...service,
         dependencyCount: upstream.length,
         dependentCount: downstream.length,
-        team: teamNode ? (nodeProps(teamNode) as TeamSummary) : null,
+        team: teamNode ? nodeProps<TeamSummary>(teamNode) : null,
       },
       upstream,
       downstream,
-      team: teamNode ? (nodeProps(teamNode) as TeamSummary) : null,
+      team: teamNode ? nodeProps<TeamSummary>(teamNode) : null,
       incidents,
     };
   } finally {

@@ -1,7 +1,7 @@
 import { getDriver } from '../config/neo4j';
 import { env } from '../config/env';
 import { AppError } from '../utils/AppError';
-import { nodeProps } from '../utils/neo4jHelpers';
+import { nodeProps, toInt } from '../utils/neo4jHelpers';
 import type { TeamSummaryWithCounts, TeamDetail, TeamSummary } from '../types/team.types';
 import type { ServiceSummary } from '../types/service.types';
 import type { IncidentSummary } from '../types/incident.types';
@@ -19,12 +19,12 @@ export const getTeams = async (): Promise<TeamSummaryWithCounts[]> => {
     `;
     const result = await session.run(query);
     
-    return result.records.map(record => {
-      const team = nodeProps(record.get('team')) as TeamSummaryWithCounts;
+    return result.records.map((record) => {
+      const team = nodeProps<TeamSummary>(record.get('team'));
       return {
         ...team,
-        serviceCount: record.get('serviceCount').toNumber(),
-        activeIncidentCount: record.get('activeIncidentCount').toNumber(),
+        serviceCount: toInt(record.get('serviceCount')),
+        activeIncidentCount: toInt(record.get('activeIncidentCount')),
       };
     });
   } finally {
@@ -43,16 +43,20 @@ export const getTeamById = async (id: string): Promise<TeamDetail> => {
       RETURN team, collect(DISTINCT s) AS services, collect(DISTINCT i) AS activeIncidents
     `;
     const result = await session.run(query, { id });
-    
+
     if (result.records.length === 0) {
       throw AppError.notFound('team', id);
     }
-    
+
     const record = result.records[0];
-    const team = nodeProps(record.get('team')) as TeamSummary;
-    const services = record.get('services').map((n: any) => nodeProps(n)) as ServiceSummary[];
-    const activeIncidents = record.get('activeIncidents').map((n: any) => nodeProps(n)) as IncidentSummary[];
-    
+    const team = nodeProps<TeamSummary>(record.get('team'));
+    const services = record
+      .get('services')
+      .map((node: unknown) => nodeProps<ServiceSummary>(node));
+    const activeIncidents = record
+      .get('activeIncidents')
+      .map((node: unknown) => nodeProps<IncidentSummary>(node));
+
     return {
       ...team,
       services,
