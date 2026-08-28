@@ -24,7 +24,7 @@ export default defineConfig({
     strictPort: true, // Fail if port is occupied instead of auto-incrementing
     // Security headers in development
     headers: {
-      'X-Frame-Options': 'DENY',
+      'X-Frame-Options': 'SAMEORIGIN',
       'X-Content-Type-Options': 'nosniff',
       'Referrer-Policy': 'strict-origin-when-cross-origin',
     },
