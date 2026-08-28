@@ -2,7 +2,9 @@
 
 > **See what breaks when something breaks.**
 
-BlastRadius is an SRE incident blast radius explorer backed by a graph database. It models your microservice architecture as a graph, and when any service fails, it instantly shows every downstream service affected — hop by hop — every team that needs to be paged, and every historical incident that followed the same failure path.
+BlastRadius is an SRE incident blast radius explorer backed by a graph database. It models your microservice
+architecture as a graph, and when any service fails, it instantly shows every downstream service affected — hop by hop —
+every team that needs to be paged, and every historical incident that followed the same failure path.
 
 <!-- screenshot: Service Map page showing 40 service cards grouped by team -->
 
@@ -21,14 +23,17 @@ BlastRadius is an SRE incident blast radius explorer backed by a graph database.
 ## Why a Graph Database?
 
 A microservice blast radius is a **graph problem**. Using a relational database for this would require:
+
 - Recursive CTEs or 5 self-joins to find 5-hop chains
 - Separate queries to join teams, incidents, and deployments to affected services
 - No native way to express "find all services reachable from this node within N hops"
 
 A graph database solves all of this natively:
+
 - **Variable-length path traversal** in one query: `MATCH (root)<-[:DEPENDS_ON*1..5]-(affected)`
 - **Pattern composition**: combine traversal + team lookup + incident history in one Cypher statement
-- **Relationship-first modeling**: dependency criticality, incident causation, and deployment triggers are all first-class graph edges
+- **Relationship-first modeling**: dependency criticality, incident causation, and deployment triggers are all
+  first-class graph edges
 - **Natural data model**: the dependency graph IS the data — no impedance mismatch between the domain and the schema
 
 ---
@@ -54,21 +59,21 @@ A graph database solves all of this natively:
   └──────┘
 ```
 
-| Node | Key Properties |
-|------|---------------|
-| `Service` | id, name, type, tier, description, language, repo_url |
-| `Team` | id, name, slack_channel, oncall_email, timezone |
-| `Incident` | id, title, severity, status, started_at, resolved_at |
-| `Deployment` | id, version, deployed_at, deployed_by, environment |
+| Node         | Key Properties                                        |
+| ------------ | ----------------------------------------------------- |
+| `Service`    | id, name, type, tier, description, language, repo_url |
+| `Team`       | id, name, slack_channel, oncall_email, timezone       |
+| `Incident`   | id, title, severity, status, started_at, resolved_at  |
+| `Deployment` | id, version, deployed_at, deployed_by, environment    |
 
-| Relationship | Properties |
-|-------------|-----------|
-| `[:DEPENDS_ON]` | criticality (hard/soft), latency_ms |
-| `[:OWNS]` | — |
-| `[:CAUSED_BY]` | — |
-| `[:AFFECTED]` | — |
-| `[:DEPLOYED_TO]` | — |
-| `[:TRIGGERED]` | — |
+| Relationship     | Properties                          |
+| ---------------- | ----------------------------------- |
+| `[:DEPENDS_ON]`  | criticality (hard/soft), latency_ms |
+| `[:OWNS]`        | —                                   |
+| `[:CAUSED_BY]`   | —                                   |
+| `[:AFFECTED]`    | —                                   |
+| `[:DEPLOYED_TO]` | —                                   |
+| `[:TRIGGERED]`   | —                                   |
 
 ---
 
@@ -84,16 +89,16 @@ A graph database solves all of this natively:
 ![Railway](https://img.shields.io/badge/Railway-backend-0B0D0E?logo=railway&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-frontend-000000?logo=vercel&logoColor=white)
 
-| Layer | Technology |
-|-------|------------|
-| Backend API | Node.js + Express + TypeScript |
-| Frontend | React 18 + Vite + TypeScript + Tailwind CSS |
-| Graph DB | CognoDB (Neo4j-compatible, openCypher over Bolt) |
-| DB Driver | `neo4j-driver` (official npm package) |
-| State management | TanStack Query (React Query) |
-| Routing | react-router-dom v6 |
-| Testing | Vitest + React Testing Library |
-| Deployment | Railway (backend) + Vercel (frontend) |
+| Layer            | Technology                                       |
+| ---------------- | ------------------------------------------------ |
+| Backend API      | Node.js + Express + TypeScript                   |
+| Frontend         | React 18 + Vite + TypeScript + Tailwind CSS      |
+| Graph DB         | CognoDB (Neo4j-compatible, openCypher over Bolt) |
+| DB Driver        | `neo4j-driver` (official npm package)            |
+| State management | TanStack Query (React Query)                     |
+| Routing          | react-router-dom v6                              |
+| Testing          | Vitest + React Testing Library                   |
+| Deployment       | Railway (backend) + Vercel (frontend)            |
 
 ---
 
@@ -123,11 +128,13 @@ This installs dependencies for both `server/` and `client/` workspaces.
 ### 3. Configure Environment Variables
 
 **Backend:**
+
 ```bash
 cp server/.env.example server/.env
 ```
 
 Edit `server/.env`:
+
 ```
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USERNAME=neo4j
@@ -139,11 +146,13 @@ NODE_ENV=development
 ```
 
 **Frontend:**
+
 ```bash
 cp client/.env.example client/.env
 ```
 
 Edit `client/.env`:
+
 ```
 VITE_API_BASE_URL=http://localhost:3001
 ```
@@ -169,6 +178,7 @@ npm run seed --workspace=server
 ```
 
 Expected output:
+
 ```
 BlastRadius Seed Script
 ========================
@@ -201,7 +211,8 @@ The app will be available at **http://localhost:5173**.
 
 ### Blast Radius (Multi-Hop Traversal)
 
-**Plain English:** "Find all services that depend on this failing service, up to 5 hops away. Tell me the minimum distance for each."
+**Plain English:** "Find all services that depend on this failing service, up to 5 hops away. Tell me the minimum
+distance for each."
 
 ```cypher
 MATCH path = (root:Service {id: $serviceId})<-[:DEPENDS_ON*1..5]-(affected:Service)
@@ -210,7 +221,8 @@ ORDER BY hops
 RETURN affected, hops
 ```
 
-This single query replaces what would be 5 self-joins in SQL. The graph engine traverses relationships depth-first, returning every reachable service with its shortest path distance.
+This single query replaces what would be 5 self-joins in SQL. The graph engine traverses relationships depth-first,
+returning every reachable service with its shortest path distance.
 
 ---
 
@@ -268,7 +280,7 @@ MATCH (s:Service {id: $serviceId})
 OPTIONAL MATCH (s)-[:DEPENDS_ON]->(upstream:Service)
 OPTIONAL MATCH (downstream:Service)-[:DEPENDS_ON]->(s)
 OPTIONAL MATCH (team:Team)-[:OWNS]->(s)
-RETURN s, collect(DISTINCT upstream) AS upstream, 
+RETURN s, collect(DISTINCT upstream) AS upstream,
        collect(DISTINCT downstream) AS downstream, team
 ```
 
@@ -278,29 +290,29 @@ Four conceptually separate lookups composed into one Cypher statement using `OPT
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
+| Document                                | Description                                                              |
+| --------------------------------------- | ------------------------------------------------------------------------ |
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Monorepo structure, technology decisions, data model, all Cypher queries |
-| [API.md](docs/API.md) | All REST endpoints with request/response schemas and examples |
-| [DATA_MODEL.md](docs/DATA_MODEL.md) | Node/relationship definitions, constraints, seed data strategy |
-| [FRONTEND.md](docs/FRONTEND.md) | Component tree, routing, animation logic, design system |
-| [TESTING.md](docs/TESTING.md) | Test strategy, coverage targets, mock setup, test scripts |
-| [SEED.md](docs/SEED.md) | Seed script walkthrough, order of operations, expected output |
-| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Railway, Vercel, CognoDB setup and environment checklist |
+| [API.md](docs/API.md)                   | All REST endpoints with request/response schemas and examples            |
+| [DATA_MODEL.md](docs/DATA_MODEL.md)     | Node/relationship definitions, constraints, seed data strategy           |
+| [FRONTEND.md](docs/FRONTEND.md)         | Component tree, routing, animation logic, design system                  |
+| [TESTING.md](docs/TESTING.md)           | Test strategy, coverage targets, mock setup, test scripts                |
+| [SEED.md](docs/SEED.md)                 | Seed script walkthrough, order of operations, expected output            |
+| [DEPLOYMENT.md](docs/DEPLOYMENT.md)     | Railway, Vercel, CognoDB setup and environment checklist                 |
 
 ---
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev --workspace=server` | Start backend in dev mode (tsx watch) |
-| `npm run dev --workspace=client` | Start frontend in dev mode (Vite HMR) |
-| `npm run build --workspace=server` | Compile TypeScript to `server/dist/` |
-| `npm run build --workspace=client` | Build frontend bundle to `client/dist/` |
-| `npm run seed --workspace=server` | Clear DB and populate with all seed data |
-| `npm test` | Run all tests (both workspaces) |
-| `npm run test:coverage` | Run tests with coverage report |
+| Command                            | Description                              |
+| ---------------------------------- | ---------------------------------------- |
+| `npm run dev --workspace=server`   | Start backend in dev mode (tsx watch)    |
+| `npm run dev --workspace=client`   | Start frontend in dev mode (Vite HMR)    |
+| `npm run build --workspace=server` | Compile TypeScript to `server/dist/`     |
+| `npm run build --workspace=client` | Build frontend bundle to `client/dist/`  |
+| `npm run seed --workspace=server`  | Clear DB and populate with all seed data |
+| `npm test`                         | Run all tests (both workspaces)          |
+| `npm run test:coverage`            | Run tests with coverage report           |
 
 ---
 

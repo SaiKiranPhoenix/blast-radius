@@ -1,6 +1,7 @@
 # BlastRadius — Testing Strategy
 
-> Test plan for the full stack: backend unit tests, backend integration tests, frontend unit tests, and frontend integration tests.
+> Test plan for the full stack: backend unit tests, backend integration tests, frontend unit tests, and frontend
+> integration tests.
 
 ---
 
@@ -25,9 +26,11 @@
 
 - Backend service functions are tested against their Cypher query outputs, not against the Express routing layer.
 - Frontend components are tested for what the user sees and can interact with, not for internal state.
-- Mocking is used only at the boundary (neo4j-driver for backend unit tests; the API client for frontend tests). Integration tests talk to real infrastructure when available.
+- Mocking is used only at the boundary (neo4j-driver for backend unit tests; the API client for frontend tests).
+  Integration tests talk to real infrastructure when available.
 
 **Testing pyramid:**
+
 ```
           /\
          /  \  E2E (not in scope for v1)
@@ -42,13 +45,13 @@
 
 ## 2. Coverage Targets
 
-| Layer | Target | Measurement |
-|-------|--------|-------------|
-| Backend service functions (`src/services/`) | **80%** line + branch coverage | Vitest coverage |
-| Backend utils (`src/utils/`) | **90%** | Vitest coverage |
-| Frontend components (`src/components/`) | **60%** | Vitest coverage |
-| Frontend hooks (`src/hooks/`) | **70%** | Vitest coverage |
-| Frontend pages (`src/pages/`) | **50%** (integration tests cover pages) | Vitest coverage |
+| Layer                                       | Target                                  | Measurement     |
+| ------------------------------------------- | --------------------------------------- | --------------- |
+| Backend service functions (`src/services/`) | **80%** line + branch coverage          | Vitest coverage |
+| Backend utils (`src/utils/`)                | **90%**                                 | Vitest coverage |
+| Frontend components (`src/components/`)     | **60%**                                 | Vitest coverage |
+| Frontend hooks (`src/hooks/`)               | **70%**                                 | Vitest coverage |
+| Frontend pages (`src/pages/`)               | **50%** (integration tests cover pages) | Vitest coverage |
 
 Coverage is measured with `@vitest/coverage-v8`. Reports are generated in `coverage/` at the root of each workspace.
 
@@ -77,6 +80,7 @@ server/
 ```
 
 **Naming convention:**
+
 - Unit tests: `<module-name>.test.ts`
 - Integration tests: `<feature>.integration.test.ts`
 - Test files live outside `src/` in a dedicated `tests/` directory
@@ -102,6 +106,7 @@ client/
 ```
 
 **Naming convention:**
+
 - Unit tests: `<ComponentName>.test.tsx` or `<hookName>.test.ts`
 - Integration tests: `<PageName>.test.tsx`
 
@@ -109,7 +114,9 @@ client/
 
 ## 4. Backend: Mocking the Neo4j Driver
 
-All backend **unit** tests mock the `neo4j-driver` module. The mock replaces `getDriver()` from `src/config/neo4j.ts` with a factory that returns a fake driver whose `session()` method returns a fake session with controllable `run()` behavior.
+All backend **unit** tests mock the `neo4j-driver` module. The mock replaces `getDriver()` from `src/config/neo4j.ts`
+with a factory that returns a fake driver whose `session()` method returns a fake session with controllable `run()`
+behavior.
 
 ### Mock Setup (`server/tests/unit/__mocks__/neo4j.ts`)
 
@@ -132,7 +139,8 @@ export const createMockDriver = (session: ReturnType<typeof createMockSession>) 
 
 ### Mock Neo4j Record
 
-The `neo4j-driver` returns `Record` objects with a `.get(key)` method. In tests, simulate this with a plain object that has a `.get()` method:
+The `neo4j-driver` returns `Record` objects with a `.get(key)` method. In tests, simulate this with a plain object that
+has a `.get()` method:
 
 ```typescript
 // Helper to create a mock Neo4j Record
@@ -193,6 +201,7 @@ describe('services.service', () => {
 **Module under test:** `src/services/services.service.ts`
 
 **Functions to test:**
+
 - `getServices(filters?)` — returns all services with team and dependency counts
 - `getServiceById(id)` — returns single service or throws `AppError(404)`
 - `getBlastRadius(id, maxHops?)` — returns hops array and team/incident data
@@ -249,6 +258,7 @@ describe('services.service', () => {
 **Module under test:** `src/services/teams.service.ts`
 
 **Functions to test:**
+
 - `getTeams()` — all teams with serviceCount and activeIncidentCount
 - `getTeamById(id)` — team with owned services and active incidents
 
@@ -276,6 +286,7 @@ getTeamById:
 **Module under test:** `src/services/incidents.service.ts`
 
 **Functions to test:**
+
 - `getIncidents(filters?)` — all incidents with optional filters
 - `getIncidentById(id)` — single incident with full detail
 
@@ -305,6 +316,7 @@ getIncidentById:
 **Module under test:** `src/services/graph.service.ts`
 
 **Functions to test:**
+
 - `getLongestChain()` — top 10 longest dependency chains
 
 **Test cases:**
@@ -325,6 +337,7 @@ getLongestChain:
 **Module under test:** `src/utils/neo4jHelpers.ts`
 
 **Functions to test:**
+
 - `toInt(value)` — converts neo4j Integer to JS number
 - `nodeToPlainObject(node)` — converts a neo4j Node to a plain JS object
 - `recordToObject(record, key)` — extracts a named value from a Record and converts it
@@ -348,17 +361,21 @@ nodeToPlainObject:
 
 ## 6. Backend Integration Tests
 
-Integration tests run against the **actual Cypher queries** to validate that query logic is correct. They require a running CognoDB instance.
+Integration tests run against the **actual Cypher queries** to validate that query logic is correct. They require a
+running CognoDB instance.
 
 ### Strategy
 
 Two options depending on environment:
 
-**Option A (CI with real DB):** Set `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD` as CI secrets. Run the seed script before tests. Tests use a dedicated `test` database (set `NEO4J_DATABASE=test`).
+**Option A (CI with real DB):** Set `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD` as CI secrets. Run the seed script
+before tests. Tests use a dedicated `test` database (set `NEO4J_DATABASE=test`).
 
-**Option B (Local development without DB):** Use `nock` or `msw` at the HTTP level, or use a partial mock that intercepts at the driver level but tests the full query string logic.
+**Option B (Local development without DB):** Use `nock` or `msw` at the HTTP level, or use a partial mock that
+intercepts at the driver level but tests the full query string logic.
 
-**Recommended for CI:** Option A. Tests should connect to a real CognoDB test instance seeded with a minimal dataset (2 teams, 5 services, 3 dependencies, 2 incidents, 1 deployment).
+**Recommended for CI:** Option A. Tests should connect to a real CognoDB test instance seeded with a minimal dataset (2
+teams, 5 services, 3 dependencies, 2 incidents, 1 deployment).
 
 ### Integration Test Setup
 
@@ -430,7 +447,8 @@ afterAll(async () => {
 
 ## 7. Frontend Unit Tests
 
-Frontend unit tests use `vitest` + `@testing-library/react` + `@testing-library/user-event`. The API layer is mocked using `vi.mock` on the `api/client.ts` module.
+Frontend unit tests use `vitest` + `@testing-library/react` + `@testing-library/user-event`. The API layer is mocked
+using `vi.mock` on the `api/client.ts` module.
 
 ### Vitest Setup (`client/vitest.config.ts`)
 
@@ -479,6 +497,7 @@ afterEach(() => {
 ```
 
 **Snapshot test:**
+
 ```
 ✓ matches snapshot for default variant
 ✓ matches snapshot for affected variant
@@ -566,7 +585,8 @@ Mock: vi.mock the API module (services.api.ts).
 
 ## 8. Frontend Integration Tests
 
-Frontend integration tests use React Testing Library + Mock Service Worker (`msw`) to intercept HTTP calls. Tests render full pages and simulate user interactions.
+Frontend integration tests use React Testing Library + Mock Service Worker (`msw`) to intercept HTTP calls. Tests render
+full pages and simulate user interactions.
 
 ### MSW Setup (`client/src/tests/msw/handlers.ts`)
 
@@ -578,28 +598,28 @@ import { mockIncidents } from '../fixtures/incidents';
 
 export const handlers = [
   http.get('*/api/services', () =>
-    HttpResponse.json({ success: true, data: { services: mockServices, total: mockServices.length } })
+    HttpResponse.json({ success: true, data: { services: mockServices, total: mockServices.length } }),
   ),
   http.get('*/api/services/:id', ({ params }) =>
-    HttpResponse.json({ success: true, data: mockServices.find(s => s.id === params.id) ?? null })
+    HttpResponse.json({ success: true, data: mockServices.find((s) => s.id === params.id) ?? null }),
   ),
   http.get('*/api/services/:id/blast-radius', ({ params }) =>
-    HttpResponse.json({ success: true, data: mockBlastRadius[params.id as string] })
+    HttpResponse.json({ success: true, data: mockBlastRadius[params.id as string] }),
   ),
   http.get('*/api/services/:id/dependencies', ({ params }) =>
-    HttpResponse.json({ success: true, data: mockDependencies[params.id as string] })
+    HttpResponse.json({ success: true, data: mockDependencies[params.id as string] }),
   ),
   http.get('*/api/teams', () =>
-    HttpResponse.json({ success: true, data: { teams: mockTeams, total: mockTeams.length } })
+    HttpResponse.json({ success: true, data: { teams: mockTeams, total: mockTeams.length } }),
   ),
   http.get('*/api/teams/:id', ({ params }) =>
-    HttpResponse.json({ success: true, data: mockTeams.find(t => t.id === params.id) })
+    HttpResponse.json({ success: true, data: mockTeams.find((t) => t.id === params.id) }),
   ),
   http.get('*/api/incidents', () =>
-    HttpResponse.json({ success: true, data: { incidents: mockIncidents, total: mockIncidents.length } })
+    HttpResponse.json({ success: true, data: { incidents: mockIncidents, total: mockIncidents.length } }),
   ),
   http.get('*/api/incidents/:id', ({ params }) =>
-    HttpResponse.json({ success: true, data: mockIncidents.find(i => i.id === params.id) })
+    HttpResponse.json({ success: true, data: mockIncidents.find((i) => i.id === params.id) }),
   ),
 ];
 ```
@@ -790,4 +810,5 @@ client/src/tests/fixtures/
 └── incidents.fixture.ts
 ```
 
-Fixtures export pre-built mock objects that match the TypeScript interfaces exactly. Using typed fixtures catches interface drift early.
+Fixtures export pre-built mock objects that match the TypeScript interfaces exactly. Using typed fixtures catches
+interface drift early.

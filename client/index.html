@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ─── SEO ─────────────────────────────────────────────────── -->
+    <title>BlastRadius — SRE Blast Radius Explorer</title>
+    <meta
+      name="description"
+      content="See what breaks when something breaks. BlastRadius models microservice dependencies as a graph and reveals the full blast radius of any failure, hop by hop."
+    />
+    <meta name="theme-color" content="#0a0f1a" />
+
+    <!-- ─── Security ─────────────────────────────────────────────── -->
+    <!--
+      Content-Security-Policy:
+      - default-src 'self': only load resources from our own origin
+      - script-src 'self': no inline scripts, no CDN scripts
+      - style-src 'self' 'unsafe-inline' fonts.googleapis.com: Tailwind inlines styles; Google Fonts CSS
+      - font-src fonts.gstatic.com: Google Fonts font files
+      - connect-src 'self' <API_ORIGIN>: XHR/fetch allowed to our API
+      Note: In production, tighten connect-src to the exact Railway URL.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' http://localhost:3001 https://*.railway.app; img-src 'self' data:;"
+    />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <!-- ─── Fonts ────────────────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ─── Favicon ──────────────────────────────────────────────── -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="bg-slate-950 text-slate-300 antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

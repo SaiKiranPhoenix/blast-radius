@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    // This config is for the Vite config file itself (vite.config.ts)
+    // It runs in Node.js, not the browser
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["vite.config.ts"]
+}

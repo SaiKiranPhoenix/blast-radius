@@ -1,6 +1,7 @@
 # BlastRadius — API Reference
 
-> All endpoints return JSON. All responses are wrapped in `{ "success": boolean, "data": T }` on success, or `{ "success": false, "error": { "code": string, "message": string } }` on failure.
+> All endpoints return JSON. All responses are wrapped in `{ "success": boolean, "data": T }` on success, or
+> `{ "success": false, "error": { "code": string, "message": string } }` on failure.
 
 **Base URL (development):** `http://localhost:3001`  
 **Base URL (production):** `https://blast-radius-api.railway.app`
@@ -59,8 +60,8 @@ interface ServiceSummary {
   description: string;
   language: string;
   repo_url: string;
-  dependencyCount: number;      // number of services this service directly depends on
-  dependentCount: number;       // number of services that directly depend on this service
+  dependencyCount: number; // number of services this service directly depends on
+  dependentCount: number; // number of services that directly depend on this service
   team: TeamSummary | null;
 }
 
@@ -93,8 +94,8 @@ interface IncidentSummary {
   title: string;
   severity: IncidentSeverity;
   status: IncidentStatus;
-  started_at: string;           // ISO 8601
-  resolved_at: string | null;   // ISO 8601, null if not resolved
+  started_at: string; // ISO 8601
+  resolved_at: string | null; // ISO 8601, null if not resolved
   description: string;
   affectedServiceCount: number;
   rootCauseService: ServiceSummary | null;
@@ -110,7 +111,7 @@ interface IncidentDetail extends IncidentSummary {
 interface DeploymentSummary {
   id: string;
   version: string;
-  deployed_at: string;          // ISO 8601
+  deployed_at: string; // ISO 8601
   deployed_by: string;
   environment: 'production' | 'staging';
 }
@@ -118,7 +119,7 @@ interface DeploymentSummary {
 // ─── Blast radius types ──────────────────────────────────────────
 
 interface BlastRadiusHop {
-  hop: number;                  // 1-indexed hop distance from failing service
+  hop: number; // 1-indexed hop distance from failing service
   services: ServiceSummary[];
 }
 
@@ -132,14 +133,14 @@ interface BlastRadiusResult {
 
 interface TeamWithAffectedServices {
   team: TeamSummary;
-  affectedServices: string[];   // service names
+  affectedServices: string[]; // service names
 }
 
 // ─── Dependency types ────────────────────────────────────────────
 
 interface DependencyResult {
   service: ServiceSummary;
-  upstream: ServiceSummary[];   // services this one depends on (outgoing DEPENDS_ON)
+  upstream: ServiceSummary[]; // services this one depends on (outgoing DEPENDS_ON)
   downstream: ServiceSummary[]; // services that depend on this one (incoming DEPENDS_ON)
   team: TeamSummary | null;
   incidents: IncidentSummary[]; // incidents this service caused
@@ -148,9 +149,9 @@ interface DependencyResult {
 // ─── Graph analytics types ───────────────────────────────────────
 
 interface LongestChainEntry {
-  source: string;               // service name at the top of the chain
-  sink: string;                 // leaf service name at the bottom
-  depth: number;                // number of hops
+  source: string; // service name at the top of the chain
+  sink: string; // leaf service name at the bottom
+  depth: number; // number of hops
 }
 ```
 
@@ -175,12 +176,12 @@ No parameters.
 ```typescript
 interface HealthResponse {
   status: 'ok' | 'degraded';
-  timestamp: string;            // ISO 8601
+  timestamp: string; // ISO 8601
   database: {
     connected: boolean;
     latencyMs: number | null;
   };
-  uptime: number;               // process uptime in seconds
+  uptime: number; // process uptime in seconds
 }
 ```
 
@@ -210,13 +211,16 @@ interface HealthResponse {
 }
 ```
 
-> Note: The health endpoint always returns 200 with `status: "degraded"` when the DB is unreachable rather than returning 503, so Railway does not restart the pod unnecessarily. Railway's health check only fails if the endpoint itself is unreachable (process crash).
+> Note: The health endpoint always returns 200 with `status: "degraded"` when the DB is unreachable rather than
+> returning 503, so Railway does not restart the pod unnecessarily. Railway's health check only fails if the endpoint
+> itself is unreachable (process crash).
 
 ---
 
 ## 3. GET /api/services
 
-**Description:** Returns all 40 services with their owning team and dependency counts. Suitable for rendering the Service Map.  
+**Description:** Returns all 40 services with their owning team and dependency counts. Suitable for rendering the
+Service Map.  
 **Auth:** None
 
 ### Request
@@ -227,13 +231,14 @@ GET /api/services
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `type` | `ServiceType` | No | Filter by service type |
-| `tier` | `ServiceTier` | No | Filter by service tier |
-| `teamId` | `string` | No | Filter by owning team ID |
+| Parameter | Type          | Required | Description              |
+| --------- | ------------- | -------- | ------------------------ |
+| `type`    | `ServiceType` | No       | Filter by service type   |
+| `tier`    | `ServiceTier` | No       | Filter by service tier   |
+| `teamId`  | `string`      | No       | Filter by owning team ID |
 
 **Example request:**
+
 ```
 GET /api/services?tier=critical
 GET /api/services?type=database
@@ -298,11 +303,11 @@ interface GetServicesResponse {
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 400 | `VALIDATION_ERROR` | Invalid `type` or `tier` filter value |
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition                             |
+| ------ | --------------------- | ------------------------------------- |
+| 400    | `VALIDATION_ERROR`    | Invalid `type` or `tier` filter value |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable               |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error               |
 
 ---
 
@@ -319,11 +324,12 @@ GET /api/services/:id
 
 **Path Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | `string` | Service ID (e.g. `svc-auth`) |
+| Parameter | Type     | Description                  |
+| --------- | -------- | ---------------------------- |
+| `id`      | `string` | Service ID (e.g. `svc-auth`) |
 
 **Example request:**
+
 ```
 GET /api/services/svc-auth
 ```
@@ -360,11 +366,11 @@ type GetServiceResponse = ServiceDetail;
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 404 | `SERVICE_NOT_FOUND` | No service with given ID exists |
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition                       |
+| ------ | --------------------- | ------------------------------- |
+| 404    | `SERVICE_NOT_FOUND`   | No service with given ID exists |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable         |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error         |
 
 ```json
 {
@@ -380,7 +386,8 @@ type GetServiceResponse = ServiceDetail;
 
 ## 5. GET /api/services/:id/blast-radius
 
-**Description:** Computes the full blast radius for a failing service. Returns affected services grouped by hop, teams to page, and historical incidents that followed the same failure path. This is the core query of the application.  
+**Description:** Computes the full blast radius for a failing service. Returns affected services grouped by hop, teams
+to page, and historical incidents that followed the same failure path. This is the core query of the application.  
 **Auth:** None
 
 ### Request
@@ -391,17 +398,18 @@ GET /api/services/:id/blast-radius
 
 **Path Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | `string` | ID of the failing service |
+| Parameter | Type     | Description               |
+| --------- | -------- | ------------------------- |
+| `id`      | `string` | ID of the failing service |
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `maxHops` | `number` | No | `5` | Maximum traversal depth (1–10) |
+| Parameter | Type     | Required | Default | Description                    |
+| --------- | -------- | -------- | ------- | ------------------------------ |
+| `maxHops` | `number` | No       | `5`     | Maximum traversal depth (1–10) |
 
 **Example request:**
+
 ```
 GET /api/services/svc-auth/blast-radius
 GET /api/services/svc-auth/blast-radius?maxHops=3
@@ -554,18 +562,19 @@ type GetBlastRadiusResponse = BlastRadiusResult;
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 404 | `SERVICE_NOT_FOUND` | No service with given ID exists |
-| 400 | `VALIDATION_ERROR` | `maxHops` is not between 1 and 10 |
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition                         |
+| ------ | --------------------- | --------------------------------- |
+| 404    | `SERVICE_NOT_FOUND`   | No service with given ID exists   |
+| 400    | `VALIDATION_ERROR`    | `maxHops` is not between 1 and 10 |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable           |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error           |
 
 ---
 
 ## 6. GET /api/services/:id/dependencies
 
-**Description:** Returns the immediate upstream dependencies and downstream dependents for a service, plus its owning team and incidents it caused. Used by the Dependency Explorer.  
+**Description:** Returns the immediate upstream dependencies and downstream dependents for a service, plus its owning
+team and incidents it caused. Used by the Dependency Explorer.  
 **Auth:** None
 
 ### Request
@@ -576,11 +585,12 @@ GET /api/services/:id/dependencies
 
 **Path Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | `string` | Service ID |
+| Parameter | Type     | Description |
+| --------- | -------- | ----------- |
+| `id`      | `string` | Service ID  |
 
 **Example request:**
+
 ```
 GET /api/services/svc-order-api/dependencies
 ```
@@ -679,11 +689,11 @@ type GetDependenciesResponse = DependencyResult;
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 404 | `SERVICE_NOT_FOUND` | No service with given ID |
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition                |
+| ------ | --------------------- | ------------------------ |
+| 404    | `SERVICE_NOT_FOUND`   | No service with given ID |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable  |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error  |
 
 ---
 
@@ -754,10 +764,10 @@ interface TeamSummaryWithCounts extends TeamSummary {
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition               |
+| ------ | --------------------- | ----------------------- |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error |
 
 ---
 
@@ -774,11 +784,12 @@ GET /api/teams/:id
 
 **Path Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | `string` | Team ID (e.g. `team-platform`) |
+| Parameter | Type     | Description                    |
+| --------- | -------- | ------------------------------ |
+| `id`      | `string` | Team ID (e.g. `team-platform`) |
 
 **Example request:**
+
 ```
 GET /api/teams/team-commerce
 ```
@@ -843,17 +854,18 @@ type GetTeamResponse = TeamDetail;
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 404 | `TEAM_NOT_FOUND` | No team with given ID |
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition               |
+| ------ | --------------------- | ----------------------- |
+| 404    | `TEAM_NOT_FOUND`      | No team with given ID   |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error |
 
 ---
 
 ## 9. GET /api/incidents
 
-**Description:** Returns all 20 incidents sorted by `started_at` descending. Includes affected service count and root cause service.  
+**Description:** Returns all 20 incidents sorted by `started_at` descending. Includes affected service count and root
+cause service.  
 **Auth:** None
 
 ### Request
@@ -864,12 +876,13 @@ GET /api/incidents
 
 **Query Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `status` | `IncidentStatus` | No | Filter by status (`active`, `resolved`, `monitoring`) |
-| `severity` | `IncidentSeverity` | No | Filter by severity (`SEV1`, `SEV2`, `SEV3`) |
+| Parameter  | Type               | Required | Description                                           |
+| ---------- | ------------------ | -------- | ----------------------------------------------------- |
+| `status`   | `IncidentStatus`   | No       | Filter by status (`active`, `resolved`, `monitoring`) |
+| `severity` | `IncidentSeverity` | No       | Filter by severity (`SEV1`, `SEV2`, `SEV3`)           |
 
 **Example request:**
+
 ```
 GET /api/incidents
 GET /api/incidents?status=active
@@ -943,17 +956,18 @@ interface GetIncidentsResponse {
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 400 | `VALIDATION_ERROR` | Invalid `status` or `severity` filter value |
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition                                   |
+| ------ | --------------------- | ------------------------------------------- |
+| 400    | `VALIDATION_ERROR`    | Invalid `status` or `severity` filter value |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable                     |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error                     |
 
 ---
 
 ## 10. GET /api/incidents/:id
 
-**Description:** Returns full detail for an incident, including all affected services and the deployment that triggered it (if any).  
+**Description:** Returns full detail for an incident, including all affected services and the deployment that triggered
+it (if any).  
 **Auth:** None
 
 ### Request
@@ -964,11 +978,12 @@ GET /api/incidents/:id
 
 **Path Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `id` | `string` | Incident ID (e.g. `inc-001`) |
+| Parameter | Type     | Description                  |
+| --------- | -------- | ---------------------------- |
+| `id`      | `string` | Incident ID (e.g. `inc-001`) |
 
 **Example request:**
+
 ```
 GET /api/incidents/inc-001
 ```
@@ -1048,17 +1063,18 @@ type GetIncidentResponse = IncidentDetail;
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 404 | `INCIDENT_NOT_FOUND` | No incident with given ID |
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition                 |
+| ------ | --------------------- | ------------------------- |
+| 404    | `INCIDENT_NOT_FOUND`  | No incident with given ID |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable   |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error   |
 
 ---
 
 ## 11. GET /api/graph/longest-chain
 
-**Description:** Returns the top 10 longest dependency chains in the graph, measured from any service to its deepest leaf dependency. Used as a graph analytics feature to surface architectural risk.  
+**Description:** Returns the top 10 longest dependency chains in the graph, measured from any service to its deepest
+leaf dependency. Used as a graph analytics feature to surface architectural risk.  
 **Auth:** None
 
 ### Request
@@ -1114,10 +1130,10 @@ interface GetLongestChainResponse {
 
 ### Error Responses
 
-| Status | Code | Condition |
-|--------|------|-----------|
-| 503 | `DB_CONNECTION_ERROR` | Database is unavailable |
-| 500 | `INTERNAL_ERROR` | Unexpected server error |
+| Status | Code                  | Condition               |
+| ------ | --------------------- | ----------------------- |
+| 503    | `DB_CONNECTION_ERROR` | Database is unavailable |
+| 500    | `INTERNAL_ERROR`      | Unexpected server error |
 
 ---
 
@@ -1139,19 +1155,20 @@ All errors follow this shape:
 
 ### Error Codes
 
-| Code | HTTP Status | When it Occurs |
-|------|-------------|----------------|
-| `SERVICE_NOT_FOUND` | 404 | `GET /api/services/:id` when no Service node with that ID exists in the graph |
-| `TEAM_NOT_FOUND` | 404 | `GET /api/teams/:id` when no Team node with that ID exists |
-| `INCIDENT_NOT_FOUND` | 404 | `GET /api/incidents/:id` when no Incident node with that ID exists |
-| `VALIDATION_ERROR` | 400 | Query parameter has an invalid value (e.g. `tier=super-critical`) |
-| `DB_CONNECTION_ERROR` | 503 | The Neo4j driver cannot reach CognoDB (Bolt connection refused or timed out) |
-| `QUERY_ERROR` | 500 | A Cypher query was syntactically valid but failed at runtime |
-| `INTERNAL_ERROR` | 500 | Any other unclassified server error |
+| Code                  | HTTP Status | When it Occurs                                                                |
+| --------------------- | ----------- | ----------------------------------------------------------------------------- |
+| `SERVICE_NOT_FOUND`   | 404         | `GET /api/services/:id` when no Service node with that ID exists in the graph |
+| `TEAM_NOT_FOUND`      | 404         | `GET /api/teams/:id` when no Team node with that ID exists                    |
+| `INCIDENT_NOT_FOUND`  | 404         | `GET /api/incidents/:id` when no Incident node with that ID exists            |
+| `VALIDATION_ERROR`    | 400         | Query parameter has an invalid value (e.g. `tier=super-critical`)             |
+| `DB_CONNECTION_ERROR` | 503         | The Neo4j driver cannot reach CognoDB (Bolt connection refused or timed out)  |
+| `QUERY_ERROR`         | 500         | A Cypher query was syntactically valid but failed at runtime                  |
+| `INTERNAL_ERROR`      | 500         | Any other unclassified server error                                           |
 
 ### Example Error Responses
 
 **404 Not Found:**
+
 ```json
 {
   "success": false,
@@ -1163,6 +1180,7 @@ All errors follow this shape:
 ```
 
 **400 Validation Error:**
+
 ```json
 {
   "success": false,
@@ -1174,6 +1192,7 @@ All errors follow this shape:
 ```
 
 **503 Database Unavailable:**
+
 ```json
 {
   "success": false,
@@ -1185,6 +1204,7 @@ All errors follow this shape:
 ```
 
 **500 Internal Error:**
+
 ```json
 {
   "success": false,

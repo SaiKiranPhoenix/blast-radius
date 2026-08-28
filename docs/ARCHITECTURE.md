@@ -19,7 +19,9 @@
 
 ## 1. Monorepo Structure
 
-The project is a monorepo with two top-level workspaces: `server/` and `client/`. A root `package.json` orchestrates shared scripts. The `docs/` folder lives at the repo root. The seed script lives inside `server/` because it shares the DB driver config.
+The project is a monorepo with two top-level workspaces: `server/` and `client/`. A root `package.json` orchestrates
+shared scripts. The `docs/` folder lives at the repo root. The seed script lives inside `server/` because it shares the
+DB driver config.
 
 ```
 blast-radius/
@@ -235,46 +237,55 @@ blast-radius/
 
 ### Backend: Node.js + Express + TypeScript
 
-**Why Node.js + Express?**
-Express is the lowest-friction choice for building a JSON REST API that acts as a thin orchestration layer between the graph DB and the frontend. The query patterns here are all read-heavy graph traversals — the backend doesn't do heavy CPU work; it translates HTTP requests into Cypher queries and shapes the results. Node's async I/O model is ideal for this.
+**Why Node.js + Express?** Express is the lowest-friction choice for building a JSON REST API that acts as a thin
+orchestration layer between the graph DB and the frontend. The query patterns here are all read-heavy graph traversals —
+the backend doesn't do heavy CPU work; it translates HTTP requests into Cypher queries and shapes the results. Node's
+async I/O model is ideal for this.
 
-**Why TypeScript?**
-Graph query results from the Neo4j driver return loosely-typed `Record` objects. TypeScript interfaces act as contracts that enforce shape mapping between raw driver results and API responses, catching bugs at compile time rather than in production.
+**Why TypeScript?** Graph query results from the Neo4j driver return loosely-typed `Record` objects. TypeScript
+interfaces act as contracts that enforce shape mapping between raw driver results and API responses, catching bugs at
+compile time rather than in production.
 
 ### Frontend: React + Vite + TypeScript + Tailwind CSS
 
-**Why React?**
-The blast radius simulator requires component-level animation state: each hop group mounts progressively. React's declarative model makes staggered-mount animations straightforward to reason about. React Query handles caching so repeated blast radius queries for the same service don't re-fetch.
+**Why React?** The blast radius simulator requires component-level animation state: each hop group mounts progressively.
+React's declarative model makes staggered-mount animations straightforward to reason about. React Query handles caching
+so repeated blast radius queries for the same service don't re-fetch.
 
-**Why Vite?**
-Fast HMR during development. Native ESM. First-class TypeScript and Tailwind support without additional configuration.
+**Why Vite?** Fast HMR during development. Native ESM. First-class TypeScript and Tailwind support without additional
+configuration.
 
-**Why Tailwind CSS?**
-The design system requires consistent color tokens (slate-950 for dark backgrounds, red-500 for critical indicators). Tailwind's utility classes co-locate styles with components, making the design system enforceable without a separate CSS architecture.
+**Why Tailwind CSS?** The design system requires consistent color tokens (slate-950 for dark backgrounds, red-500 for
+critical indicators). Tailwind's utility classes co-locate styles with components, making the design system enforceable
+without a separate CSS architecture.
 
 ### Database: CognoDB (Neo4j-compatible, openCypher over Bolt)
 
-**Why a graph database?**
-The core problem — "what is the blast radius of this failure?" — is fundamentally a graph traversal problem. In a relational DB, computing a 4-hop dependency chain requires 4 self-joins on a `service_dependencies` table. In a graph DB, this is a single `MATCH path = (root)<-[:DEPENDS_ON*1..4]-(affected)` query. The data model naturally maps to nodes and edges.
+**Why a graph database?** The core problem — "what is the blast radius of this failure?" — is fundamentally a graph
+traversal problem. In a relational DB, computing a 4-hop dependency chain requires 4 self-joins on a
+`service_dependencies` table. In a graph DB, this is a single `MATCH path = (root)<-[:DEPENDS_ON*1..4]-(affected)`
+query. The data model naturally maps to nodes and edges.
 
-**Why CognoDB specifically?**
-CognoDB is Neo4j-compatible (openCypher + Bolt protocol), which means the official `neo4j-driver` npm package works unchanged. It has a hosted free tier suitable for demo/development deployments.
+**Why CognoDB specifically?** CognoDB is Neo4j-compatible (openCypher + Bolt protocol), which means the official
+`neo4j-driver` npm package works unchanged. It has a hosted free tier suitable for demo/development deployments.
 
-**Why the official `neo4j-driver`?**
-It handles connection pooling, session management, and Bolt protocol details. It supports async/await natively and has first-class TypeScript types.
+**Why the official `neo4j-driver`?** It handles connection pooling, session management, and Bolt protocol details. It
+supports async/await natively and has first-class TypeScript types.
 
 ### Testing: Vitest
 
-**Why Vitest instead of Jest?**
-Vitest shares the Vite build pipeline, so TypeScript transforms are handled by the same config already in use. No separate `ts-jest` or `babel-jest` configuration needed. It is API-compatible with Jest so test authors familiar with Jest have no learning curve.
+**Why Vitest instead of Jest?** Vitest shares the Vite build pipeline, so TypeScript transforms are handled by the same
+config already in use. No separate `ts-jest` or `babel-jest` configuration needed. It is API-compatible with Jest so
+test authors familiar with Jest have no learning curve.
 
 ### Deployment: Railway (backend) + Vercel (frontend)
 
-**Why Railway for the backend?**
-Railway provides environment variables, automatic redeploys from Git, and a health check system. It can run the Node.js server with a simple `npm start` command and exposes a public URL that Vercel's frontend can call.
+**Why Railway for the backend?** Railway provides environment variables, automatic redeploys from Git, and a health
+check system. It can run the Node.js server with a simple `npm start` command and exposes a public URL that Vercel's
+frontend can call.
 
-**Why Vercel for the frontend?**
-Vercel is the canonical host for Vite/React SPAs. It handles the SPA rewrite rule (all routes to `index.html`) out of the box and provides automatic preview deployments per branch.
+**Why Vercel for the frontend?** Vercel is the canonical host for Vite/React SPAs. It handles the SPA rewrite rule (all
+routes to `index.html`) out of the box and provides automatic preview deployments per branch.
 
 ---
 
@@ -282,14 +293,15 @@ Vercel is the canonical host for Vite/React SPAs. It handles the SPA rewrite rul
 
 ### Protocol
 
-All communication is over **HTTPS REST**. No WebSockets. The blast radius simulation is driven by client-side state using the hop data returned in a single API response, not a streaming connection.
+All communication is over **HTTPS REST**. No WebSockets. The blast radius simulation is driven by client-side state
+using the hop data returned in a single API response, not a streaming connection.
 
 ### Base URLs
 
-| Environment | Frontend Origin | Backend Base URL |
-|-------------|-----------------|------------------|
-| Development | `http://localhost:5173` | `http://localhost:3001` |
-| Production | `https://blast-radius.vercel.app` | `https://blast-radius-api.railway.app` |
+| Environment | Frontend Origin                   | Backend Base URL                       |
+| ----------- | --------------------------------- | -------------------------------------- |
+| Development | `http://localhost:5173`           | `http://localhost:3001`                |
+| Production  | `https://blast-radius.vercel.app` | `https://blast-radius-api.railway.app` |
 
 The frontend reads `VITE_API_BASE_URL` from its environment. The Axios client is initialized with this base URL.
 
@@ -306,17 +318,20 @@ export const apiClient = axios.create({
 
 ### CORS Setup
 
-The backend uses the `cors` npm package. In development it allows `http://localhost:5173`. In production it allows the Vercel origin. The allowed origin is controlled by the `CLIENT_ORIGIN` environment variable.
+The backend uses the `cors` npm package. In development it allows `http://localhost:5173`. In production it allows the
+Vercel origin. The allowed origin is controlled by the `CLIENT_ORIGIN` environment variable.
 
 ```typescript
 // server/src/app.ts
 import cors from 'cors';
 
-app.use(cors({
-  origin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
-  methods: ['GET'],
-  allowedHeaders: ['Content-Type'],
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173',
+    methods: ['GET'],
+    allowedHeaders: ['Content-Type'],
+  }),
+);
 ```
 
 All API endpoints are read-only (GET). No mutation endpoints exist in v1.
@@ -339,24 +354,25 @@ Every API response is wrapped in a consistent envelope:
 
 ### Server (`server/.env`)
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `PORT` | No | HTTP port to listen on | `3001` |
-| `NEO4J_URI` | **Yes** | Bolt URI to CognoDB | `bolt://localhost:7687` |
-| `NEO4J_USERNAME` | **Yes** | DB username | `neo4j` |
-| `NEO4J_PASSWORD` | **Yes** | DB password | `s3cr3t` |
-| `NEO4J_DATABASE` | No | DB name (default: `neo4j`) | `neo4j` |
-| `CLIENT_ORIGIN` | No | Allowed CORS origin | `http://localhost:5173` |
-| `NODE_ENV` | No | `development` or `production` | `development` |
-| `LOG_LEVEL` | No | `info`, `debug`, or `error` | `info` |
+| Variable         | Required | Description                   | Example                 |
+| ---------------- | -------- | ----------------------------- | ----------------------- |
+| `PORT`           | No       | HTTP port to listen on        | `3001`                  |
+| `NEO4J_URI`      | **Yes**  | Bolt URI to CognoDB           | `bolt://localhost:7687` |
+| `NEO4J_USERNAME` | **Yes**  | DB username                   | `neo4j`                 |
+| `NEO4J_PASSWORD` | **Yes**  | DB password                   | `s3cr3t`                |
+| `NEO4J_DATABASE` | No       | DB name (default: `neo4j`)    | `neo4j`                 |
+| `CLIENT_ORIGIN`  | No       | Allowed CORS origin           | `http://localhost:5173` |
+| `NODE_ENV`       | No       | `development` or `production` | `development`           |
+| `LOG_LEVEL`      | No       | `info`, `debug`, or `error`   | `info`                  |
 
-The `server/src/config/env.ts` module reads and validates these at startup, throwing immediately if required variables are missing.
+The `server/src/config/env.ts` module reads and validates these at startup, throwing immediately if required variables
+are missing.
 
 ### Client (`client/.env`)
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `VITE_API_BASE_URL` | **Yes** | Backend base URL | `http://localhost:3001` |
+| Variable            | Required | Description      | Example                 |
+| ------------------- | -------- | ---------------- | ----------------------- |
+| `VITE_API_BASE_URL` | **Yes**  | Backend base URL | `http://localhost:3001` |
 
 Vite injects only variables prefixed with `VITE_` into the browser bundle.
 
@@ -366,7 +382,8 @@ Vite injects only variables prefixed with `VITE_` into the browser bundle.
 
 ### Singleton Driver
 
-The Neo4j driver is expensive to instantiate (it establishes a connection pool). It must be created **once** at application startup and reused across all requests.
+The Neo4j driver is expensive to instantiate (it establishes a connection pool). It must be created **once** at
+application startup and reused across all requests.
 
 ```typescript
 // server/src/config/neo4j.ts
@@ -377,14 +394,10 @@ let _driver: Driver | null = null;
 
 export function getDriver(): Driver {
   if (!_driver) {
-    _driver = neo4j.driver(
-      env.NEO4J_URI,
-      neo4j.auth.basic(env.NEO4J_USERNAME, env.NEO4J_PASSWORD),
-      {
-        maxConnectionPoolSize: 10,
-        connectionAcquisitionTimeout: 5000,
-      }
-    );
+    _driver = neo4j.driver(env.NEO4J_URI, neo4j.auth.basic(env.NEO4J_USERNAME, env.NEO4J_PASSWORD), {
+      maxConnectionPoolSize: 10,
+      connectionAcquisitionTimeout: 5000,
+    });
   }
   return _driver;
 }
@@ -399,7 +412,8 @@ export async function closeDriver(): Promise<void> {
 
 ### Session Management
 
-Each service function opens a **session**, executes queries, and closes the session in a `finally` block. Sessions are lightweight and are meant to be short-lived.
+Each service function opens a **session**, executes queries, and closes the session in a `finally` block. Sessions are
+lightweight and are meant to be short-lived.
 
 ```typescript
 export async function getServices(): Promise<ServiceSummary[]> {
@@ -416,7 +430,8 @@ export async function getServices(): Promise<ServiceSummary[]> {
 
 ### Health Check
 
-The `/health` endpoint calls `driver.verifyConnectivity()` to confirm the DB is reachable. This is the Railway health check path.
+The `/health` endpoint calls `driver.verifyConnectivity()` to confirm the DB is reachable. This is the Railway health
+check path.
 
 ### Graceful Shutdown
 
@@ -444,19 +459,20 @@ export class AppError extends Error {
 
 ### Error Codes
 
-| Code | HTTP Status | Meaning |
-|------|-------------|---------|
-| `SERVICE_NOT_FOUND` | 404 | No Service node with given ID |
-| `TEAM_NOT_FOUND` | 404 | No Team node with given ID |
-| `INCIDENT_NOT_FOUND` | 404 | No Incident node with given ID |
-| `DB_CONNECTION_ERROR` | 503 | Neo4j driver cannot connect |
-| `QUERY_ERROR` | 500 | Cypher query failed unexpectedly |
-| `VALIDATION_ERROR` | 400 | Invalid request parameters |
-| `INTERNAL_ERROR` | 500 | Unclassified server error |
+| Code                  | HTTP Status | Meaning                          |
+| --------------------- | ----------- | -------------------------------- |
+| `SERVICE_NOT_FOUND`   | 404         | No Service node with given ID    |
+| `TEAM_NOT_FOUND`      | 404         | No Team node with given ID       |
+| `INCIDENT_NOT_FOUND`  | 404         | No Incident node with given ID   |
+| `DB_CONNECTION_ERROR` | 503         | Neo4j driver cannot connect      |
+| `QUERY_ERROR`         | 500         | Cypher query failed unexpectedly |
+| `VALIDATION_ERROR`    | 400         | Invalid request parameters       |
+| `INTERNAL_ERROR`      | 500         | Unclassified server error        |
 
 ### Global Error Handler (Express)
 
-The 4-argument Express error middleware catches all errors thrown or passed to `next()`. It maps `AppError` instances to their status codes, detects Neo4j `ServiceUnavailableError`, and falls back to 500 for unknown errors.
+The 4-argument Express error middleware catches all errors thrown or passed to `next()`. It maps `AppError` instances to
+their status codes, detects Neo4j `ServiceUnavailableError`, and falls back to 500 for unknown errors.
 
 ### Async Wrapper
 
@@ -464,8 +480,10 @@ All route handlers are wrapped with `asyncWrapper` to prevent unhandled promise 
 
 ```typescript
 // server/src/middleware/asyncWrapper.ts
-export const asyncWrapper = (fn: RequestHandler): RequestHandler =>
-  (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+export const asyncWrapper =
+  (fn: RequestHandler): RequestHandler =>
+  (req, res, next) =>
+    Promise.resolve(fn(req, res, next)).catch(next);
 ```
 
 ### Frontend Error Handling
@@ -473,7 +491,8 @@ export const asyncWrapper = (fn: RequestHandler): RequestHandler =>
 - **React Query** automatically retries failed requests up to 3 times with exponential backoff.
 - **`isError` state** from `useQuery` triggers `<ErrorState>` components with human-readable messages.
 - **React `ErrorBoundary`** wraps each page to catch rendering errors and show a fallback UI.
-- **Axios interceptors** on the client detect 5xx responses and normalize them into a consistent `ApiError` shape before React Query sees them.
+- **Axios interceptors** on the client detect 5xx responses and normalize them into a consistent `ApiError` shape before
+  React Query sees them.
 
 ---
 
@@ -565,7 +584,8 @@ export const asyncWrapper = (fn: RequestHandler): RequestHandler =>
 
 ### Relationship Direction Convention
 
-`(A)-[:DEPENDS_ON]->(B)` means **A calls B** (A is the consumer, B is the provider). When B fails, A is affected. The blast radius query traverses **incoming** `DEPENDS_ON` edges from the failing service to find affected services:
+`(A)-[:DEPENDS_ON]->(B)` means **A calls B** (A is the consumer, B is the provider). When B fails, A is affected. The
+blast radius query traverses **incoming** `DEPENDS_ON` edges from the failing service to find affected services:
 
 ```cypher
 MATCH (root)<-[:DEPENDS_ON*1..5]-(affected)
@@ -588,9 +608,12 @@ ORDER BY hops
 RETURN affected, hops
 ```
 
-**Why graph-native:** The `*1..5` variable-length path pattern is a core graph primitive. In a relational database this would require 5 self-joins on a `dependencies` table with UNION ALL to deduplicate services appearing at multiple depths. The graph engine evaluates this with a depth-first traversal and memoizes visited nodes automatically.
+**Why graph-native:** The `*1..5` variable-length path pattern is a core graph primitive. In a relational database this
+would require 5 self-joins on a `dependencies` table with UNION ALL to deduplicate services appearing at multiple
+depths. The graph engine evaluates this with a depth-first traversal and memoizes visited nodes automatically.
 
-**What it returns:** Each unique affected service paired with the minimum hop distance from the root. This is how the frontend groups cards into hop levels (Hop 1, Hop 2, ...).
+**What it returns:** Each unique affected service paired with the minimum hop distance from the root. This is how the
+frontend groups cards into hop levels (Hop 1, Hop 2, ...).
 
 ---
 
@@ -602,9 +625,12 @@ MATCH (team:Team)-[:OWNS]->(affected)
 RETURN DISTINCT team, collect(affected.name) AS affectedServices
 ```
 
-**Why graph-native:** This query composes two graph patterns: a traversal and a relationship lookup. In one pass, it finds all affected services AND their owning teams, grouping affected service names per team using `collect()`. In SQL this would require a multi-table join with a recursive CTE.
+**Why graph-native:** This query composes two graph patterns: a traversal and a relationship lookup. In one pass, it
+finds all affected services AND their owning teams, grouping affected service names per team using `collect()`. In SQL
+this would require a multi-table join with a recursive CTE.
 
-**What it returns:** Each unique team that has at least one affected service, with the list of their affected service names. Used to render the "Page These Teams" banner in the blast radius UI.
+**What it returns:** Each unique team that has at least one affected service, with the list of their affected service
+names. Used to render the "Page These Teams" banner in the blast radius UI.
 
 ---
 
@@ -617,9 +643,11 @@ RETURN i, collect(s.name) AS affectedServices
 ORDER BY i.started_at DESC
 ```
 
-**Why graph-native:** Incident linkage is stored as relationships, not foreign keys. The graph can answer "which incidents were caused by this service AND what did they affect?" in a single traversal across three node types.
+**Why graph-native:** Incident linkage is stored as relationships, not foreign keys. The graph can answer "which
+incidents were caused by this service AND what did they affect?" in a single traversal across three node types.
 
-**What it returns:** All incidents caused by the given service, each with the list of services it affected, ordered newest first. Used in the "Historical Context" section of the blast radius simulator.
+**What it returns:** All incidents caused by the given service, each with the list of services it affected, ordered
+newest first. Used in the "Historical Context" section of the blast radius simulator.
 
 ---
 
@@ -633,9 +661,12 @@ ORDER BY depth DESC
 LIMIT 10
 ```
 
-**Why graph-native:** Finding the longest path in a graph is a graph-native problem. The `WHERE NOT (t)-[:DEPENDS_ON]->()` clause identifies **leaf nodes** (services that depend on nothing — typically databases, caches, and queues). The variable-length traversal without an upper bound finds all paths to leaves.
+**Why graph-native:** Finding the longest path in a graph is a graph-native problem. The
+`WHERE NOT (t)-[:DEPENDS_ON]->()` clause identifies **leaf nodes** (services that depend on nothing — typically
+databases, caches, and queues). The variable-length traversal without an upper bound finds all paths to leaves.
 
-**What it returns:** The top 10 longest paths from any service to a leaf dependency, useful for identifying architectural depth and blast radius risk.
+**What it returns:** The top 10 longest paths from any service to a leaf dependency, useful for identifying
+architectural depth and blast radius risk.
 
 ---
 
@@ -646,10 +677,13 @@ MATCH (s:Service {id: $serviceId})
 OPTIONAL MATCH (s)-[:DEPENDS_ON]->(upstream:Service)
 OPTIONAL MATCH (downstream:Service)-[:DEPENDS_ON]->(s)
 OPTIONAL MATCH (team:Team)-[:OWNS]->(s)
-RETURN s, collect(DISTINCT upstream) AS upstream, 
+RETURN s, collect(DISTINCT upstream) AS upstream,
        collect(DISTINCT downstream) AS downstream, team
 ```
 
-**Why graph-native:** Four conceptually separate queries in SQL collapse into a single Cypher statement using `OPTIONAL MATCH`. The graph engine evaluates all four patterns in one execution plan. `collect(DISTINCT ...)` deduplicates nodes that appear in multiple matched paths.
+**Why graph-native:** Four conceptually separate queries in SQL collapse into a single Cypher statement using
+`OPTIONAL MATCH`. The graph engine evaluates all four patterns in one execution plan. `collect(DISTINCT ...)`
+deduplicates nodes that appear in multiple matched paths.
 
-**What it returns:** The service node itself, its direct upstream dependencies, its direct downstream dependents, and its owning team. Used in the Dependency Explorer feature.
+**What it returns:** The service node itself, its direct upstream dependencies, its direct downstream dependents, and
+its owning team. Used in the Dependency Explorer feature.

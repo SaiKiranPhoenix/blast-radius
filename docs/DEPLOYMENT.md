@@ -1,6 +1,7 @@
 # BlastRadius — Deployment Guide
 
-> Complete setup instructions for deploying BlastRadius to production: Railway (backend), Vercel (frontend), and CognoDB (graph database).
+> Complete setup instructions for deploying BlastRadius to production: Railway (backend), Vercel (frontend), and CognoDB
+> (graph database).
 
 ---
 
@@ -53,6 +54,7 @@ All three components are hosted on free/hobby tiers. This is sufficient for demo
 ### Step 1: Create a CognoDB Account
 
 Go to the CognoDB website and sign up for a free account. The free tier provides:
+
 - 1 database instance
 - openCypher over Bolt protocol
 - Sufficient storage for the seed data (~10MB for 85 nodes, 300+ relationships)
@@ -80,21 +82,19 @@ Copy these values. They will be used as environment variables in Railway.
 
 ### Step 4: Note the Bolt URI Format
 
-CognoDB's hosted Bolt URIs typically use `bolt+ssc://` (Bolt with self-signed certificate). The `neo4j-driver` must be configured to trust self-signed certs in this case:
+CognoDB's hosted Bolt URIs typically use `bolt+ssc://` (Bolt with self-signed certificate). The `neo4j-driver` must be
+configured to trust self-signed certs in this case:
 
 ```typescript
 // server/src/config/neo4j.ts
-_driver = neo4j.driver(
-  env.NEO4J_URI,
-  neo4j.auth.basic(env.NEO4J_USERNAME, env.NEO4J_PASSWORD),
-  {
-    encrypted: env.NEO4J_URI.startsWith('bolt+ssc') ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF',
-    trust: env.NEO4J_URI.startsWith('bolt+ssc') ? 'TRUST_ALL_CERTIFICATES' : 'TRUST_SYSTEM_CA_SIGNED_CERTIFICATES',
-  }
-);
+_driver = neo4j.driver(env.NEO4J_URI, neo4j.auth.basic(env.NEO4J_USERNAME, env.NEO4J_PASSWORD), {
+  encrypted: env.NEO4J_URI.startsWith('bolt+ssc') ? 'ENCRYPTION_ON' : 'ENCRYPTION_OFF',
+  trust: env.NEO4J_URI.startsWith('bolt+ssc') ? 'TRUST_ALL_CERTIFICATES' : 'TRUST_SYSTEM_CA_SIGNED_CERTIFICATES',
+});
 ```
 
-If CognoDB provides `neo4j+s://` URIs instead, use the `neo4j.driver()` default SSL configuration. Always check the CognoDB documentation for the exact URI scheme they use.
+If CognoDB provides `neo4j+s://` URIs instead, use the `neo4j.driver()` default SSL configuration. Always check the
+CognoDB documentation for the exact URI scheme they use.
 
 ### Step 5: Run the Seed Script Against the Production DB
 
@@ -135,6 +135,7 @@ Railway will create a service for the entire repo. Since the backend is in `serv
 **Root directory:** `server`
 
 In the Railway service settings:
+
 - **Root Directory:** `/server`
 - **Build Command:** `npm install && npm run build`
 - **Start Command:** `npm start`
@@ -159,29 +160,32 @@ The `tsconfig.build.json` compiles `src/` to `dist/` excluding test files.
 
 In the Railway service dashboard, go to **Variables** and add:
 
-| Variable | Value |
-|----------|-------|
-| `PORT` | `3001` (Railway also sets this automatically, but be explicit) |
-| `NEO4J_URI` | `bolt+ssc://abc123.cognodb.io:7687` |
-| `NEO4J_USERNAME` | `neo4j` |
-| `NEO4J_PASSWORD` | `<your-cognodb-password>` |
-| `NEO4J_DATABASE` | `neo4j` |
-| `CLIENT_ORIGIN` | `https://blast-radius.vercel.app` (update after Vercel deploy) |
-| `NODE_ENV` | `production` |
-| `LOG_LEVEL` | `info` |
+| Variable         | Value                                                          |
+| ---------------- | -------------------------------------------------------------- |
+| `PORT`           | `3001` (Railway also sets this automatically, but be explicit) |
+| `NEO4J_URI`      | `bolt+ssc://abc123.cognodb.io:7687`                            |
+| `NEO4J_USERNAME` | `neo4j`                                                        |
+| `NEO4J_PASSWORD` | `<your-cognodb-password>`                                      |
+| `NEO4J_DATABASE` | `neo4j`                                                        |
+| `CLIENT_ORIGIN`  | `https://blast-radius.vercel.app` (update after Vercel deploy) |
+| `NODE_ENV`       | `production`                                                   |
+| `LOG_LEVEL`      | `info`                                                         |
 
 ### Step 5: Configure the Health Check
 
 In Railway service settings:
+
 - **Health Check Path:** `/health`
 - **Health Check Timeout:** `30s`
 - **Health Check Interval:** `30s`
 
-Railway will ping `GET /health` and restart the service if it fails to respond. The `/health` endpoint checks DB connectivity and returns `200` always (even if DB is degraded) so Railway doesn't restart the pod on DB blips.
+Railway will ping `GET /health` and restart the service if it fails to respond. The `/health` endpoint checks DB
+connectivity and returns `200` always (even if DB is degraded) so Railway doesn't restart the pod on DB blips.
 
 ### Step 6: Get the Deployment URL
 
 After the first successful deploy, Railway assigns a URL like:
+
 ```
 https://blast-radius-api-production.up.railway.app
 ```
@@ -190,7 +194,8 @@ Copy this URL. It will be used as `VITE_API_BASE_URL` in Vercel.
 
 ### Step 7: Custom Domain (Optional)
 
-In Railway, go to **Settings → Networking → Custom Domain** and add your domain. Configure your DNS provider to point to Railway's IP.
+In Railway, go to **Settings → Networking → Custom Domain** and add your domain. Configure your DNS provider to point to
+Railway's IP.
 
 ---
 
@@ -206,13 +211,13 @@ In Railway, go to **Settings → Networking → Custom Domain** and add your dom
 
 Vercel will prompt for configuration:
 
-| Setting | Value |
-|---------|-------|
-| **Framework Preset** | Vite |
-| **Root Directory** | `client` |
-| **Build Command** | `npm run build` |
-| **Output Directory** | `dist` |
-| **Install Command** | `npm install` |
+| Setting              | Value           |
+| -------------------- | --------------- |
+| **Framework Preset** | Vite            |
+| **Root Directory**   | `client`        |
+| **Build Command**    | `npm run build` |
+| **Output Directory** | `dist`          |
+| **Install Command**  | `npm install`   |
 
 Vercel auto-detects Vite when the root directory is `client/`.
 
@@ -220,30 +225,32 @@ Vercel auto-detects Vite when the root directory is `client/`.
 
 In Vercel project settings → **Environment Variables**:
 
-| Variable | Environment | Value |
-|----------|-------------|-------|
-| `VITE_API_BASE_URL` | Production | `https://blast-radius-api-production.up.railway.app` |
-| `VITE_API_BASE_URL` | Preview | `https://blast-radius-api-production.up.railway.app` |
+| Variable            | Environment | Value                                                |
+| ------------------- | ----------- | ---------------------------------------------------- |
+| `VITE_API_BASE_URL` | Production  | `https://blast-radius-api-production.up.railway.app` |
+| `VITE_API_BASE_URL` | Preview     | `https://blast-radius-api-production.up.railway.app` |
 
-> Note: Preview deployments (from PRs) can also point to the production API unless you set up a separate staging Railway service.
+> Note: Preview deployments (from PRs) can also point to the production API unless you set up a separate staging Railway
+> service.
 
 ### Step 4: Configure SPA Rewrites
 
-Vite builds a SPA where all routes need to serve `index.html`. Vercel handles this automatically when it detects a Vite project, but to be explicit, create `client/public/vercel.json` (or `client/vercel.json`):
+Vite builds a SPA where all routes need to serve `index.html`. Vercel handles this automatically when it detects a Vite
+project, but to be explicit, create `client/public/vercel.json` (or `client/vercel.json`):
 
 ```json
 {
-  "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
-  ]
+  "rewrites": [{ "source": "/((?!api/).*)", "destination": "/index.html" }]
 }
 ```
 
-This ensures that navigating directly to `https://blast-radius.vercel.app/services/svc-auth` returns `index.html` and React Router handles the routing client-side.
+This ensures that navigating directly to `https://blast-radius.vercel.app/services/svc-auth` returns `index.html` and
+React Router handles the routing client-side.
 
 ### Step 5: Get the Deployment URL
 
 After the first successful deploy, Vercel assigns:
+
 ```
 https://blast-radius.vercel.app
 ```
@@ -258,7 +265,8 @@ In Vercel project settings → **Domains**, add your custom domain. Vercel provi
 
 ## 5. CORS Configuration
 
-CORS is enforced on the backend using the `cors` npm package. The `CLIENT_ORIGIN` environment variable controls which origins are allowed.
+CORS is enforced on the backend using the `cors` npm package. The `CLIENT_ORIGIN` environment variable controls which
+origins are allowed.
 
 ### Development
 
@@ -274,13 +282,16 @@ Allows the local Vite dev server to call the local Express server.
 CLIENT_ORIGIN=https://blast-radius.vercel.app
 ```
 
-Only the Vercel frontend origin is allowed. All other origins (including browser dev tools) will be rejected with a CORS error.
+Only the Vercel frontend origin is allowed. All other origins (including browser dev tools) will be rejected with a CORS
+error.
 
 ### CORS Preflight
 
-The backend's CORS config allows only `GET` methods and `Content-Type` header. Since all API endpoints are `GET` and browsers don't send preflight for simple `GET` requests, there are no `OPTIONS` route issues to handle.
+The backend's CORS config allows only `GET` methods and `Content-Type` header. Since all API endpoints are `GET` and
+browsers don't send preflight for simple `GET` requests, there are no `OPTIONS` route issues to handle.
 
-However, if you ever add mutation endpoints (`POST`, `PATCH`, `DELETE`), ensure the CORS config includes `OPTIONS` in the `methods` array and add an `app.options('*', cors())` catch-all.
+However, if you ever add mutation endpoints (`POST`, `PATCH`, `DELETE`), ensure the CORS config includes `OPTIONS` in
+the `methods` array and add an `app.options('*', cors())` catch-all.
 
 ### Testing CORS in Production
 
@@ -292,6 +303,7 @@ curl -v -H "Origin: https://blast-radius.vercel.app" \
 ```
 
 The response should include:
+
 ```
 Access-Control-Allow-Origin: https://blast-radius.vercel.app
 ```
@@ -300,7 +312,9 @@ Access-Control-Allow-Origin: https://blast-radius.vercel.app
 
 ## 6. Keeping CognoDB Alive
 
-CognoDB free tier instances may **sleep after periods of inactivity** (typically after 30–60 minutes without queries). When the instance sleeps, the first request to the backend will fail with a `ServiceUnavailableError` until the instance wakes up (which may take 30–60 seconds).
+CognoDB free tier instances may **sleep after periods of inactivity** (typically after 30–60 minutes without queries).
+When the instance sleeps, the first request to the backend will fail with a `ServiceUnavailableError` until the instance
+wakes up (which may take 30–60 seconds).
 
 ### Strategy 1: Warm-Up on Backend Start
 
@@ -316,14 +330,16 @@ console.log('Database connection verified. ✓');
 
 Set up a periodic health check to prevent the DB from sleeping. Options:
 
-**Option A: External Uptime Monitor**
-Use a free uptime monitoring service (e.g., UptimeRobot, Better Uptime) to ping `GET /health` every 10 minutes. The health check itself queries the DB (`driver.verifyConnectivity()`), keeping the connection active.
+**Option A: External Uptime Monitor** Use a free uptime monitoring service (e.g., UptimeRobot, Better Uptime) to ping
+`GET /health` every 10 minutes. The health check itself queries the DB (`driver.verifyConnectivity()`), keeping the
+connection active.
 
-**Option B: Railway Cron Job**
-If Railway supports cron jobs in your plan, create a cron that calls `GET /health` every 15 minutes.
+**Option B: Railway Cron Job** If Railway supports cron jobs in your plan, create a cron that calls `GET /health` every
+15 minutes.
 
-**Option C: Frontend Keep-Alive**
-Add a React Query query that polls `/health` every 5 minutes while the app tab is open:
+**Option C: Frontend Keep-Alive** Add a React Query query that polls `/health` every 5 minutes while the app tab is
+open:
+
 ```typescript
 useQuery({
   queryKey: ['health'],
@@ -335,7 +351,8 @@ useQuery({
 
 ### Strategy 3: Graceful Wake-Up on 503
 
-When the backend detects a `DB_CONNECTION_ERROR`, the frontend `<ErrorState>` should show a user-friendly message: **"Database is waking up — please try again in 30 seconds."** with an automatic retry after 30 seconds.
+When the backend detects a `DB_CONNECTION_ERROR`, the frontend `<ErrorState>` should show a user-friendly message:
+**"Database is waking up — please try again in 30 seconds."** with an automatic retry after 30 seconds.
 
 ```typescript
 // In BlastRadiusPanel or ServiceMapPage
@@ -377,7 +394,8 @@ if (error?.code === 'DB_CONNECTION_ERROR') {
 
 ### Functional Verification After Deployment
 
-- [ ] `GET https://blast-radius-api-production.up.railway.app/health` returns `{ "status": "ok", "database": { "connected": true } }`
+- [ ] `GET https://blast-radius-api-production.up.railway.app/health` returns
+      `{ "status": "ok", "database": { "connected": true } }`
 - [ ] `GET https://blast-radius-api-production.up.railway.app/api/services` returns 40 services
 - [ ] `GET https://blast-radius.vercel.app` loads the Service Map page
 - [ ] Clicking a service on the Service Map opens the blast radius panel with hop groups
@@ -391,7 +409,8 @@ if (error?.code === 'DB_CONNECTION_ERROR') {
 
 ### Deploying Backend Changes
 
-Railway automatically redeploys when you push to the `main` branch (configured in Railway project settings → **Git Branch**). Manual redeploys:
+Railway automatically redeploys when you push to the `main` branch (configured in Railway project settings → **Git
+Branch**). Manual redeploys:
 
 1. Go to the Railway service dashboard
 2. Click **"Deploy"** → **"Deploy latest commit"**
@@ -420,7 +439,8 @@ NEO4J_DATABASE=neo4j \
 npm run seed --workspace=server
 ```
 
-The seed script clears and re-populates the DB. This causes ~5 seconds of downtime while the DB is cleared. For a demo application this is acceptable.
+The seed script clears and re-populates the DB. This causes ~5 seconds of downtime while the DB is cleared. For a demo
+application this is acceptable.
 
 ---
 
@@ -432,12 +452,14 @@ The seed script clears and re-populates the DB. This causes ~5 seconds of downti
 Error: Cannot find module '...'
 ```
 
-**Fix:** Ensure `server/tsconfig.build.json` excludes test files and that all imports in `src/` resolve correctly. Run `tsc --noEmit` locally first.
+**Fix:** Ensure `server/tsconfig.build.json` excludes test files and that all imports in `src/` resolve correctly. Run
+`tsc --noEmit` locally first.
 
 ### Railway: "Cannot connect to database" in logs
 
 **Symptoms:** `/health` returns `{ "database": { "connected": false } }`  
-**Fix:** 
+**Fix:**
+
 1. Verify `NEO4J_URI` in Railway variables matches the CognoDB dashboard exactly
 2. Check if CognoDB free tier has put the instance to sleep — wait 60 seconds and retry
 3. Verify the Bolt URI scheme: `bolt+ssc://` vs `neo4j+s://`
@@ -445,12 +467,14 @@ Error: Cannot find module '...'
 ### Vercel: "Page not found" on direct navigation to `/services/svc-auth`
 
 **Symptoms:** Navigating directly to a deep URL shows Vercel's 404 page  
-**Fix:** The SPA rewrite is missing. Ensure `vercel.json` exists at `client/vercel.json` with the rewrite rule (see Section 4, Step 4).
+**Fix:** The SPA rewrite is missing. Ensure `vercel.json` exists at `client/vercel.json` with the rewrite rule (see
+Section 4, Step 4).
 
 ### CORS Error in Browser
 
 **Symptoms:** `Access to fetch blocked by CORS policy` in browser DevTools  
 **Fix:**
+
 1. Verify `CLIENT_ORIGIN` in Railway matches the Vercel URL exactly (no trailing slash)
 2. Check that the Railway service has been redeployed after updating `CLIENT_ORIGIN`
 3. Use `curl -H "Origin: <vercel-url>"` to test the API directly
@@ -459,6 +483,7 @@ Error: Cannot find module '...'
 
 **Symptoms:** Seed script or server fails with `ECONNREFUSED bolt://localhost:7687`  
 **Fix:** Ensure your local CognoDB instance is running. If using Docker:
+
 ```bash
 docker run -p 7474:7474 -p 7687:7687 \
   -e NEO4J_AUTH=neo4j/password \

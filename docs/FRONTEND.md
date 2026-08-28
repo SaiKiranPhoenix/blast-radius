@@ -21,7 +21,8 @@
 
 ## 1. Page Routes
 
-Routing is handled by `react-router-dom` v6. All routes are defined in `client/src/App.tsx`. Every route is wrapped in the `<AppShell>` layout component.
+Routing is handled by `react-router-dom` v6. All routes are defined in `client/src/App.tsx`. Every route is wrapped in
+the `<AppShell>` layout component.
 
 ```typescript
 // client/src/App.tsx
@@ -54,14 +55,14 @@ function App() {
 
 ### Route Descriptions
 
-| Path | Component | Description |
-|------|-----------|-------------|
-| `/` | `ServiceMapPage` | All 40 services as cards, grouped by team. Entry point to the blast radius simulator. |
-| `/services/:id` | `ServiceDetailPage` | Full service detail: blast radius panel, dependency explorer, incident history. |
-| `/teams` | `TeamsPage` | All 10 teams as cards with service count and active incident count. |
-| `/teams/:id` | `TeamDetailPage` | Team detail: owned services, oncall info, active incidents. |
-| `/incidents` | `IncidentsPage` | Chronological incident list with severity/status filters. |
-| `/incidents/:id` | `IncidentDetailPage` | Full incident detail: root cause, affected services, triggering deployment. |
+| Path             | Component            | Description                                                                           |
+| ---------------- | -------------------- | ------------------------------------------------------------------------------------- |
+| `/`              | `ServiceMapPage`     | All 40 services as cards, grouped by team. Entry point to the blast radius simulator. |
+| `/services/:id`  | `ServiceDetailPage`  | Full service detail: blast radius panel, dependency explorer, incident history.       |
+| `/teams`         | `TeamsPage`          | All 10 teams as cards with service count and active incident count.                   |
+| `/teams/:id`     | `TeamDetailPage`     | Team detail: owned services, oncall info, active incidents.                           |
+| `/incidents`     | `IncidentsPage`      | Chronological incident list with severity/status filters.                             |
+| `/incidents/:id` | `IncidentDetailPage` | Full incident detail: root cause, affected services, triggering deployment.           |
 
 ---
 
@@ -81,7 +82,8 @@ interface AppShellProps {
 }
 ```
 
-**Responsibility:** Outer layout wrapper. Renders `<Sidebar>` on the left and `<Outlet>` (page content) on the right. On mobile, collapses the sidebar into a hamburger-triggered drawer. Reads `isSidebarOpen` from `uiStore`.
+**Responsibility:** Outer layout wrapper. Renders `<Sidebar>` on the left and `<Outlet>` (page content) on the right. On
+mobile, collapses the sidebar into a hamburger-triggered drawer. Reads `isSidebarOpen` from `uiStore`.
 
 ---
 
@@ -93,9 +95,12 @@ interface SidebarProps {
 }
 ```
 
-**Responsibility:** Left navigation. Contains the BlastRadius logo/wordmark at the top, four nav links (Service Map, Teams, Incidents, and a divider), and a small status indicator showing the count of active incidents (queried via React Query). Active route is highlighted. On mobile, renders as a full-height overlay.
+**Responsibility:** Left navigation. Contains the BlastRadius logo/wordmark at the top, four nav links (Service Map,
+Teams, Incidents, and a divider), and a small status indicator showing the count of active incidents (queried via React
+Query). Active route is highlighted. On mobile, renders as a full-height overlay.
 
 **Nav links:**
+
 - `/` → "Service Map" icon: `MapIcon`
 - `/teams` → "Teams" icon: `UsersIcon`
 - `/incidents` → "Incidents" icon: `BellAlertIcon`
@@ -112,7 +117,8 @@ interface TopBarProps {
 }
 ```
 
-**Responsibility:** Page-level header bar rendered inside the content area. Shows the page title, optional subtitle (e.g., service name), and a breadcrumb trail. On mobile, also contains the hamburger button that toggles the sidebar.
+**Responsibility:** Page-level header bar rendered inside the content area. Shows the page title, optional subtitle
+(e.g., service name), and a breadcrumb trail. On mobile, also contains the hamburger button that toggles the sidebar.
 
 ---
 
@@ -127,16 +133,20 @@ interface ServiceCardProps {
   service: ServiceSummary;
   onClick?: () => void;
   variant?: 'default' | 'compact' | 'affected';
-  isHighlighted?: boolean;    // true when this card is the "selected failing service"
-  animationDelay?: number;    // milliseconds — for staggered entrance in blast radius
+  isHighlighted?: boolean; // true when this card is the "selected failing service"
+  animationDelay?: number; // milliseconds — for staggered entrance in blast radius
 }
 ```
 
-**Responsibility:** Renders a single service as a card. Displays service name, `<ServiceBadge type>`, `<ServiceBadge tier>`, owning team name, and dependency/dependent counts. Clicking navigates to `/services/:id` OR triggers the blast radius simulation (on the Service Map page). 
+**Responsibility:** Renders a single service as a card. Displays service name, `<ServiceBadge type>`,
+`<ServiceBadge tier>`, owning team name, and dependency/dependent counts. Clicking navigates to `/services/:id` OR
+triggers the blast radius simulation (on the Service Map page).
 
-The `variant="affected"` state adds a red left border and a pulsing red dot to indicate this service is in the blast radius. `animationDelay` controls when the card fades in using a CSS transition.
+The `variant="affected"` state adds a red left border and a pulsing red dot to indicate this service is in the blast
+radius. `animationDelay` controls when the card fades in using a CSS transition.
 
 **Visual design:**
+
 - Background: `bg-slate-800`
 - Border: `border border-slate-700`
 - Hover: `hover:border-slate-500 hover:bg-slate-750` with a subtle lift (`hover:-translate-y-0.5 transition-transform`)
@@ -157,10 +167,12 @@ interface ServiceBadgeProps {
 ```
 
 **Responsibility:** Renders a small colored pill badge. Two variants:
+
 - `variant="type"`: displays the service type with a unique color per type
 - `variant="tier"`: displays the tier with a severity-appropriate color
 
 **Type badge colors:**
+
 - `api` → `bg-blue-500/20 text-blue-400 ring-blue-500/30`
 - `gateway` → `bg-purple-500/20 text-purple-400 ring-purple-500/30`
 - `worker` → `bg-amber-500/20 text-amber-400 ring-amber-500/30`
@@ -169,6 +181,7 @@ interface ServiceBadgeProps {
 - `queue` → `bg-orange-500/20 text-orange-400 ring-orange-500/30`
 
 **Tier badge colors:**
+
 - `critical` → `bg-red-500/20 text-red-400 ring-red-500/30`
 - `high` → `bg-amber-500/20 text-amber-400 ring-amber-500/30`
 - `medium` → `bg-blue-500/20 text-blue-400 ring-blue-500/30`
@@ -187,7 +200,10 @@ interface ServiceGridProps {
 }
 ```
 
-**Responsibility:** Renders all services grouped by owning team. Each group is a labeled section with a team name header. Within each group, services are laid out in a responsive CSS grid. When `isLoading` is true, renders `<ServiceSkeleton>` cards instead. When a service is selected (for blast radius), it dims all other cards with `opacity-40` and highlights the selected one.
+**Responsibility:** Renders all services grouped by owning team. Each group is a labeled section with a team name
+header. Within each group, services are laid out in a responsive CSS grid. When `isLoading` is true, renders
+`<ServiceSkeleton>` cards instead. When a service is selected (for blast radius), it dims all other cards with
+`opacity-40` and highlights the selected one.
 
 ---
 
@@ -195,11 +211,12 @@ interface ServiceGridProps {
 
 ```typescript
 interface ServiceSkeletonProps {
-  count?: number;  // default: 8
+  count?: number; // default: 8
 }
 ```
 
-**Responsibility:** Loading skeleton for the service grid. Renders `count` placeholder cards with animated shimmer using `animate-pulse`. Each card shows the same structure as `ServiceCard` but with gray blocks instead of content.
+**Responsibility:** Loading skeleton for the service grid. Renders `count` placeholder cards with animated shimmer using
+`animate-pulse`. Each card shows the same structure as `ServiceCard` but with gray blocks instead of content.
 
 ---
 
@@ -211,20 +228,23 @@ interface ServiceSkeletonProps {
 
 ```typescript
 interface BlastRadiusPanelProps {
-  serviceId: string;         // The failing service's ID
-  isVisible: boolean;        // Whether to show the panel
+  serviceId: string; // The failing service's ID
+  isVisible: boolean; // Whether to show the panel
   onClose: () => void;
 }
 ```
 
-**Responsibility:** The main blast radius simulator panel. Fetches blast radius data using `useBlastRadius(serviceId)`. Manages the `revealedHops` state (starts at 0, increments every 600ms using `setTimeout`). Renders:
+**Responsibility:** The main blast radius simulator panel. Fetches blast radius data using `useBlastRadius(serviceId)`.
+Manages the `revealedHops` state (starts at 0, increments every 600ms using `setTimeout`). Renders:
+
 1. A "Simulating..." header with the failing service name
 2. `<HopGroup>` for each hop up to `revealedHops`
 3. `<TeamAlertBanner>` that appears after all hops are revealed
 4. "Historical Incidents" section (list of `<IncidentCard variant="compact">`)
 5. A summary stat row: "X services affected across Y teams"
 
-**Panel transitions:** Slides in from the right using a CSS transform animation (`translate-x-full` → `translate-x-0`) triggered by `isVisible`.
+**Panel transitions:** Slides in from the right using a CSS transform animation (`translate-x-full` → `translate-x-0`)
+triggered by `isVisible`.
 
 ---
 
@@ -232,13 +252,15 @@ interface BlastRadiusPanelProps {
 
 ```typescript
 interface HopGroupProps {
-  hop: number;                          // 1-indexed
+  hop: number; // 1-indexed
   services: ServiceSummary[];
-  isRevealing: boolean;                 // true while this group is being animated in
+  isRevealing: boolean; // true while this group is being animated in
 }
 ```
 
-**Responsibility:** Renders one hop level's worth of affected services. Shows a labeled divider line: `"── Hop 1: Direct Dependents ──"`. Then renders a horizontal scroll of `<AffectedServiceCard>` components. When `isRevealing` is true, cards enter with a staggered fade-in + slide-up animation (see Section 4).
+**Responsibility:** Renders one hop level's worth of affected services. Shows a labeled divider line:
+`"── Hop 1: Direct Dependents ──"`. Then renders a horizontal scroll of `<AffectedServiceCard>` components. When
+`isRevealing` is true, cards enter with a staggered fade-in + slide-up animation (see Section 4).
 
 ---
 
@@ -247,12 +269,14 @@ interface HopGroupProps {
 ```typescript
 interface AffectedServiceCardProps {
   service: ServiceSummary;
-  animationDelay: number;   // milliseconds for staggered entrance
-  isVisible: boolean;       // controls opacity/transform transition
+  animationDelay: number; // milliseconds for staggered entrance
+  isVisible: boolean; // controls opacity/transform transition
 }
 ```
 
-**Responsibility:** A smaller variant of `ServiceCard` optimized for the blast radius panel. Shows service name, type badge, tier badge, and team name. Clicking navigates to `/services/:id`. Uses CSS `transition-all` with `opacity-0 translate-y-2` initial state transitioning to `opacity-100 translate-y-0` when `isVisible` becomes true.
+**Responsibility:** A smaller variant of `ServiceCard` optimized for the blast radius panel. Shows service name, type
+badge, tier badge, and team name. Clicking navigates to `/services/:id`. Uses CSS `transition-all` with
+`opacity-0 translate-y-2` initial state transitioning to `opacity-100 translate-y-0` when `isVisible` becomes true.
 
 ---
 
@@ -265,7 +289,9 @@ interface TeamAlertBannerProps {
 }
 ```
 
-**Responsibility:** The "Page These Teams" section that appears after all hops are revealed. Renders a red-bordered banner with a `BellAlertIcon`. Each team is shown with their Slack channel, oncall email, and count of affected services. Has a fade-in animation controlled by `isVisible`.
+**Responsibility:** The "Page These Teams" section that appears after all hops are revealed. Renders a red-bordered
+banner with a `BellAlertIcon`. Each team is shown with their Slack channel, oncall email, and count of affected
+services. Has a fade-in animation controlled by `isVisible`.
 
 ---
 
@@ -282,7 +308,8 @@ interface IncidentListProps {
 }
 ```
 
-**Responsibility:** Renders the list of incidents. When `isLoading`, renders `<IncidentSkeleton count={5}>`. Renders each incident as an `<IncidentCard>`. Sorts by `started_at` descending (most recent first).
+**Responsibility:** Renders the list of incidents. When `isLoading`, renders `<IncidentSkeleton count={5}>`. Renders
+each incident as an `<IncidentCard>`. Sorts by `started_at` descending (most recent first).
 
 ---
 
@@ -296,9 +323,13 @@ interface IncidentCardProps {
 }
 ```
 
-**Responsibility:** Renders an incident. Default variant shows: title, `<IncidentBadge severity>`, `<IncidentBadge status>`, start time (relative, e.g., "3 days ago"), duration, affected service count, and root cause service name. Compact variant is used inside the blast radius panel's historical incidents section — shows only title, severity badge, status badge, and date.
+**Responsibility:** Renders an incident. Default variant shows: title, `<IncidentBadge severity>`,
+`<IncidentBadge status>`, start time (relative, e.g., "3 days ago"), duration, affected service count, and root cause
+service name. Compact variant is used inside the blast radius panel's historical incidents section — shows only title,
+severity badge, status badge, and date.
 
 **Visual design:**
+
 - Active SEV1: left border `border-l-4 border-l-red-500` with a pulsing red dot
 - Active SEV2: left border `border-l-4 border-l-amber-500`
 - Resolved: `opacity-75`, left border `border-l-4 border-l-slate-600`
@@ -319,11 +350,13 @@ interface IncidentBadgeProps {
 **Responsibility:** Small badge for incident severity and status.
 
 **Severity colors:**
+
 - `SEV1` → `bg-red-500/20 text-red-400` with a blinking animation for active incidents
 - `SEV2` → `bg-amber-500/20 text-amber-400`
 - `SEV3` → `bg-blue-500/20 text-blue-400`
 
 **Status colors:**
+
 - `active` → `bg-red-500/20 text-red-400` with `animate-pulse` dot
 - `monitoring` → `bg-amber-500/20 text-amber-400`
 - `resolved` → `bg-emerald-500/20 text-emerald-400`
@@ -334,7 +367,7 @@ interface IncidentBadgeProps {
 
 ```typescript
 interface IncidentSkeletonProps {
-  count?: number;  // default: 5
+  count?: number; // default: 5
 }
 ```
 
@@ -355,7 +388,8 @@ interface TeamCardProps {
 }
 ```
 
-**Responsibility:** Renders a team card showing team name, Slack channel, timezone, service count, and active incident count. If `activeIncidentCount > 0`, shows a pulsing amber dot beside the team name. Clicking navigates to `/teams/:id`.
+**Responsibility:** Renders a team card showing team name, Slack channel, timezone, service count, and active incident
+count. If `activeIncidentCount > 0`, shows a pulsing amber dot beside the team name. Clicking navigates to `/teams/:id`.
 
 ---
 
@@ -376,7 +410,7 @@ interface TeamGridProps {
 
 ```typescript
 interface TeamSkeletonProps {
-  count?: number;  // default: 10
+  count?: number; // default: 10
 }
 ```
 
@@ -394,7 +428,9 @@ interface DependencyExplorerProps {
 }
 ```
 
-**Responsibility:** Fetches and renders the full dependency picture for a service using `useDependencies(serviceId)`. Renders two columns: `<UpstreamList>` and `<DownstreamList>`. On mobile, stacks vertically. Shows a visual arrow/connector between columns.
+**Responsibility:** Fetches and renders the full dependency picture for a service using `useDependencies(serviceId)`.
+Renders two columns: `<UpstreamList>` and `<DownstreamList>`. On mobile, stacks vertically. Shows a visual
+arrow/connector between columns.
 
 ---
 
@@ -403,11 +439,12 @@ interface DependencyExplorerProps {
 ```typescript
 interface UpstreamListProps {
   services: ServiceSummary[];
-  title?: string;  // default: "Upstream Dependencies"
+  title?: string; // default: "Upstream Dependencies"
 }
 ```
 
-**Responsibility:** Renders the list of services this service depends ON. Shows a note about `criticality: "hard"` vs `"soft"` dependencies. Each item is a compact `<ServiceCard variant="compact">` that links to that service's page.
+**Responsibility:** Renders the list of services this service depends ON. Shows a note about `criticality: "hard"` vs
+`"soft"` dependencies. Each item is a compact `<ServiceCard variant="compact">` that links to that service's page.
 
 ---
 
@@ -416,11 +453,12 @@ interface UpstreamListProps {
 ```typescript
 interface DownstreamListProps {
   services: ServiceSummary[];
-  title?: string;  // default: "Downstream Dependents"
+  title?: string; // default: "Downstream Dependents"
 }
 ```
 
-**Responsibility:** Renders the list of services that depend ON this service. Shows a warning if `dependentCount > 10` ("This is a high-impact service. Consider it carefully before making changes."). Each item links to that service's page.
+**Responsibility:** Renders the list of services that depend ON this service. Shows a warning if `dependentCount > 10`
+("This is a high-impact service. Consider it carefully before making changes."). Each item links to that service's page.
 
 ---
 
@@ -433,11 +471,12 @@ interface DownstreamListProps {
 ```typescript
 interface ErrorBoundaryProps {
   children: React.ReactNode;
-  fallback?: React.ReactNode;  // custom fallback UI
+  fallback?: React.ReactNode; // custom fallback UI
 }
 ```
 
-**Responsibility:** Class component that catches render errors in its subtree. Renders a centered `<ErrorState>` if no custom fallback is provided. Wraps each page in `App.tsx`.
+**Responsibility:** Class component that catches render errors in its subtree. Renders a centered `<ErrorState>` if no
+custom fallback is provided. Wraps each page in `App.tsx`.
 
 ---
 
@@ -455,7 +494,8 @@ interface EmptyStateProps {
 }
 ```
 
-**Responsibility:** Centered empty state illustration with optional action button. Used when data fetching succeeds but returns zero results.
+**Responsibility:** Centered empty state illustration with optional action button. Used when data fetching succeeds but
+returns zero results.
 
 ---
 
@@ -463,14 +503,15 @@ interface EmptyStateProps {
 
 ```typescript
 interface ErrorStateProps {
-  title?: string;                       // default: "Something went wrong"
+  title?: string; // default: "Something went wrong"
   description?: string;
   onRetry?: () => void;
   error?: { code: string; message: string };
 }
 ```
 
-**Responsibility:** Centered error state with an alert icon, description, and optional retry button. Used when a React Query `isError` is true. Shows the error code in `JetBrains Mono` if present.
+**Responsibility:** Centered error state with an alert icon, description, and optional retry button. Used when a React
+Query `isError` is true. Shows the error code in `JetBrains Mono` if present.
 
 ---
 
@@ -481,12 +522,13 @@ interface BadgeProps {
   children: React.ReactNode;
   color: 'red' | 'amber' | 'blue' | 'green' | 'purple' | 'cyan' | 'orange' | 'slate';
   size?: 'sm' | 'md';
-  dot?: boolean;        // show animated pulsing dot before text
+  dot?: boolean; // show animated pulsing dot before text
   dotAnimate?: boolean; // only animate dot if true (for active incidents)
 }
 ```
 
-**Responsibility:** Generic badge component. All domain-specific badge components (`ServiceBadge`, `IncidentBadge`) are thin wrappers around this.
+**Responsibility:** Generic badge component. All domain-specific badge components (`ServiceBadge`, `IncidentBadge`) are
+thin wrappers around this.
 
 ---
 
@@ -502,7 +544,8 @@ interface CardProps {
 }
 ```
 
-**Responsibility:** Base card with `bg-slate-800 border border-slate-700 rounded-xl` styling. All domain cards are built on top of this.
+**Responsibility:** Base card with `bg-slate-800 border border-slate-700 rounded-xl` styling. All domain cards are built
+on top of this.
 
 ---
 
@@ -517,7 +560,8 @@ interface PageHeaderProps {
 }
 ```
 
-**Responsibility:** Consistent page-level header with a title, optional subtitle, optional badge, and optional right-aligned action buttons/links.
+**Responsibility:** Consistent page-level header with a title, optional subtitle, optional badge, and optional
+right-aligned action buttons/links.
 
 ---
 
@@ -531,11 +575,11 @@ All API data is managed by React Query. The `QueryClient` is configured in `clie
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000,        // 1 minute — data is fresh for 1 minute
-      gcTime: 5 * 60 * 1000,       // 5 minutes — cache kept for 5 minutes after unmount
+      staleTime: 60 * 1000, // 1 minute — data is fresh for 1 minute
+      gcTime: 5 * 60 * 1000, // 5 minutes — cache kept for 5 minutes after unmount
       retry: 3,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-      refetchOnWindowFocus: false,   // SRE tool — don't refetch on tab switch
+      refetchOnWindowFocus: false, // SRE tool — don't refetch on tab switch
     },
   },
 });
@@ -563,7 +607,7 @@ export const useBlastRadius = (id: string) =>
     queryKey: ['services', id, 'blast-radius'],
     queryFn: () => servicesApi.getBlastRadius(id),
     enabled: !!id,
-    staleTime: 0,   // always re-fetch blast radius (data may change)
+    staleTime: 0, // always re-fetch blast radius (data may change)
   });
 
 export const useDependencies = (id: string) =>
@@ -574,8 +618,7 @@ export const useDependencies = (id: string) =>
   });
 
 // hooks/useTeams.ts
-export const useTeams = () =>
-  useQuery({ queryKey: ['teams'], queryFn: teamsApi.getTeams });
+export const useTeams = () => useQuery({ queryKey: ['teams'], queryFn: teamsApi.getTeams });
 
 export const useTeam = (id: string) =>
   useQuery({
@@ -611,21 +654,25 @@ A lightweight context store handles UI-only state that multiple components need 
 // store/uiStore.ts
 interface UIState {
   isSidebarOpen: boolean;
-  selectedServiceId: string | null;  // for blast radius simulation
+  selectedServiceId: string | null; // for blast radius simulation
   setSidebarOpen: (open: boolean) => void;
   setSelectedServiceId: (id: string | null) => void;
 }
 
 export const UIContext = createContext<UIState>(/* initial values */);
-export const UIProvider = ({ children }: { children: React.ReactNode }) => { /* ... */ };
+export const UIProvider = ({ children }: { children: React.ReactNode }) => {
+  /* ... */
+};
 export const useUI = () => useContext(UIContext);
 ```
 
 **What goes in UIState:**
+
 - `isSidebarOpen` — toggled by hamburger button on mobile
 - `selectedServiceId` — which service is selected for blast radius on the Service Map page
 
 **What stays local (`useState`):**
+
 - `revealedHops` in `BlastRadiusPanel` — purely local animation state
 - Filter values in `IncidentsPage` — no need to share across components
 
@@ -633,7 +680,8 @@ export const useUI = () => useContext(UIContext);
 
 ## 4. Hop-by-Hop Animation Logic
 
-The blast radius simulator reveals affected services progressively — one hop group at a time with a delay between each group, and cards within each group animate in with a stagger.
+The blast radius simulator reveals affected services progressively — one hop group at a time with a delay between each
+group, and cards within each group animate in with a stagger.
 
 ### Algorithm
 
@@ -661,8 +709,8 @@ useEffect(() => {
   }
 
   const timer = setTimeout(() => {
-    setRevealedHops(prev => prev + 1);
-  }, 700);  // 700ms between each hop group
+    setRevealedHops((prev) => prev + 1);
+  }, 700); // 700ms between each hop group
 
   return () => clearTimeout(timer);
 }, [data, revealedHops, isLoading]);
@@ -707,7 +755,7 @@ useEffect(() => {
   // Stagger reveal: one card every 120ms
   services.forEach((_, index) => {
     setTimeout(() => {
-      setVisibleCardIndices(prev => new Set([...prev, index]));
+      setVisibleCardIndices((prev) => new Set([...prev, index]));
     }, index * 120);
   });
 }, [isRevealing, services]);
@@ -745,17 +793,18 @@ The result: the UI appears to "simulate" the failure propagating through the dep
 
 ## 5. Loading States
 
-Every data-fetching component has a skeleton loading state. Skeletons use `animate-pulse` with `bg-slate-700` blocks to suggest the shape of the content to come.
+Every data-fetching component has a skeleton loading state. Skeletons use `animate-pulse` with `bg-slate-700` blocks to
+suggest the shape of the content to come.
 
-| Component | Loading Behavior |
-|-----------|-----------------|
-| `ServiceMapPage` | Shows `<ServiceSkeleton count={8}>` inside each team group |
-| `ServiceDetailPage` | Shows a skeleton for the service header, a skeleton for `<BlastRadiusPanel>`, and a skeleton for `<DependencyExplorer>` |
-| `BlastRadiusPanel` | Shows a single centered `<Spinner>` with "Loading blast radius..." text |
-| `IncidentsPage` | Shows `<IncidentSkeleton count={5}>` |
-| `IncidentDetailPage` | Shows skeleton for the incident header and skeleton list for affected services |
-| `TeamsPage` | Shows `<TeamSkeleton count={10}>` |
-| `TeamDetailPage` | Shows skeleton for team header and skeleton for services list |
+| Component            | Loading Behavior                                                                                                        |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ServiceMapPage`     | Shows `<ServiceSkeleton count={8}>` inside each team group                                                              |
+| `ServiceDetailPage`  | Shows a skeleton for the service header, a skeleton for `<BlastRadiusPanel>`, and a skeleton for `<DependencyExplorer>` |
+| `BlastRadiusPanel`   | Shows a single centered `<Spinner>` with "Loading blast radius..." text                                                 |
+| `IncidentsPage`      | Shows `<IncidentSkeleton count={5}>`                                                                                    |
+| `IncidentDetailPage` | Shows skeleton for the incident header and skeleton list for affected services                                          |
+| `TeamsPage`          | Shows `<TeamSkeleton count={10}>`                                                                                       |
+| `TeamDetailPage`     | Shows skeleton for team header and skeleton for services list                                                           |
 
 Skeleton cards are built to exactly match the dimensions of the real content to prevent layout shift.
 
@@ -763,32 +812,33 @@ Skeleton cards are built to exactly match the dimensions of the real content to 
 
 ## 6. Empty States
 
-| Page / Component | Condition | Empty State |
-|------------------|-----------|-------------|
-| `ServiceMapPage` | `services.length === 0` | Icon: `ServerStackIcon`, Title: "No services found", Description: "The service database appears to be empty. Run the seed script to populate it.", Action: link to docs |
-| `BlastRadiusPanel` | `hops.length === 0` | Icon: `CheckCircleIcon` (green), Title: "No affected services", Description: "No other services depend on this one. It is a leaf node with no blast radius." |
-| `IncidentsPage` (filtered) | No results matching filters | Icon: `MagnifyingGlassIcon`, Title: "No incidents match your filters", Description: "Try adjusting the severity or status filters.", Action: "Clear filters" button |
-| `IncidentsPage` (unfiltered) | `incidents.length === 0` | Icon: `ShieldCheckIcon` (green), Title: "No incidents recorded", Description: "All systems are operating normally." |
-| `TeamDetailPage` | `team.services.length === 0` | Title: "No services owned", Description: "This team doesn't own any services yet." |
-| `DependencyExplorer` (upstream) | `upstream.length === 0` | "This service has no upstream dependencies. It is a foundational service." |
-| `DependencyExplorer` (downstream) | `downstream.length === 0` | "No services depend on this one directly." |
+| Page / Component                  | Condition                    | Empty State                                                                                                                                                             |
+| --------------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ServiceMapPage`                  | `services.length === 0`      | Icon: `ServerStackIcon`, Title: "No services found", Description: "The service database appears to be empty. Run the seed script to populate it.", Action: link to docs |
+| `BlastRadiusPanel`                | `hops.length === 0`          | Icon: `CheckCircleIcon` (green), Title: "No affected services", Description: "No other services depend on this one. It is a leaf node with no blast radius."            |
+| `IncidentsPage` (filtered)        | No results matching filters  | Icon: `MagnifyingGlassIcon`, Title: "No incidents match your filters", Description: "Try adjusting the severity or status filters.", Action: "Clear filters" button     |
+| `IncidentsPage` (unfiltered)      | `incidents.length === 0`     | Icon: `ShieldCheckIcon` (green), Title: "No incidents recorded", Description: "All systems are operating normally."                                                     |
+| `TeamDetailPage`                  | `team.services.length === 0` | Title: "No services owned", Description: "This team doesn't own any services yet."                                                                                      |
+| `DependencyExplorer` (upstream)   | `upstream.length === 0`      | "This service has no upstream dependencies. It is a foundational service."                                                                                              |
+| `DependencyExplorer` (downstream) | `downstream.length === 0`    | "No services depend on this one directly."                                                                                                                              |
 
 ---
 
 ## 7. Error States
 
-| Page / Component | Trigger | Error State UI |
-|------------------|---------|----------------|
-| `ServiceMapPage` | API fetch fails | `<ErrorState title="Failed to load services" description="Check that the API is running." onRetry={refetch} />` |
-| `ServiceDetailPage` | Service not found (404) | `<ErrorState title="Service not found" description="No service with this ID exists." />` with a back button |
-| `ServiceDetailPage` | API fails | `<ErrorState title="Failed to load service" onRetry={refetch} />` |
-| `BlastRadiusPanel` | Blast radius query fails | `<ErrorState title="Blast radius unavailable" description="Could not compute the blast radius." onRetry={refetch} />` |
-| `IncidentsPage` | API fails | `<ErrorState title="Failed to load incidents" onRetry={refetch} />` |
-| `IncidentDetailPage` | 404 | `<ErrorState title="Incident not found" />` |
-| `TeamsPage` | API fails | `<ErrorState title="Failed to load teams" onRetry={refetch} />` |
-| Any page | React render error | `<ErrorBoundary>` fallback: "An unexpected rendering error occurred. Please refresh." |
+| Page / Component     | Trigger                  | Error State UI                                                                                                        |
+| -------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| `ServiceMapPage`     | API fetch fails          | `<ErrorState title="Failed to load services" description="Check that the API is running." onRetry={refetch} />`       |
+| `ServiceDetailPage`  | Service not found (404)  | `<ErrorState title="Service not found" description="No service with this ID exists." />` with a back button           |
+| `ServiceDetailPage`  | API fails                | `<ErrorState title="Failed to load service" onRetry={refetch} />`                                                     |
+| `BlastRadiusPanel`   | Blast radius query fails | `<ErrorState title="Blast radius unavailable" description="Could not compute the blast radius." onRetry={refetch} />` |
+| `IncidentsPage`      | API fails                | `<ErrorState title="Failed to load incidents" onRetry={refetch} />`                                                   |
+| `IncidentDetailPage` | 404                      | `<ErrorState title="Incident not found" />`                                                                           |
+| `TeamsPage`          | API fails                | `<ErrorState title="Failed to load teams" onRetry={refetch} />`                                                       |
+| Any page             | React render error       | `<ErrorBoundary>` fallback: "An unexpected rendering error occurred. Please refresh."                                 |
 
 The `ErrorState` component shows the API error code (if available) in a small monospace block to aid debugging:
+
 ```
 Error code: DB_CONNECTION_ERROR
 ```
@@ -842,44 +892,45 @@ export default {
 
 ### Color Palette
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `slate-950` | `#0a0f1a` | App background, sidebar background |
-| `slate-900` | `#0f172a` | Page background inside content area |
-| `slate-800` | `#1e293b` | Card backgrounds |
-| `slate-750` | `#1e2a3a` | Card hover state |
-| `slate-700` | `#334155` | Card borders, dividers |
-| `slate-600` | `#475569` | Subtle borders |
-| `slate-400` | `#94a3b8` | Secondary text, muted labels |
-| `slate-300` | `#cbd5e1` | Primary text |
-| `white` | `#ffffff` | Headings |
-| `red-500` | `#ef4444` | Critical tier, SEV1, active incidents, blast radius borders |
-| `red-400` | `#f87171` | Critical badge text |
-| `amber-500` | `#f59e0b` | High tier, SEV2, monitoring incidents, warnings |
-| `amber-400` | `#fbbf24` | High badge text |
-| `blue-500` | `#3b82f6` | Medium tier, api type badges, links |
-| `blue-400` | `#60a5fa` | Medium badge text |
-| `emerald-500` | `#10b981` | Resolved status, healthy indicators |
-| `purple-400` | `#c084fc` | Gateway type badge |
-| `cyan-400` | `#22d3ee` | Cache type badge |
-| `orange-400` | `#fb923c` | Queue type badge |
+| Token         | Hex       | Usage                                                       |
+| ------------- | --------- | ----------------------------------------------------------- |
+| `slate-950`   | `#0a0f1a` | App background, sidebar background                          |
+| `slate-900`   | `#0f172a` | Page background inside content area                         |
+| `slate-800`   | `#1e293b` | Card backgrounds                                            |
+| `slate-750`   | `#1e2a3a` | Card hover state                                            |
+| `slate-700`   | `#334155` | Card borders, dividers                                      |
+| `slate-600`   | `#475569` | Subtle borders                                              |
+| `slate-400`   | `#94a3b8` | Secondary text, muted labels                                |
+| `slate-300`   | `#cbd5e1` | Primary text                                                |
+| `white`       | `#ffffff` | Headings                                                    |
+| `red-500`     | `#ef4444` | Critical tier, SEV1, active incidents, blast radius borders |
+| `red-400`     | `#f87171` | Critical badge text                                         |
+| `amber-500`   | `#f59e0b` | High tier, SEV2, monitoring incidents, warnings             |
+| `amber-400`   | `#fbbf24` | High badge text                                             |
+| `blue-500`    | `#3b82f6` | Medium tier, api type badges, links                         |
+| `blue-400`    | `#60a5fa` | Medium badge text                                           |
+| `emerald-500` | `#10b981` | Resolved status, healthy indicators                         |
+| `purple-400`  | `#c084fc` | Gateway type badge                                          |
+| `cyan-400`    | `#22d3ee` | Cache type badge                                            |
+| `orange-400`  | `#fb923c` | Queue type badge                                            |
 
 ### Typography Scale
 
-| Element | Classes |
-|---------|---------|
-| Page title (h1) | `text-3xl font-bold text-white tracking-tight font-sans` |
-| Section title (h2) | `text-xl font-semibold text-white font-sans` |
-| Card title | `text-base font-semibold text-slate-100 font-sans` |
-| Body text | `text-sm text-slate-300 font-sans` |
-| Muted/secondary | `text-xs text-slate-400 font-sans` |
-| Monospace (IDs, code) | `text-xs text-slate-400 font-mono` |
-| Badge text | `text-xs font-medium font-sans` |
-| Hop label | `text-xs font-semibold text-slate-400 uppercase tracking-widest font-sans` |
+| Element               | Classes                                                                    |
+| --------------------- | -------------------------------------------------------------------------- |
+| Page title (h1)       | `text-3xl font-bold text-white tracking-tight font-sans`                   |
+| Section title (h2)    | `text-xl font-semibold text-white font-sans`                               |
+| Card title            | `text-base font-semibold text-slate-100 font-sans`                         |
+| Body text             | `text-sm text-slate-300 font-sans`                                         |
+| Muted/secondary       | `text-xs text-slate-400 font-sans`                                         |
+| Monospace (IDs, code) | `text-xs text-slate-400 font-mono`                                         |
+| Badge text            | `text-xs font-medium font-sans`                                            |
+| Hop label             | `text-xs font-semibold text-slate-400 uppercase tracking-widest font-sans` |
 
 ### Component Variants Reference
 
 **Card:**
+
 ```
 Base: bg-slate-800 border border-slate-700 rounded-xl p-4
 Hover: hover:border-slate-500 hover:bg-slate-750 transition-colors cursor-pointer
@@ -888,6 +939,7 @@ Affected: border-l-4 border-l-red-500
 ```
 
 **Button (primary):**
+
 ```
 bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm px-4 py-2 rounded-lg
 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
@@ -895,33 +947,39 @@ focus:ring-offset-slate-900
 ```
 
 **Button (secondary):**
+
 ```
 bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium text-sm px-4 py-2 rounded-lg
 transition-colors
 ```
 
 **Button (ghost):**
+
 ```
 text-slate-400 hover:text-slate-200 hover:bg-slate-800 text-sm px-3 py-1.5 rounded-lg
 transition-colors
 ```
 
 **Nav link (active):**
+
 ```
 bg-slate-800 text-white font-medium
 ```
 
 **Nav link (inactive):**
+
 ```
 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50
 ```
 
 **Sidebar:**
+
 ```
 bg-slate-950 border-r border-slate-800 w-64 flex-shrink-0
 ```
 
 **TopBar:**
+
 ```
 border-b border-slate-800 bg-slate-900 px-6 py-4
 ```
@@ -934,41 +992,47 @@ The app is **mobile-first**. The base styles apply to mobile, with `md:` and `lg
 
 ### Breakpoints
 
-| Breakpoint | Width | Layout Changes |
-|------------|-------|----------------|
+| Breakpoint       | Width   | Layout Changes                                |
+| ---------------- | ------- | --------------------------------------------- |
 | Mobile (default) | < 768px | Single column, sidebar hidden, hamburger menu |
-| Tablet (`md:`) | 768px+ | Service grid 2 columns, sidebar still hidden |
-| Desktop (`lg:`) | 1024px+ | Sidebar visible, service grid 3 columns |
-| Wide (`xl:`) | 1280px+ | Service grid 4 columns |
+| Tablet (`md:`)   | 768px+  | Service grid 2 columns, sidebar still hidden  |
+| Desktop (`lg:`)  | 1024px+ | Sidebar visible, service grid 3 columns       |
+| Wide (`xl:`)     | 1280px+ | Service grid 4 columns                        |
 
 ### Page-by-Page Responsive Behavior
 
 **Service Map (`/`):**
+
 - Mobile: 1 column grid of service cards; blast radius panel slides in as a full-screen overlay from the bottom
 - Tablet: 2 column grid; blast radius panel overlays right half
 - Desktop: 3–4 column grid; blast radius panel slides in from the right as a side panel
 
 **Service Detail (`/services/:id`):**
+
 - Mobile: stacked vertically: header → blast radius panel → dependency explorer → incidents
 - Desktop: header full width, then a 2-column layout: blast radius panel (60%) | dependency explorer (40%)
 
 **Incidents (`/incidents`):**
+
 - Mobile: full-width list
 - Desktop: list remains single-column but with wider max-width container
 
 **Teams (`/teams`):**
+
 - Mobile: 1 column
 - Tablet: 2 columns
 - Desktop: 3–4 columns
 
 **Team Detail (`/teams/:id`):**
+
 - Mobile: stacked: header → oncall info → services list → active incidents
 - Desktop: 2 columns: services (60%) | oncall info + active incidents (40%)
 
 ### Sidebar Behavior
 
 - **Desktop (`lg:`):** Sidebar is always visible. Content area has `ml-64`.
-- **Mobile/Tablet:** Sidebar is hidden by default. A hamburger icon in the `TopBar` toggles `isSidebarOpen` in `uiStore`. When open, the sidebar renders as a fixed overlay with `z-50` and a semi-transparent backdrop.
+- **Mobile/Tablet:** Sidebar is hidden by default. A hamburger icon in the `TopBar` toggles `isSidebarOpen` in
+  `uiStore`. When open, the sidebar renders as a fixed overlay with `z-50` and a semi-transparent backdrop.
 
 ---
 
@@ -984,6 +1048,9 @@ The app is **mobile-first**. The base styles apply to mobile, with `md:` and `lg
 - Reduced motion: uses `prefers-reduced-motion` to disable animations for users who prefer it
   ```css
   @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    * {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
   ```

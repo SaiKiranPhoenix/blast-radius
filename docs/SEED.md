@@ -1,6 +1,7 @@
 # BlastRadius — Seed Script Specification
 
-> Complete logic walkthrough for populating the CognoDB graph with 40 services, 10 teams, 80+ dependency edges, 20 incidents, and 15 deployments.
+> Complete logic walkthrough for populating the CognoDB graph with 40 services, 10 teams, 80+ dependency edges, 20
+> incidents, and 15 deployments.
 
 ---
 
@@ -25,11 +26,14 @@
 
 ## 1. Overview
 
-The seed script lives in `server/seed/` and is executed as a standalone TypeScript script (not part of the Express application). It uses the same `neo4j-driver` singleton from `server/src/config/neo4j.ts` and the same environment variables from `server/.env`.
+The seed script lives in `server/seed/` and is executed as a standalone TypeScript script (not part of the Express
+application). It uses the same `neo4j-driver` singleton from `server/src/config/neo4j.ts` and the same environment
+variables from `server/.env`.
 
 **Script entry point:** `server/seed/index.ts`
 
 The script is designed to be:
+
 - **Idempotent:** Running it twice produces the same DB state as running it once (uses `MERGE` throughout).
 - **Ordered:** Each phase depends on previous phases completing successfully.
 - **Verbose:** Each phase logs progress to stdout so it is easy to diagnose failures.
@@ -54,13 +58,15 @@ NEO4J_PASSWORD=your-password
 NEO4J_DATABASE=neo4j
 ```
 
-For Railway-hosted CognoDB, the URI will be `bolt+ssc://<host>:7687` or similar. Use exactly what the CognoDB dashboard provides.
+For Railway-hosted CognoDB, the URI will be `bolt+ssc://<host>:7687` or similar. Use exactly what the CognoDB dashboard
+provides.
 
 ---
 
 ## 3. Order of Operations
 
-The seed script executes phases strictly in sequence. Each phase is wrapped in a try/catch. If any phase fails, the script exits with a non-zero code and logs the error.
+The seed script executes phases strictly in sequence. Each phase is wrapped in a try/catch. If any phase fails, the
+script exits with a non-zero code and logs the error.
 
 ```
 Phase 1: Clear Database        (DELETE all nodes and relationships)
@@ -73,6 +79,7 @@ Phase 7: Seed Deployments      (15 Deployment nodes + DEPLOYED_TO + TRIGGERED re
 ```
 
 **Why this order?**
+
 - Constraints must exist before data is inserted to guarantee uniqueness enforcement from the first write.
 - Teams must exist before services because the `OWNS` relationship is created during service seeding.
 - Services and their dependencies must exist before incidents can reference them via `CAUSED_BY` and `AFFECTED`.
@@ -91,9 +98,12 @@ MATCH (n)
 DETACH DELETE n
 ```
 
-This single Cypher statement deletes all nodes and all relationships in the database, returning it to an empty state. `DETACH DELETE` removes the node and all its relationships atomically.
+This single Cypher statement deletes all nodes and all relationships in the database, returning it to an empty state.
+`DETACH DELETE` removes the node and all its relationships atomically.
 
-**Why clear first?** While `MERGE` handles re-seeding gracefully, a full clear guarantees there is no stale data from old schema versions or manual experiments. This is appropriate for a development/demo database. Do **not** clear a production database containing real operational data.
+**Why clear first?** While `MERGE` handles re-seeding gracefully, a full clear guarantees there is no stale data from
+old schema versions or manual experiments. This is appropriate for a development/demo database. Do **not** clear a
+production database containing real operational data.
 
 **Logging:**
 
@@ -108,7 +118,8 @@ This single Cypher statement deletes all nodes and all relationships in the data
 
 **Runner:** `server/seed/runners/createConstraints.ts`
 
-**Logic:** Runs the following Cypher statements in sequence. Uses `IF NOT EXISTS` so the statements are idempotent even if constraints were already created.
+**Logic:** Runs the following Cypher statements in sequence. Uses `IF NOT EXISTS` so the statements are idempotent even
+if constraints were already created.
 
 ```cypher
 CREATE CONSTRAINT service_id_unique IF NOT EXISTS
@@ -139,7 +150,8 @@ CREATE INDEX incident_severity_idx IF NOT EXISTS
 FOR (i:Incident) ON (i.severity);
 ```
 
-Each statement is run in its own session call. The runner collects results and logs how many constraints/indexes were created vs. already existed.
+Each statement is run in its own session call. The runner collects results and logs how many constraints/indexes were
+created vs. already existed.
 
 **Logging:**
 
@@ -228,7 +240,7 @@ export const servicesData = [
     description: 'Primary ingress point for all external traffic...',
     language: 'Go',
     repo_url: 'https://github.com/acme/api-gateway',
-    teamId: 'team-platform',   // which team owns this service
+    teamId: 'team-platform', // which team owns this service
   },
   {
     id: 'svc-auth',
@@ -321,7 +333,8 @@ SET r.criticality = $criticality,
     r.latency_ms = $latency_ms
 ```
 
-If either service is not found (MATCH returns null), the MERGE has nothing to act on and the relationship is silently skipped. The runner logs a warning for any edge where both ends are not found.
+If either service is not found (MATCH returns null), the MERGE has nothing to act on and the relationship is silently
+skipped. The runner logs a warning for any edge where both ends are not found.
 
 **Logging:**
 
@@ -354,11 +367,24 @@ export const incidentsData = [
     description: 'Redis cache exhaustion caused auth token validation to fail...',
     rootCauseServiceId: 'svc-auth',
     affectedServiceIds: [
-      'svc-auth', 'svc-api-gateway', 'svc-bff-web', 'svc-bff-mobile',
-      'svc-graphql-gateway', 'svc-order-api', 'svc-checkout', 'svc-payment-gateway',
-      'svc-search-api', 'svc-user-profile', 'svc-cart', 'svc-recommendation-api',
-      'svc-catalog', 'svc-billing', 'svc-inventory', 'svc-notification-api',
-      'svc-pricing', 'svc-fraud-detection',
+      'svc-auth',
+      'svc-api-gateway',
+      'svc-bff-web',
+      'svc-bff-mobile',
+      'svc-graphql-gateway',
+      'svc-order-api',
+      'svc-checkout',
+      'svc-payment-gateway',
+      'svc-search-api',
+      'svc-user-profile',
+      'svc-cart',
+      'svc-recommendation-api',
+      'svc-catalog',
+      'svc-billing',
+      'svc-inventory',
+      'svc-notification-api',
+      'svc-pricing',
+      'svc-fraud-detection',
     ],
   },
   // ... 19 more incidents
@@ -396,13 +422,18 @@ MATCH (s:Service {id: serviceId})
 MERGE (i)-[:AFFECTED]->(s)
 ```
 
-Using `UNWIND` keeps the number of round-trips to the DB minimal — one query creates all AFFECTED edges for a given incident.
+Using `UNWIND` keeps the number of round-trips to the DB minimal — one query creates all AFFECTED edges for a given
+incident.
 
 **How affected services are determined:**
 
-For SEV1 incidents with a foundational root cause (auth, postgres, redis): affected services are all services that transitively depend on the root cause. This is computed upfront during data file authoring — the data file directly lists the `affectedServiceIds` array. It does not recompute at seed time using a traversal (the graph must be fully seeded first for that to work).
+For SEV1 incidents with a foundational root cause (auth, postgres, redis): affected services are all services that
+transitively depend on the root cause. This is computed upfront during data file authoring — the data file directly
+lists the `affectedServiceIds` array. It does not recompute at seed time using a traversal (the graph must be fully
+seeded first for that to work).
 
-For SEV3 incidents with a leaf-node root cause: affected services are just 1–3 services immediately depending on the root cause.
+For SEV3 incidents with a leaf-node root cause: affected services are just 1–3 services immediately depending on the
+root cause.
 
 **Logging:**
 
@@ -432,7 +463,7 @@ export const deploymentsData = [
     deployed_by: 'bob.smith',
     environment: 'production',
     deployedToServiceId: 'svc-api-gateway',
-    triggeredIncidentId: null,   // clean deploy
+    triggeredIncidentId: null, // clean deploy
   },
   {
     id: 'dep-007',
@@ -441,7 +472,7 @@ export const deploymentsData = [
     deployed_by: 'alice.johnson',
     environment: 'production',
     deployedToServiceId: 'svc-auth',
-    triggeredIncidentId: 'inc-001',   // this deploy caused the outage
+    triggeredIncidentId: 'inc-001', // this deploy caused the outage
   },
   // ... 13 more deployments
 ];
@@ -489,7 +520,8 @@ MERGE (d)-[:TRIGGERED]->(i)
 
 ## 11. Ensuring 4-Hop Chains Exist
 
-The dependency topology must produce chains of at least 4 hops for the blast radius simulator to demonstrate meaningful depth. Here are the specific chains verified to exist in the seed data:
+The dependency topology must produce chains of at least 4 hops for the blast radius simulator to demonstrate meaningful
+depth. Here are the specific chains verified to exist in the seed data:
 
 ### Chain A (depth 4): BFF Mobile → API Gateway → Auth → Postgres
 
@@ -524,7 +556,8 @@ svc-recommendation-api
             └──[:DEPENDS_ON]──► svc-postgres-main
 ```
 
-**These chains exist in the `dependenciesData` array in the seed data file. The engineer writing the seed data file must verify that these edges are all present.**
+**These chains exist in the `dependenciesData` array in the seed data file. The engineer writing the seed data file must
+verify that these edges are all present.**
 
 ### Verification Query
 
@@ -545,18 +578,18 @@ If this returns results, the chain requirement is satisfied.
 
 After a successful seed run, the database should contain:
 
-| Entity | Count |
-|--------|-------|
-| `Service` nodes | 40 |
-| `Team` nodes | 10 |
-| `Incident` nodes | 20 |
-| `Deployment` nodes | 15 |
-| `[:DEPENDS_ON]` relationships | 84 (approximately) |
-| `[:OWNS]` relationships | 40 (one per service) |
-| `[:CAUSED_BY]` relationships | 20 (one per incident) |
-| `[:AFFECTED]` relationships | ~140 (variable per incident severity) |
-| `[:DEPLOYED_TO]` relationships | 15 (one per deployment) |
-| `[:TRIGGERED]` relationships | 5 (only the bad deploys) |
+| Entity                         | Count                                 |
+| ------------------------------ | ------------------------------------- |
+| `Service` nodes                | 40                                    |
+| `Team` nodes                   | 10                                    |
+| `Incident` nodes               | 20                                    |
+| `Deployment` nodes             | 15                                    |
+| `[:DEPENDS_ON]` relationships  | 84 (approximately)                    |
+| `[:OWNS]` relationships        | 40 (one per service)                  |
+| `[:CAUSED_BY]` relationships   | 20 (one per incident)                 |
+| `[:AFFECTED]` relationships    | ~140 (variable per incident severity) |
+| `[:DEPLOYED_TO]` relationships | 15 (one per deployment)               |
+| `[:TRIGGERED]` relationships   | 5 (only the bad deploys)              |
 
 **Verify with:**
 
@@ -611,8 +644,10 @@ Seeding complete!
 The seed script is idempotent. Running it multiple times produces the same result because:
 
 1. **Phase 1 always clears the database first.** This makes subsequent phases always work with a clean slate.
-2. **All node creation uses `MERGE` on the `id` property.** If the node already exists (e.g., after a partial failure followed by a re-run), it is updated with `SET` rather than duplicated.
-3. **All relationship creation uses `MERGE` on the pattern.** This prevents duplicate relationships between the same node pairs.
+2. **All node creation uses `MERGE` on the `id` property.** If the node already exists (e.g., after a partial failure
+   followed by a re-run), it is updated with `SET` rather than duplicated.
+3. **All relationship creation uses `MERGE` on the pattern.** This prevents duplicate relationships between the same
+   node pairs.
 
 **To re-seed from scratch:**
 
@@ -624,7 +659,9 @@ This runs the full sequence: clear → constraints → teams → services → de
 
 **To run a partial re-seed** (e.g., only refresh incidents):
 
-The seed runners can be invoked individually if needed. However, for simplicity, the default `npm run seed` always runs the full sequence. For partial re-seeding in production-like environments, skip Phase 1 (the clear phase) and run only the desired runners. The `MERGE` strategy ensures no duplicates.
+The seed runners can be invoked individually if needed. However, for simplicity, the default `npm run seed` always runs
+the full sequence. For partial re-seeding in production-like environments, skip Phase 1 (the clear phase) and run only
+the desired runners. The `MERGE` strategy ensures no duplicates.
 
 ---
 
@@ -653,14 +690,15 @@ npm run seed --workspace=server
 
 ### Dry-run mode
 
-The `--dry-run` flag (optional to implement) logs all Cypher statements that would be run without actually executing them. Useful for verifying the seed logic without affecting the database.
+The `--dry-run` flag (optional to implement) logs all Cypher statements that would be run without actually executing
+them. Useful for verifying the seed logic without affecting the database.
 
 ### Troubleshooting
 
-| Error | Likely Cause | Fix |
-|-------|-------------|-----|
-| `ServiceUnavailableError` | CognoDB is not running or URI is wrong | Check `NEO4J_URI` in `.env` and verify DB is running |
-| `AuthError` | Wrong username or password | Check `NEO4J_USERNAME` and `NEO4J_PASSWORD` |
-| `Neo4jError: Already exists` | Constraint creation on existing constraint without `IF NOT EXISTS` | Confirm `IF NOT EXISTS` is in all constraint statements |
-| Phase hangs at `seedDependencies` | One of the service IDs in `dependencies.ts` is misspelled | Check for typos in service IDs |
-| `MATCH (t:Team {id: $teamId}) ... MERGE` creates nothing | Team not found — seeding services before teams | Verify the order of operations in `seed/index.ts` |
+| Error                                                    | Likely Cause                                                       | Fix                                                     |
+| -------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------- |
+| `ServiceUnavailableError`                                | CognoDB is not running or URI is wrong                             | Check `NEO4J_URI` in `.env` and verify DB is running    |
+| `AuthError`                                              | Wrong username or password                                         | Check `NEO4J_USERNAME` and `NEO4J_PASSWORD`             |
+| `Neo4jError: Already exists`                             | Constraint creation on existing constraint without `IF NOT EXISTS` | Confirm `IF NOT EXISTS` is in all constraint statements |
+| Phase hangs at `seedDependencies`                        | One of the service IDs in `dependencies.ts` is misspelled          | Check for typos in service IDs                          |
+| `MATCH (t:Team {id: $teamId}) ... MERGE` creates nothing | Team not found — seeding services before teams                     | Verify the order of operations in `seed/index.ts`       |
