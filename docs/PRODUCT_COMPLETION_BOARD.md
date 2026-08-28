@@ -349,24 +349,24 @@
 - [x] Create `src/pages/ServiceDetailPage.tsx` — renders service header (name, badges, repo link),
       `<DependencyExplorer>`, `<BlastRadiusPanel>` (always visible on this page, not toggled), historical incidents
       caused by this service
-- [ ] Create `src/components/team/TeamCard.tsx` — team name, slack channel, timezone, service count, active incident
+- [x] Create `src/components/team/TeamCard.tsx` — team name, slack channel, timezone, service count, active incident
       count with amber pulsing dot if > 0
-- [ ] Create `src/components/team/TeamSkeleton.tsx` — skeleton variant
-- [ ] Create `src/components/team/TeamGrid.tsx` — responsive grid of TeamCards
-- [ ] Create `src/pages/TeamsPage.tsx` — fetches all teams with `useTeams`, renders `<TeamGrid>` with
+- [x] Create `src/components/team/TeamSkeleton.tsx` — skeleton variant
+- [x] Create `src/components/team/TeamGrid.tsx` — responsive grid of TeamCards
+- [x] Create `src/pages/TeamsPage.tsx` — fetches all teams with `useTeams`, renders `<TeamGrid>` with
       loading/empty/error states
-- [ ] Create `src/pages/TeamDetailPage.tsx` — fetches team detail with `useTeam(id)`, renders team oncall info card,
+- [x] Create `src/pages/TeamDetailPage.tsx` — fetches team detail with `useTeam(id)`, renders team oncall info card,
       owned services list, active incidents list
-- [ ] Create `src/components/incident/IncidentBadge.tsx` — severity badge (SEV1/SEV2/SEV3) and status badge
+- [x] Create `src/components/incident/IncidentBadge.tsx` — severity badge (SEV1/SEV2/SEV3) and status badge
       (active/monitoring/resolved) with correct colors; active incidents have pulsing dot
-- [ ] Create `src/components/incident/IncidentCard.tsx` — title, severity badge, status badge, relative time, duration
+- [x] Create `src/components/incident/IncidentCard.tsx` — title, severity badge, status badge, relative time, duration
       (or "Ongoing"), affected service count, root cause service name; supports `variant` (default/compact)
-- [ ] Create `src/components/incident/IncidentSkeleton.tsx` — skeleton variant
-- [ ] Create `src/pages/IncidentsPage.tsx` — fetches all incidents with `useIncidents(filters)`, renders list with
+- [x] Create `src/components/incident/IncidentSkeleton.tsx` — skeleton variant
+- [x] Create `src/pages/IncidentsPage.tsx` — fetches all incidents with `useIncidents(filters)`, renders list with
       severity + status filter dropdowns; loading/empty/error states with appropriate copy per state
-- [ ] Create `src/pages/IncidentDetailPage.tsx` — incident title, severity/status badges, timeline (started → resolved),
+- [x] Create `src/pages/IncidentDetailPage.tsx` — incident title, severity/status badges, timeline (started → resolved),
       root cause service card, affected services grid, triggering deployment (if any)
-- [ ] Verify all 6 routes render without React or TypeScript errors by visiting each in the browser
+- [x] Verify all 6 routes render without React or TypeScript errors by visiting each in the browser
 
 ---
 
