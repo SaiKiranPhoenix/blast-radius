@@ -20,7 +20,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\"",
     "seed": "npm run seed --workspace=seed",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "prepare": "husky"
+    "prepare": "husky || node -e \"\""
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
