@@ -5,8 +5,8 @@ import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { PageHeader } from '../components/common/PageHeader';
 import { Spinner } from '../components/common/Spinner';
-import { SylvaHero } from '../threeui';
 import { useServices } from '../hooks/useServices';
+import { SylvaHero } from '../threeui';
 
 export function ServiceMapPage(): JSX.Element {
   const servicesQuery = useServices();
@@ -49,7 +49,7 @@ export function ServiceMapPage(): JSX.Element {
           <PageHeader
             title="Service Map"
             subtitle="Phase 8 will turn these into the full grouped map and blast radius simulation."
-            badge={<Badge color="blue">{services.length || '...' } services</Badge>}
+            badge={<Badge color="blue">{services.length || '...'} services</Badge>}
             actions={servicesQuery.isFetching ? <Spinner label="Refreshing" /> : null}
           />
 
@@ -86,7 +86,9 @@ export function ServiceMapPage(): JSX.Element {
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <h3 className="truncate font-semibold text-white">{service.name}</h3>
-                        <p className="mt-1 line-clamp-2 text-sm text-slate-400">{service.description}</p>
+                        <p className="mt-1 line-clamp-2 text-sm text-slate-400">
+                          {service.description}
+                        </p>
                       </div>
                       <Badge color={service.tier === 'critical' ? 'red' : 'slate'} size="sm">
                         {service.tier}

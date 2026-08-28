@@ -1,8 +1,18 @@
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import type { ApiFailure, ApiSuccess } from '../types/api.types';
 import type { BlastRadiusResult, DependencyResult, LongestChainEntry } from '../types/graph.types';
-import type { IncidentDetail, IncidentSeverity, IncidentStatus, IncidentSummary } from '../types/incident.types';
-import type { ServiceDetail, ServiceSummary, ServiceTier, ServiceType } from '../types/service.types';
+import type {
+  IncidentDetail,
+  IncidentSeverity,
+  IncidentStatus,
+  IncidentSummary,
+} from '../types/incident.types';
+import type {
+  ServiceDetail,
+  ServiceSummary,
+  ServiceTier,
+  ServiceType,
+} from '../types/service.types';
 import type { TeamDetail, TeamSummaryWithCounts } from '../types/team.types';
 
 export class ApiError extends Error {
@@ -34,13 +44,17 @@ responseInterceptor.use(
     if (envelope.success) return envelope.data;
     throw new ApiError(envelope.error.message, envelope.error.code, response.status);
   },
-  (error: AxiosError<ApiFailure>) => {
+  (error) => {
     const failure = error.response?.data;
     if (failure && !failure.success) {
       throw new ApiError(failure.error.message, failure.error.code, error.response?.status);
     }
 
-    throw new ApiError(error.message || 'The server did not respond.', 'NETWORK_ERROR', error.response?.status);
+    throw new ApiError(
+      error.message || 'The server did not respond.',
+      'NETWORK_ERROR',
+      error.response?.status,
+    );
   },
 );
 
@@ -57,7 +71,9 @@ export type IncidentFilters = {
 export const apiClient = {
   services: {
     list: async (filters?: ServiceFilters): Promise<ServiceSummary[]> => {
-      const result = await api.get<unknown, { services: ServiceSummary[] }>('/api/services', { params: filters });
+      const result = await api.get<unknown, { services: ServiceSummary[] }>('/api/services', {
+        params: filters,
+      });
       return result.services;
     },
     detail: async (id: string): Promise<ServiceDetail> => {
@@ -65,8 +81,11 @@ export const apiClient = {
       return result.service;
     },
     blastRadius: (id: string, maxHops?: number) =>
-      api.get<unknown, BlastRadiusResult>(`/api/services/${id}/blast-radius`, { params: { maxHops } }),
-    dependencies: (id: string) => api.get<unknown, DependencyResult>(`/api/services/${id}/dependencies`),
+      api.get<unknown, BlastRadiusResult>(`/api/services/${id}/blast-radius`, {
+        params: { maxHops },
+      }),
+    dependencies: (id: string) =>
+      api.get<unknown, DependencyResult>(`/api/services/${id}/dependencies`),
   },
   teams: {
     list: async (): Promise<TeamSummaryWithCounts[]> => {
@@ -80,7 +99,9 @@ export const apiClient = {
   },
   incidents: {
     list: async (filters?: IncidentFilters): Promise<IncidentSummary[]> => {
-      const result = await api.get<unknown, { incidents: IncidentSummary[] }>('/api/incidents', { params: filters });
+      const result = await api.get<unknown, { incidents: IncidentSummary[] }>('/api/incidents', {
+        params: filters,
+      });
       return result.incidents;
     },
     detail: async (id: string): Promise<IncidentDetail> => {
@@ -90,7 +111,9 @@ export const apiClient = {
   },
   graph: {
     longestChain: async (): Promise<LongestChainEntry[]> => {
-      const result = await api.get<unknown, { chains: LongestChainEntry[] }>('/api/graph/longest-chain');
+      const result = await api.get<unknown, { chains: LongestChainEntry[] }>(
+        '/api/graph/longest-chain',
+      );
       return result.chains;
     },
   },

@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
+import { useUI } from '../../store/uiStore';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
-import { useUI } from '../../store/uiStore';
 
 export function AppShell(): JSX.Element {
   const { isSidebarOpen, setIsSidebarOpen } = useUI();

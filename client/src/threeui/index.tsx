@@ -28,7 +28,7 @@ export function SylvaHero({
   primaryColor = '#ffffff',
   style,
 }: SylvaHeroProps): JSX.Element {
-const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(false);
   const [srcDoc, setSrcDoc] = useState<string | null>(null);
   const frameRef = useRef<HTMLIFrameElement>(null);
 
@@ -85,7 +85,17 @@ const [ready, setReady] = useState(false);
       }
     `;
     document.head.appendChild(customization);
-  }, [bodyFont, bodySize, bodyWeight, headingFont, headingLetterSpacing, headingSize, headingWeight, primaryColor, ready]);
+  }, [
+    bodyFont,
+    bodySize,
+    bodyWeight,
+    headingFont,
+    headingLetterSpacing,
+    headingSize,
+    headingWeight,
+    primaryColor,
+    ready,
+  ]);
 
   return (
     <div

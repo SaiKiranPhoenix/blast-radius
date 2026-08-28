@@ -7,9 +7,9 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { NavLink } from 'react-router-dom';
-import { Badge } from '../common/Badge';
 import { useIncidents } from '../../hooks/useIncidents';
 import { useUI } from '../../store/uiStore';
+import { Badge } from '../common/Badge';
 
 const navItems = [
   { href: '/', label: 'Service Map', icon: RectangleGroupIcon },
@@ -25,7 +25,11 @@ export function Sidebar(): JSX.Element {
   return (
     <aside className="flex h-full w-72 flex-col border-r border-slate-800 bg-slate-950/95 px-4 py-5 shadow-panel backdrop-blur-xl">
       <div className="flex items-center justify-between gap-3 px-2">
-        <NavLink to="/" className="flex min-w-0 items-center gap-3" onClick={() => setIsSidebarOpen(false)}>
+        <NavLink
+          to="/"
+          className="flex min-w-0 items-center gap-3"
+          onClick={() => setIsSidebarOpen(false)}
+        >
           <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-blue-400/35 bg-blue-500/15 text-blue-100">
             <BoltIcon className="h-5 w-5" aria-hidden="true" />
           </span>
