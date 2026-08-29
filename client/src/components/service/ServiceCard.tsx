@@ -55,7 +55,9 @@ export function ServiceCard({
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className={`font-bold text-slate-100 truncate uppercase tracking-wider ${isCompact ? 'text-xs' : 'text-sm'}`}>
+          <h3
+            className={`font-bold text-slate-100 truncate uppercase tracking-wider ${isCompact ? 'text-xs' : 'text-sm'}`}
+          >
             {service.name}
           </h3>
           <p className="text-[10px] text-hud-cyan/80 uppercase truncate mt-1">

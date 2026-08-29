@@ -23,7 +23,7 @@ export function ServiceGrid({ services, isLoading }: ServiceGridProps) {
       }
       groups[teamName].push(service);
     }
-    
+
     // Sort groups alphabetically, but put 'Unassigned' last
     return Object.entries(groups).sort(([a], [b]) => {
       if (a === 'Unassigned') return 1;
@@ -76,7 +76,7 @@ export function ServiceGrid({ services, isLoading }: ServiceGridProps) {
               {teamServices.length}
             </span>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {teamServices.map((service) => {
               const isSelected = selectedServiceId === service.id;
@@ -88,7 +88,9 @@ export function ServiceGrid({ services, isLoading }: ServiceGridProps) {
                   service={service}
                   isHighlighted={isSelected}
                   onClick={handleServiceClick}
-                  className={isDimmed ? 'opacity-40 grayscale-[0.5] hover:opacity-100 hover:grayscale-0' : ''}
+                  className={
+                    isDimmed ? 'opacity-40 grayscale-[0.5] hover:opacity-100 hover:grayscale-0' : ''
+                  }
                 />
               );
             })}

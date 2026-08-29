@@ -5,7 +5,9 @@ import { getDriver } from '../db/neo4j';
 
 export async function seedDependencies(): Promise<number> {
   if (env.DRY_RUN) {
-    console.log(`[seedDependencies] DRY RUN: would create ${dependenciesData.length} dependencies.`);
+    console.log(
+      `[seedDependencies] DRY RUN: would create ${dependenciesData.length} dependencies.`,
+    );
     return dependenciesData.length;
   }
 
@@ -29,7 +31,9 @@ export async function seedDependencies(): Promise<number> {
       const relationshipCount = toNumber(result.records[0]?.get('relationshipCount') ?? 0);
 
       if (relationshipCount === 0) {
-        console.warn(`[seedDependencies] Skipped missing edge ${dependency.from} -> ${dependency.to}`);
+        console.warn(
+          `[seedDependencies] Skipped missing edge ${dependency.from} -> ${dependency.to}`,
+        );
       } else {
         created += 1;
       }

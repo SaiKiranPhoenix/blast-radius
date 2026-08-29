@@ -2,7 +2,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { incidentActive } from '../../fixtures/incidents.fixture';
 import { serviceGateway } from '../../fixtures/services.fixture';
 import { teamPlatform, teamPlatformWithCounts } from '../../fixtures/teams.fixture';
-import { createMockDriver, createMockNode, createMockRecord, createMockSession } from '../__mocks__/neo4j';
+import {
+  createMockDriver,
+  createMockNode,
+  createMockRecord,
+  createMockSession,
+} from '../__mocks__/neo4j';
 
 vi.mock('../../../src/config/neo4j', () => ({
   getDriver: vi.fn(),

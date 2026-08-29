@@ -23,7 +23,7 @@ export function TeamAlertBanner({ teams, isVisible, animationDelay = 0 }: TeamAl
         <div className="p-2 bg-red-500/20 rounded-lg shrink-0">
           <ExclamationTriangleIcon className="w-6 h-6 text-red-400" />
         </div>
-        
+
         <div className="min-w-0">
           <h3 className="text-red-400 font-semibold text-sm sm:text-base mb-1">
             Teams to Page ({teams.length})
@@ -34,11 +34,12 @@ export function TeamAlertBanner({ teams, isVisible, animationDelay = 0 }: TeamAl
 
           <div className="space-y-3">
             {teams.map((teamData) => (
-              <div key={teamData.team.id} className="bg-slate-900/50 rounded-lg p-3 border border-red-500/10">
+              <div
+                key={teamData.team.id}
+                className="bg-slate-900/50 rounded-lg p-3 border border-red-500/10"
+              >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-medium text-slate-200 text-sm">
-                    {teamData.team.name}
-                  </span>
+                  <span className="font-medium text-slate-200 text-sm">{teamData.team.name}</span>
                   <a
                     href="#" // Placeholder for slack channel link
                     className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors"
@@ -47,10 +48,13 @@ export function TeamAlertBanner({ teams, isVisible, animationDelay = 0 }: TeamAl
                     Notify Channel
                   </a>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-1.5">
                   {teamData.affectedServices.map((svcName) => (
-                    <span key={svcName} className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-xs border border-slate-700">
+                    <span
+                      key={svcName}
+                      className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-xs border border-slate-700"
+                    >
                       {svcName}
                     </span>
                   ))}

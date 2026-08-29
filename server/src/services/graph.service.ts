@@ -9,7 +9,7 @@ export const getLongestChain = async (): Promise<LongestChainEntry[]> => {
   const session = driver.session({ database: env.NEO4J_DATABASE });
   try {
     const result = await session.run(Q_LONGEST_CHAIN);
-    
+
     return result.records.map((record) => ({
       source: record.get('source'),
       sink: record.get('sink'),

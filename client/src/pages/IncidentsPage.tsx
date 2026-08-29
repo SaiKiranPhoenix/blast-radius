@@ -15,7 +15,12 @@ export function IncidentsPage(): JSX.Element {
 
   // We fetch all and filter client side for simplicity in this demo,
   // or pass filters to hook if API supports it. The hook supports filters.
-  const { data: incidents, isLoading, isError, refetch } = useIncidents({
+  const {
+    data: incidents,
+    isLoading,
+    isError,
+    refetch,
+  } = useIncidents({
     severity: severityFilter === 'all' ? undefined : severityFilter,
     status: statusFilter === 'all' ? undefined : statusFilter,
   });
@@ -68,7 +73,9 @@ export function IncidentsPage(): JSX.Element {
         />
       ) : isLoading ? (
         <div className="space-y-4 animate-in fade-in duration-500">
-          {[1, 2, 3].map(i => <IncidentSkeleton key={i} />)}
+          {[1, 2, 3].map((i) => (
+            <IncidentSkeleton key={i} />
+          ))}
         </div>
       ) : !incidents || incidents.length === 0 ? (
         <div className="mt-12">
@@ -77,7 +84,7 @@ export function IncidentsPage(): JSX.Element {
             title="No incidents found"
             description="There are no incidents matching your current filters."
             action={
-              (severityFilter !== 'all' || statusFilter !== 'all') ? (
+              severityFilter !== 'all' || statusFilter !== 'all' ? (
                 <button
                   onClick={() => {
                     setSeverityFilter('all');
@@ -93,7 +100,7 @@ export function IncidentsPage(): JSX.Element {
         </div>
       ) : (
         <div className="space-y-4">
-          {incidents.map(incident => (
+          {incidents.map((incident) => (
             <IncidentCard key={incident.id} incident={incident} />
           ))}
         </div>

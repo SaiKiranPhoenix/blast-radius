@@ -6,18 +6,22 @@ import { Card } from '../components/common/Card';
 import { ServiceCard } from '../components/service/ServiceCard';
 import { Badge } from '../components/common/Badge';
 import { SeverityBadge, StatusBadge } from '../components/incident/IncidentBadge';
-import { 
-  ClockIcon, 
+import {
+  ClockIcon,
   CalendarIcon,
   ServerStackIcon,
   CheckCircleIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
 
 function formatDateTime(dateString: string) {
   return new Date(dateString).toLocaleString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric',
-    hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short',
   });
 }
 
@@ -30,14 +34,26 @@ export function IncidentDetailPage(): JSX.Element {
   const { id } = useParams();
   const { data: incident, isLoading, isError, refetch } = useIncident(id);
 
-  if (isLoading) return <div className="flex justify-center items-center h-96"><Spinner /></div>;
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-96">
+        <Spinner />
+      </div>
+    );
   if (isError || !incident) {
     return (
       <div className="px-4 py-8 max-w-7xl mx-auto">
         <ErrorState
           title="Incident not found"
           description="We couldn't load the details for this incident."
-          action={<button onClick={() => void refetch()} className="bg-red-500 text-white px-4 py-2 rounded">Retry</button>}
+          action={
+            <button
+              onClick={() => void refetch()}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Retry
+            </button>
+          }
         />
       </div>
     );
@@ -68,9 +84,8 @@ export function IncidentDetailPage(): JSX.Element {
               <ClockIcon className="w-5 h-5" />
               Timeline
             </h3>
-            
+
             <div className="relative pl-6 space-y-6 before:absolute before:inset-0 before:left-2.5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-slate-700 before:to-slate-800">
-              
               <div className="relative">
                 <div className="absolute left-[-29px] mt-1 w-4 h-4 rounded-full bg-red-500 ring-4 ring-slate-950" />
                 <h4 className="text-sm font-semibold text-slate-200">Incident Detected</h4>
@@ -104,10 +119,9 @@ export function IncidentDetailPage(): JSX.Element {
                   </div>
                 </div>
               )}
-
             </div>
           </Card>
-          
+
           <Card className="p-6">
             <h3 className="text-lg font-semibold text-slate-100 mb-4 flex items-center gap-2">
               <ExclamationTriangleIcon className="w-5 h-5 text-red-400" />
@@ -129,9 +143,9 @@ export function IncidentDetailPage(): JSX.Element {
             </h3>
             <Badge color="red">{incident.affectedServices.length} affected</Badge>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {incident.affectedServices.map(service => (
+            {incident.affectedServices.map((service) => (
               <ServiceCard key={service.id} service={service} variant="affected" />
             ))}
           </div>
