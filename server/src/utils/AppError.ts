@@ -5,14 +5,9 @@ export type AppErrorCode =
   | 'DB_CONNECTION_ERROR'
   | 'QUERY_ERROR'
   | 'VALIDATION_ERROR'
+  | 'UNAUTHENTICATED'
   | 'NOT_FOUND'
   | 'INTERNAL_ERROR';
-
-const notFoundCodes = {
-  service: 'SERVICE_NOT_FOUND',
-  team: 'TEAM_NOT_FOUND',
-  incident: 'INCIDENT_NOT_FOUND',
-} as const;
 
 export class AppError extends Error {
   public readonly isOperational = true;
@@ -26,8 +21,8 @@ export class AppError extends Error {
     this.name = 'AppError';
   }
 
-  public static notFound(entity: keyof typeof notFoundCodes, id: string): AppError {
-    return new AppError(`No ${entity} found with id: ${id}`, 404, notFoundCodes[entity]);
+  public static notFound(entity: string, id: string): AppError {
+    return new AppError(`No ${entity} found with id: ${id}`, 404, 'NOT_FOUND');
   }
 
   public static dbError(error: unknown): AppError {

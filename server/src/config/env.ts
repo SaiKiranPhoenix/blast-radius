@@ -12,6 +12,9 @@ const envSchema = z.object({
   CLIENT_ORIGIN: z.string().url().default('http://localhost:5173'),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+  // Auth / sessions
+  SESSION_SECRET: z.string().min(16).default('blast-radius-dev-secret-change-in-prod'),
+  SESSION_MAX_AGE_MS: z.coerce.number().int().positive().default(86_400_000), // 24 h
 });
 
 export type Env = z.infer<typeof envSchema>;

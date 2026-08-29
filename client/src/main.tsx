@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { App } from './App';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { UIProvider } from './store/uiStore';
+import { AuthProvider } from './store/authStore';
 import './index.css';
 import './threeui/style.css';
 
@@ -27,11 +28,13 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <UIProvider>
-        <ErrorBoundary>
-          <App />
-        </ErrorBoundary>
-      </UIProvider>
+      <AuthProvider>
+        <UIProvider>
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
+        </UIProvider>
+      </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>,
 );

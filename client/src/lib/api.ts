@@ -1,5 +1,6 @@
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import type { ApiFailure, ApiSuccess } from '../types/api.types';
+import type { MeResponse } from '../types/auth.types';
 import type { BlastRadiusResult, DependencyResult, LongestChainEntry } from '../types/graph.types';
 import type {
   IncidentDetail,
@@ -29,6 +30,7 @@ export class ApiError extends Error {
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 15_000,
+  withCredentials: true, // Required for session cookies
 });
 
 const responseInterceptor = api.interceptors.response as unknown as {
@@ -116,5 +118,12 @@ export const apiClient = {
       );
       return result.chains;
     },
+  },
+  auth: {
+    me: (): Promise<MeResponse> => api.get<unknown, MeResponse>('/api/me'),
+    demo: (): Promise<MeResponse> => api.post<unknown, MeResponse>('/api/auth/demo'),
+    login: (email: string): Promise<MeResponse> =>
+      api.post<unknown, MeResponse>('/api/auth/login', { email }),
+    logout: (): Promise<void> => api.post('/api/auth/logout'),
   },
 };
