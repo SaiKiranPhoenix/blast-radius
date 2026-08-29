@@ -137,3 +137,19 @@ export const deploymentsData: DeploymentData[] = [
     triggeredIncidentId: null,
   },
 ];
+
+// Generate 200 programmatic deployments
+const environments: ('production' | 'staging')[] = ['production', 'staging'];
+for (let i = 1; i <= 200; i++) {
+  const isFailed = i % 20 === 0; // Some deployments trigger incidents
+
+  deploymentsData.push({
+    id: `dep-gen-${i}`,
+    version: `v${Math.floor(i / 10)}.${i % 10}.0`,
+    deployed_at: '2024-11-18T10:00:00.000Z',
+    deployed_by: `developer-${i % 10}`,
+    environment: environments[i % environments.length],
+    deployedToServiceId: `svc-gen-${(i % 120) + 1}`,
+    triggeredIncidentId: isFailed ? `inc-gen-${(i % 50) + 1}` : null,
+  });
+}

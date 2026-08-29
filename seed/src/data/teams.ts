@@ -72,3 +72,14 @@ export const teamsData: TeamData[] = [
     timezone: 'America/Los_Angeles',
   },
 ];
+
+// Generate 40 additional teams (some empty/without services to test edge cases)
+for (let i = 1; i <= 40; i++) {
+  teamsData.push({
+    id: `team-gen-${i}`,
+    name: `Generated Team Alpha-${i}`,
+    slack_channel: `#gen-oncall-${i}`,
+    oncall_email: `gen-team-${i}@acme.com`,
+    timezone: i % 2 === 0 ? 'America/New_York' : 'Europe/London',
+  });
+}

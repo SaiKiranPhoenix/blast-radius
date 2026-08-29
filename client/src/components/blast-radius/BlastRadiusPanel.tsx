@@ -16,7 +16,11 @@ interface BlastRadiusPanelProps {
 
 const HOP_REVEAL_DELAY_MS = 700;
 
-export function BlastRadiusPanel({ serviceId, onClose, inline = false }: BlastRadiusPanelProps) {
+export function BlastRadiusPanel({
+  serviceId,
+  onClose,
+  inline = false,
+}: BlastRadiusPanelProps): JSX.Element | null {
   const { data, isLoading, error, refetch } = useBlastRadius(serviceId || undefined);
   const [revealedHops, setRevealedHops] = useState(0);
 
@@ -29,7 +33,7 @@ export function BlastRadiusPanel({ serviceId, onClose, inline = false }: BlastRa
       return;
     }
 
-    const totalHops = data.hops.length;
+    const totalHops = data.hops?.length || 0;
     if (revealedHops < totalHops) {
       const timer = setTimeout(() => {
         setRevealedHops((prev) => prev + 1);
@@ -50,7 +54,9 @@ export function BlastRadiusPanel({ serviceId, onClose, inline = false }: BlastRa
       <div className="flex items-center justify-between p-4 sm:p-6 border-b border-hud-border bg-hud-panel/80 backdrop-blur-md relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-hud-cyan to-transparent"></div>
         <div className="relative z-10">
-          <h2 className="text-xl font-bold text-hud-cyan uppercase tracking-widest animate-pulse-slow">Blast Radius</h2>
+          <h2 className="text-xl font-bold text-hud-cyan uppercase tracking-widest animate-pulse-slow">
+            Blast Radius
+          </h2>
           {data && (
             <p className="text-xs text-hud-red mt-1 font-bold tracking-widest">
               &gt; {data.totalAffected} NODE{data.totalAffected !== 1 ? 'S' : ''} COMPROMISED
@@ -91,44 +97,51 @@ export function BlastRadiusPanel({ serviceId, onClose, inline = false }: BlastRa
           />
         )}
 
-        {data && data.hops.length === 0 && (
+        {data && (!data.hops || data.hops.length === 0) && (
           <div className="text-center py-12 text-slate-400 text-sm">
             This service has no downstream dependents.
           </div>
         )}
 
-        {data && data.hops.length > 0 && (
+        {data && data.hops?.length > 0 && (
           <>
             <div className="space-y-8">
               {data.hops.map((hopData, idx) => (
-                <HopGroup
-                  key={hopData.hop}
-                  hopData={hopData}
-                  isVisible={idx < revealedHops}
-                />
+                <HopGroup key={hopData.hop} hopData={hopData} isVisible={idx < revealedHops} />
               ))}
             </div>
 
             <TeamAlertBanner
-              teams={data.teamsToPage}
-              isVisible={revealedHops >= data.hops.length}
+              teams={data.teamsToPage || []}
+              isVisible={revealedHops >= (data.hops?.length || 0)}
               animationDelay={400}
             />
-            
+
             {/* Historical Incidents (Optional extension) */}
-            {revealedHops >= data.hops.length && data.historicalIncidents.length > 0 && (
-              <div className="mt-8 pt-8 border-t border-slate-800 animate-fade-in-up" style={{ animationDelay: '600ms', animationFillMode: 'both' }}>
-                <h3 className="text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wider">Related Historical Incidents</h3>
-                <div className="space-y-3">
-                  {data.historicalIncidents.map(incident => (
-                    <div key={incident.id} className="p-3 bg-slate-800/50 rounded-lg border border-slate-700/50">
-                      <div className="text-sm font-medium text-slate-200">{incident.title}</div>
-                      <div className="text-xs text-slate-400 mt-1">{new Date(incident.started_at).toLocaleDateString()}</div>
-                    </div>
-                  ))}
+            {revealedHops >= (data.hops?.length || 0) &&
+              (data.historicalIncidents?.length || 0) > 0 && (
+                <div
+                  className="mt-8 pt-8 border-t border-slate-800 animate-fade-in-up"
+                  style={{ animationDelay: '600ms', animationFillMode: 'both' }}
+                >
+                  <h3 className="text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wider">
+                    Related Historical Incidents
+                  </h3>
+                  <div className="space-y-3">
+                    {data.historicalIncidents?.map((incident) => (
+                      <div
+                        key={incident.id}
+                        className="p-3 bg-slate-800/50 rounded-lg border border-slate-700/50"
+                      >
+                        <div className="text-sm font-medium text-slate-200">{incident.title}</div>
+                        <div className="text-xs text-slate-400 mt-1">
+                          {new Date(incident.started_at).toLocaleDateString()}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </>
         )}
       </div>
@@ -143,12 +156,12 @@ export function BlastRadiusPanel({ serviceId, onClose, inline = false }: BlastRa
     <>
       {/* Backdrop */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-hud-black/60 backdrop-blur-sm z-40 transition-opacity lg:hidden"
           onClick={onClose}
         />
       )}
-      
+
       {/* Slide-in Panel */}
       <div
         className={`
