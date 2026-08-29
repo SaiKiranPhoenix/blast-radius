@@ -64,7 +64,7 @@ Any future phase that does not strengthen this journey should be reconsidered.
 | Phase 6 — Backend Tests                   | 13      | 13      | 0         |
 | Phase 7 — Frontend Shell                  | 20      | 20      | 0         |
 | Phase 8A — Product Entry & Demo Journey   | 18      | 18      | 0         |
-| Phase 8B — Auth, Users & Workspaces       | 20      | 0       | 20        |
+| Phase 8B — Auth, Users & Workspaces       | 20      | 20      | 0         |
 | Phase 8C — Incident Triage Workflow       | 22      | 0       | 22        |
 | Phase 8D — Action Plan & Collaboration    | 18      | 0       | 18        |
 | Phase 8E — Product Analytics & Feedback   | 10      | 0       | 10        |
@@ -74,7 +74,7 @@ Any future phase that does not strengthen this journey should be reconsidered.
 | Phase 11 — Integration & E2E Verification | 12      | 0       | 12        |
 | Phase 12 — Deployment                     | 12      | 0       | 12        |
 | Phase 13 — Final Polish & Submission      | 9       | 0       | 9         |
-| **Total**                                 | **290** | **118** | **172**   |
+| **Total**                                 | **290** | **138** | **152**   |
 
 ---
 
@@ -399,28 +399,28 @@ Any future phase that does not strengthen this journey should be reconsidered.
 > Goal: The app has a real starting point, a clear user identity, and a workspace boundary so service graphs are not
 > just global demo data.
 
-- [ ] Choose an auth approach for v1: passwordless email, GitHub OAuth, or demo-only local auth; document the decision
+- [x] Choose an auth approach for v1: passwordless email, GitHub OAuth, or demo-only local auth; document the decision
       in `docs/AUTH.md`.
-- [ ] Create `User` and `Workspace` entities in the data model with ownership relationships.
-- [ ] Add `Membership` or equivalent relationship connecting users to workspaces with roles: owner, responder, viewer.
-- [ ] Add migration/constraint tasks for unique user email and workspace id.
-- [ ] Add seed data for one demo workspace and at least three demo users: on-call engineer, manager, viewer.
-- [ ] Add backend env variables for auth/session settings without hardcoding secrets.
-- [ ] Add login endpoint or auth callback endpoint depending on chosen provider.
-- [ ] Add logout endpoint that clears the active session.
-- [ ] Add `/api/me` endpoint returning current user, active workspace, role, and feature flags.
-- [ ] Add workspace switch endpoint or client-side workspace selector if multiple workspaces are available.
-- [ ] Scope all service, team, incident, deployment, and graph queries by workspace id.
-- [ ] Update tests to prove users cannot access another workspace's services or incidents.
-- [ ] Add `AuthProvider` on the frontend with loading, signed-out, demo, and signed-in states.
-- [ ] Add `RequireAuth` or `RequireWorkspace` route wrapper for non-demo private routes.
-- [ ] Create `/login` page with "Continue with demo workspace" and the chosen real auth option.
-- [ ] Add account menu in the top bar showing user name, workspace name, and logout.
-- [ ] Add role-aware UI: viewers can inspect and share, responders can create simulations/action plans, owners can
+- [x] Create `User` and `Workspace` entities in the data model with ownership relationships.
+- [x] Add `Membership` or equivalent relationship connecting users to workspaces with roles: owner, responder, viewer.
+- [x] Add migration/constraint tasks for unique user email and workspace id.
+- [x] Add seed data for one demo workspace and at least three demo users: on-call engineer, manager, viewer.
+- [x] Add backend env variables for auth/session settings without hardcoding secrets.
+- [x] Add login endpoint or auth callback endpoint depending on chosen provider.
+- [x] Add logout endpoint that clears the active session.
+- [x] Add `/api/me` endpoint returning current user, active workspace, role, and feature flags.
+- [x] Add workspace switch endpoint or client-side workspace selector if multiple workspaces are available.
+- [x] Scope all service, team, incident, deployment, and graph queries by workspace id.
+- [x] Update tests to prove users cannot access another workspace's services or incidents.
+- [x] Add `AuthProvider` on the frontend with loading, signed-out, demo, and signed-in states.
+- [x] Add `RequireAuth` or `RequireWorkspace` route wrapper for non-demo private routes.
+- [x] Create `/login` page with "Continue with demo workspace" and the chosen real auth option.
+- [x] Add account menu in the top bar showing user name, workspace name, and logout.
+- [x] Add role-aware UI: viewers can inspect and share, responders can create simulations/action plans, owners can
       manage workspace settings.
-- [ ] Add workspace settings page with workspace name, default severity, and team escalation preferences.
-- [ ] Verify unauthenticated users land on `/login` and can enter demo mode without seeing a blank app.
-- [ ] Verify signed-in/demo sessions survive refresh and can be cleared with logout.
+- [x] Add workspace settings page with workspace name, default severity, and team escalation preferences.
+- [x] Verify unauthenticated users land on `/login` and can enter demo mode without seeing a blank app.
+- [x] Verify signed-in/demo sessions survive refresh and can be cleared with logout.
 
 ---
 

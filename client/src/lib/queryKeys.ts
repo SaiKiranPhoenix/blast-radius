@@ -28,3 +28,8 @@ export const graphKeys = {
   all: ['graph'] as const,
   longestChain: () => [...graphKeys.all, 'longest-chain'] as const,
 };
+
+export const authKeys = {
+  all: ['auth'] as const,
+  me: () => [...authKeys.all, 'me'] as const,
+};

@@ -8,6 +8,9 @@ import { seedDeployments } from './steps/seedDeployments';
 import { seedIncidents } from './steps/seedIncidents';
 import { seedServices } from './steps/seedServices';
 import { seedTeams } from './steps/seedTeams';
+import { seedUsers } from './steps/seedUsers';
+import { seedWorkspaceLinks } from './steps/seedWorkspaceLinks';
+import { seedWorkspaces } from './steps/seedWorkspaces';
 
 async function printSummary(): Promise<void> {
   if (env.DRY_RUN) {
@@ -70,8 +73,11 @@ async function runSeed(): Promise<void> {
     await clearDatabase();
   }
   await createConstraints();
+  await seedWorkspaces();
   await seedTeams();
   await seedServices();
+  await seedWorkspaceLinks();
+  await seedUsers();
   await seedDependencies();
   await seedIncidents();
   await seedDeployments();
