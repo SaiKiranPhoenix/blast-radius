@@ -6,7 +6,7 @@ import type { ApiSuccess } from '../types/api.types';
 
 export const getServices = async (req: Request, res: Response) => {
   const { type, tier, teamId } = req.query;
-  
+
   const filters: Record<string, string> = {};
   if (type) filters.type = type as string;
   if (tier) filters.tier = tier as string;
@@ -18,7 +18,7 @@ export const getServices = async (req: Request, res: Response) => {
     data: {
       services,
       total: services.length,
-    }
+    },
   };
   res.json(response);
 };
@@ -43,7 +43,7 @@ export const getBlastRadius = async (req: Request, res: Response) => {
   if (!parseResult.success) {
     throw AppError.validationError('maxHops must be an integer between 1 and 10');
   }
-  
+
   const { maxHops } = parseResult.data;
   const result = await servicesService.getBlastRadius(id, maxHops);
   const response: ApiSuccess<typeof result> = {

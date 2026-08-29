@@ -35,8 +35,12 @@ export function TopBar(): JSX.Element {
       <div className="min-w-0 flex items-center gap-3">
         <div className="h-4 w-1 bg-hud-cyan animate-pulse"></div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-hud-cyan/50">SYS.LINK</p>
-          <h2 className="truncate text-sm font-bold tracking-widest text-slate-100 uppercase">{pageTitle}</h2>
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-hud-cyan/50">
+            SYS.LINK
+          </p>
+          <h2 className="truncate text-sm font-bold tracking-widest text-slate-100 uppercase">
+            {pageTitle}
+          </h2>
         </div>
       </div>
     </header>

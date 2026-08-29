@@ -2,6 +2,7 @@ import {
   ArrowTopRightOnSquareIcon,
   BoltIcon,
   ExclamationTriangleIcon,
+  PlayIcon,
   RectangleGroupIcon,
   UserGroupIcon,
   XMarkIcon,
@@ -12,7 +13,8 @@ import { useUI } from '../../store/uiStore';
 import { Badge } from '../common/Badge';
 
 const navItems = [
-  { href: '/', label: 'Service Map', icon: RectangleGroupIcon },
+  { href: '/start', label: 'Start', icon: PlayIcon },
+  { href: '/services', label: 'Service Map', icon: RectangleGroupIcon },
   { href: '/teams', label: 'Teams', icon: UserGroupIcon },
   { href: '/incidents', label: 'Incidents', icon: ExclamationTriangleIcon },
 ];
@@ -26,7 +28,7 @@ export function Sidebar(): JSX.Element {
     <aside className="flex h-full w-72 flex-col border-r border-hud-border bg-hud-panel/95 px-4 py-5 shadow-panel backdrop-blur-xl">
       <div className="flex items-center justify-between gap-3 px-2">
         <NavLink
-          to="/"
+          to="/start"
           className="flex min-w-0 items-center gap-3"
           onClick={() => setIsSidebarOpen(false)}
         >
@@ -35,8 +37,12 @@ export function Sidebar(): JSX.Element {
             <div className="absolute inset-0 bg-hud-cyan/10 animate-pulse-slow"></div>
           </span>
           <span className="min-w-0">
-            <span className="block truncate text-lg font-bold tracking-widest text-hud-cyan uppercase">BlastRadius</span>
-            <span className="block truncate text-[10px] uppercase tracking-widest text-slate-500">Global Assessment</span>
+            <span className="block truncate text-lg font-bold tracking-widest text-hud-cyan uppercase">
+              BlastRadius
+            </span>
+            <span className="block truncate text-[10px] uppercase tracking-widest text-slate-500">
+              Global Assessment
+            </span>
           </span>
         </NavLink>
         <button
@@ -54,7 +60,7 @@ export function Sidebar(): JSX.Element {
           <NavLink
             key={item.href}
             to={item.href}
-            end={item.href === '/'}
+            end={item.href === '/start' || item.href === '/services'}
             onClick={() => setIsSidebarOpen(false)}
             className={({ isActive }) =>
               [

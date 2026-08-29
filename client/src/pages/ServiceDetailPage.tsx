@@ -18,7 +18,10 @@ export function ServiceDetailPage(): JSX.Element {
       {serviceQuery.isLoading ? (
         <Spinner label="Loading service" />
       ) : serviceQuery.isError || !service ? (
-        <ErrorState description="This service could not be found or the API is unavailable." title="Service unavailable" />
+        <ErrorState
+          description="This service could not be found or the API is unavailable."
+          title="Service unavailable"
+        />
       ) : (
         <>
           <PageHeader
@@ -26,23 +29,29 @@ export function ServiceDetailPage(): JSX.Element {
             subtitle={service.description}
             badge={<ServiceTierBadge tier={service.tier} />}
           />
-          
+
           <Card className="p-5 border-slate-700/50 bg-slate-900/50">
             <dl className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <div>
                 <dt className="text-xs uppercase tracking-[0.16em] text-slate-500 mb-2">Type</dt>
-                <dd><ServiceTypeBadge type={service.type} /></dd>
+                <dd>
+                  <ServiceTypeBadge type={service.type} />
+                </dd>
               </div>
               <div>
                 <dt className="text-xs uppercase tracking-[0.16em] text-slate-500 mb-2">Team</dt>
                 <dd className="font-medium text-slate-200">{service.team?.name ?? 'Unassigned'}</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-[0.16em] text-slate-500 mb-2">Depends on</dt>
+                <dt className="text-xs uppercase tracking-[0.16em] text-slate-500 mb-2">
+                  Depends on
+                </dt>
                 <dd className="font-medium text-emerald-400">{service.dependencyCount}</dd>
               </div>
               <div>
-                <dt className="text-xs uppercase tracking-[0.16em] text-slate-500 mb-2">Dependents</dt>
+                <dt className="text-xs uppercase tracking-[0.16em] text-slate-500 mb-2">
+                  Dependents
+                </dt>
                 <dd className="font-medium text-amber-400">{service.dependentCount}</dd>
               </div>
             </dl>

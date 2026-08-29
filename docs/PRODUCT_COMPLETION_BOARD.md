@@ -8,25 +8,73 @@
 
 ---
 
+## Product North Star
+
+BlastRadius is not just a service catalog. It is an incident decision tool for engineering teams who need to answer one
+question quickly:
+
+> **"This service is failing. Who is affected, who do we page, what do we say, and what should we do first?"**
+
+The finished product must support a clear journey:
+
+1. A user lands on the app and immediately understands the use case.
+2. They sign in or continue with a demo workspace.
+3. They choose a workspace that contains a service graph.
+4. They start from a real incident scenario or pick a failing service.
+5. The app simulates blast radius hop by hop.
+6. The app converts graph data into a plain-language response plan.
+7. The user can share that plan with teammates or save it for review.
+8. The app teaches why the graph matters through guided examples, not empty dashboards.
+
+### Primary Users
+
+- **On-call engineer:** needs a fast dependency map, owners, and escalation list during an incident.
+- **Engineering manager:** needs to understand customer/team impact and coordinate updates.
+- **Platform/SRE lead:** needs recurring architecture risk insights before incidents happen.
+- **Evaluator/reviewer:** needs a frictionless demo journey that proves the app is useful without setup pain.
+
+### Core Use Cases
+
+- **Incident Triage:** "Payments API is timing out. Show what breaks and who to page."
+- **Pre-Deploy Risk Review:** "If we deploy Auth Service, which critical paths could be affected?"
+- **Architecture Hotspot Review:** "Which services sit on the deepest dependency chains?"
+- **Post-Incident Learning:** "Has this failure shape happened before, and what teams were involved?"
+- **Executive Summary:** "Create a readable impact summary for a non-technical stakeholder."
+
+### Product Definition of Useful
+
+The app is useful only when a first-time user can complete this flow without explanation:
+
+`Open app -> choose demo workspace -> start an incident -> select failing service -> view blast radius -> see teams to page -> copy/share action plan`
+
+Any future phase that does not strengthen this journey should be reconsidered.
+
+---
+
 ## Progress
 
-| Phase                                     | Tasks   | Done   | Remaining |
-| ----------------------------------------- | ------- | ------ | --------- |
-| Phase 0 — Repo & Environment Setup        | 20      | 0      | 20        |
-| Phase 1 — Git Workflow & Code Quality     | 12      | 0      | 12        |
-| Phase 2 — CI/CD Pipeline                  | 14      | 0      | 14        |
-| Phase 3 — Database Layer                  | 7       | 7      | 0         |
-| Phase 4 — Seed Script                     | 16      | 16     | 0         |
-| Phase 5 — Backend API                     | 24      | 24     | 0         |
-| Phase 6 — Backend Tests                   | 13      | 13     | 0         |
-| Phase 7 — Frontend Shell                  | 20      | 20     | 0         |
-| Phase 8 — Frontend Pages                  | 22      | 0      | 22        |
-| Phase 9 — Frontend Tests                  | 11      | 0      | 11        |
-| Phase 10 — Observability & Security       | 10      | 0      | 10        |
-| Phase 11 — Integration & E2E Verification | 12      | 0      | 12        |
-| Phase 12 — Deployment                     | 12      | 0      | 12        |
-| Phase 13 — Final Polish & Submission      | 9       | 0      | 9         |
-| **Total**                                 | **202** | **100** | **102**   |
+| Phase                                     | Tasks   | Done    | Remaining |
+| ----------------------------------------- | ------- | ------- | --------- |
+| Phase 0 — Repo & Environment Setup        | 20      | 0       | 20        |
+| Phase 1 — Git Workflow & Code Quality     | 12      | 0       | 12        |
+| Phase 2 — CI/CD Pipeline                  | 14      | 0       | 14        |
+| Phase 3 — Database Layer                  | 7       | 7       | 0         |
+| Phase 4 — Seed Script                     | 16      | 16      | 0         |
+| Phase 5 — Backend API                     | 24      | 24      | 0         |
+| Phase 6 — Backend Tests                   | 13      | 13      | 0         |
+| Phase 7 — Frontend Shell                  | 20      | 20      | 0         |
+| Phase 8A — Product Entry & Demo Journey   | 18      | 18      | 0         |
+| Phase 8B — Auth, Users & Workspaces       | 20      | 0       | 20        |
+| Phase 8C — Incident Triage Workflow       | 22      | 0       | 22        |
+| Phase 8D — Action Plan & Collaboration    | 18      | 0       | 18        |
+| Phase 8E — Product Analytics & Feedback   | 10      | 0       | 10        |
+| Phase 8 — Frontend Pages                  | 22      | 0       | 22        |
+| Phase 9 — Frontend Tests                  | 11      | 0       | 11        |
+| Phase 10 — Observability & Security       | 10      | 0       | 10        |
+| Phase 11 — Integration & E2E Verification | 12      | 0       | 12        |
+| Phase 12 — Deployment                     | 12      | 0       | 12        |
+| Phase 13 — Final Polish & Submission      | 9       | 0       | 9         |
+| **Total**                                 | **290** | **118** | **172**   |
 
 ---
 
@@ -315,6 +363,144 @@
 
 ---
 
+## Phase 8A — Product Entry & Demo Journey
+
+> Goal: A first-time visitor immediately understands what BlastRadius does and can enter a meaningful demo without
+> reading documentation.
+
+- [x] Replace the current generic first screen with a product start screen focused on the question: "What happens if
+      this service fails?"
+- [x] Add a primary CTA: "Start incident simulation" that moves the user into the demo workflow.
+- [x] Add a secondary CTA: "Explore architecture risk" that opens the service map with risk-first sorting.
+- [x] Add a "Continue with demo workspace" path that requires no login and uses seeded data.
+- [x] Add a compact product explanation panel with 3 plain-language outcomes: affected services, teams to page, response
+      plan.
+- [x] Add a demo scenario picker with at least 5 realistic scenarios: auth outage, checkout slowdown, database failure,
+      queue backlog, deploy regression.
+- [x] Create `src/data/demoScenarios.ts` with scenario id, title, starting service id, severity, prompt copy, and
+      expected business impact.
+- [x] Add a `DemoScenarioCard` component that shows scenario title, affected domain, severity, and start action.
+- [x] Add a `/start` route that presents the guided product entry experience.
+- [x] Update `/` to redirect to `/start` unless the user has an active workspace/session.
+- [x] Add "Skip to service map" for technical users who already know what they want.
+- [x] Add empty-state copy that explains what to do next, not just that data is missing.
+- [x] Add loading copy that describes the current action: "Reading dependency graph", "Finding owners", "Preparing
+      plan".
+- [x] Add a first-run checklist in UI state: choose scenario, inspect hops, review teams, copy plan.
+- [x] Add a visible "Why this matters" section for non-technical reviewers with one short example incident.
+- [x] Make the Sylva/ThreeUI hero serve the product start screen without hiding the operational controls below the fold.
+- [x] Verify a reviewer can land on `/start`, choose a scenario, and reach the service map in under 30 seconds.
+- [x] Update README screenshots and demo script to start from the new `/start` journey.
+
+---
+
+## Phase 8B — Auth, Users & Workspaces
+
+> Goal: The app has a real starting point, a clear user identity, and a workspace boundary so service graphs are not
+> just global demo data.
+
+- [ ] Choose an auth approach for v1: passwordless email, GitHub OAuth, or demo-only local auth; document the decision
+      in `docs/AUTH.md`.
+- [ ] Create `User` and `Workspace` entities in the data model with ownership relationships.
+- [ ] Add `Membership` or equivalent relationship connecting users to workspaces with roles: owner, responder, viewer.
+- [ ] Add migration/constraint tasks for unique user email and workspace id.
+- [ ] Add seed data for one demo workspace and at least three demo users: on-call engineer, manager, viewer.
+- [ ] Add backend env variables for auth/session settings without hardcoding secrets.
+- [ ] Add login endpoint or auth callback endpoint depending on chosen provider.
+- [ ] Add logout endpoint that clears the active session.
+- [ ] Add `/api/me` endpoint returning current user, active workspace, role, and feature flags.
+- [ ] Add workspace switch endpoint or client-side workspace selector if multiple workspaces are available.
+- [ ] Scope all service, team, incident, deployment, and graph queries by workspace id.
+- [ ] Update tests to prove users cannot access another workspace's services or incidents.
+- [ ] Add `AuthProvider` on the frontend with loading, signed-out, demo, and signed-in states.
+- [ ] Add `RequireAuth` or `RequireWorkspace` route wrapper for non-demo private routes.
+- [ ] Create `/login` page with "Continue with demo workspace" and the chosen real auth option.
+- [ ] Add account menu in the top bar showing user name, workspace name, and logout.
+- [ ] Add role-aware UI: viewers can inspect and share, responders can create simulations/action plans, owners can
+      manage workspace settings.
+- [ ] Add workspace settings page with workspace name, default severity, and team escalation preferences.
+- [ ] Verify unauthenticated users land on `/login` and can enter demo mode without seeing a blank app.
+- [ ] Verify signed-in/demo sessions survive refresh and can be cleared with logout.
+
+---
+
+## Phase 8C — Incident Triage Workflow
+
+> Goal: The central workflow is not browsing cards; it is starting from a concrete failure and getting an incident
+> answer.
+
+- [ ] Create `/triage/new` route for starting a new incident simulation.
+- [ ] Add failing service search with typeahead, service tier, owner team, and dependency count in each result.
+- [ ] Add scenario prefill so choosing a demo scenario opens `/triage/new` with service, severity, and context filled
+      in.
+- [ ] Add severity selector with clear business meaning for SEV1, SEV2, and SEV3.
+- [ ] Add incident context input: short symptom, customer impact, and optional suspected deployment.
+- [ ] Add max-hop control with a sensible default and copy explaining why deeper hops can create noise.
+- [ ] Add "Run blast radius" action that creates a local triage run and opens `/triage/:runId`.
+- [ ] Add backend model for `TriageRun` with id, workspace id, root service id, severity, context, created_by,
+      created_at.
+- [ ] Add `POST /api/triage-runs` to create a run and persist the selected scenario/context.
+- [ ] Add `GET /api/triage-runs/:id` to retrieve the run, blast radius result, teams to page, and recommendations.
+- [ ] Add `GET /api/triage-runs` to list recent simulations for the workspace.
+- [ ] Add tests for creating and retrieving triage runs.
+- [ ] Build `/triage/:runId` page with a clear top summary: root service, severity, affected count, team count.
+- [ ] Show blast radius hop groups as the primary experience, with progressive reveal and pause/replay controls.
+- [ ] Show "Immediate teams to page" beside the graph, sorted by critical service ownership first.
+- [ ] Show "Likely customer impact" generated from affected service types and tiers using deterministic rules.
+- [ ] Show "Recommended first checks" using service type and incident history: logs, deploys, upstream DB, queue lag,
+      cache health.
+- [ ] Show historical incidents matching the root service or same affected team set.
+- [ ] Add a "Mark as active incident" action that converts a simulation into a real incident record.
+- [ ] Add a "Close simulation" action that returns to service map without losing recent run history.
+- [ ] Verify the auth outage demo produces a readable triage page with affected services, page list, and next steps.
+- [ ] Verify all triage flow states exist: no service selected, loading graph, graph error, no affected services, and
+      successful result.
+
+---
+
+## Phase 8D — Action Plan & Collaboration
+
+> Goal: BlastRadius turns graph output into something a responder can send, save, and act on during an incident.
+
+- [ ] Create an `ActionPlan` type with summary, affected services, teams to page, first checks, comms draft, and status.
+- [ ] Add backend endpoint `POST /api/triage-runs/:id/action-plan` that creates a deterministic action plan from a run.
+- [ ] Add backend endpoint `GET /api/action-plans/:id` to retrieve saved plans.
+- [ ] Add backend endpoint `PATCH /api/action-plans/:id` to update status, notes, and owner.
+- [ ] Add tests for action plan creation, retrieval, and update authorization.
+- [ ] Add `ActionPlanPanel` on the triage page with sections: Impact, Owners, First Checks, Update Draft.
+- [ ] Add "Copy incident update" button that copies a plain-language status update to clipboard.
+- [ ] Add "Copy Slack page list" button that copies team channels grouped by severity/criticality.
+- [ ] Add "Export summary" button that downloads a Markdown incident brief.
+- [ ] Add "Assign owner" field for a responder to take responsibility for the plan.
+- [ ] Add checklist interactions for first checks: pending, in progress, done, skipped.
+- [ ] Add notes field for responder observations during the simulation or incident.
+- [ ] Add shareable read-only link for a triage run or action plan within the same workspace.
+- [ ] Add visual distinction between demo-generated plans and real incident plans.
+- [ ] Add audit trail entries for plan created, note added, checklist updated, copied update, exported summary.
+- [ ] Add "what changed since last run" comparison when a service has previous triage runs.
+- [ ] Verify a user can run a scenario and copy a useful status update without editing raw graph data.
+- [ ] Verify exported Markdown includes timestamp, root service, affected count, teams, and next actions.
+
+---
+
+## Phase 8E — Product Analytics & Feedback
+
+> Goal: Validate whether users understand and complete the core journey, without collecting sensitive data.
+
+- [ ] Define product events: start viewed, demo selected, triage started, blast radius viewed, action plan copied, share
+      link created.
+- [ ] Add privacy note documenting that service names and incident notes are not sent to third-party analytics in v1.
+- [ ] Add local analytics adapter that logs events in development and can be disabled in production.
+- [ ] Track first-run funnel progress in client state and expose it in development for debugging.
+- [ ] Add "Was this useful?" feedback prompt after a user copies or exports an action plan.
+- [ ] Add feedback endpoint storing rating, optional comment, workspace id, and triage run id.
+- [ ] Add tests for feedback validation and rejection of empty/invalid payloads.
+- [ ] Add admin-only feedback list endpoint for workspace owners.
+- [ ] Add small workspace insights panel: simulations this week, most tested service, most paged team.
+- [ ] Verify demo journey completion can be measured locally from `/start` to copied action plan.
+
+---
+
 ## Phase 8 — Frontend Pages (client/)
 
 > Goal: All 6 pages are built with full loading/empty/error states and the blast radius animation works.
@@ -508,15 +694,31 @@
 - Related tests pass (or the task is a manual verification step)
 - The feature works end-to-end in the browser (for frontend tasks)
 - No secrets are hardcoded; env vars are used for all config
+- The screen tells the user what to do next without requiring a developer to explain it
+- Empty, loading, and error states preserve the user journey instead of becoming dead ends
+- Any feature that creates a result also gives the user a useful next action: page, copy, share, export, assign, or save
+
+**A product flow is complete when:**
+
+- A first-time visitor can enter through `/start` and understand the app's purpose in under 30 seconds
+- A demo user can complete the full incident triage flow without signing up
+- A signed-in user can work inside a clear workspace boundary
+- A responder can turn a failing service into an action plan that names affected services, teams to page, likely impact,
+  and first checks
+- A non-technical reviewer can understand the outcome without reading API docs, seed files, or source code
 
 **The project is complete when:**
 
-- All 202 checkboxes above are checked
+- All 290 checkboxes above are checked
 - Both test suites pass with coverage thresholds met (backend ≥80%, frontend ≥60%)
 - The CI pipeline passes on `main` (lint, type-check, all tests)
 - The app is deployed and reachable via a public URL
-- The screen recording is made and the submission email is sent
+- The deployed demo starts at `/start` and demonstrates a complete incident triage journey
+- The screen recording shows: start screen → demo scenario → failing service → blast radius → teams to page → copied
+  action plan
+- The submission email includes repo URL, deployed demo link, screen recording, and a short explanation of the product
+  use case
 
 ---
 
-_Last updated: 2026-08-29 — Phase breakdown: 13 phases, 202 atomic tasks_
+_Last updated: 2026-08-29 — Phase breakdown: 13 core phases plus 5 product-usefulness phases, 290 atomic tasks_

@@ -33,10 +33,10 @@ export function StatusBadge({ status, size = 'sm' }: StatusBadgeProps): JSX.Elem
   };
 
   return (
-    <Badge 
-      color={colorMap[status]} 
-      size={size} 
-      dot={status === 'active'} 
+    <Badge
+      color={colorMap[status]}
+      size={size}
+      dot={status === 'active'}
       dotAnimate={status === 'active'}
     >
       {status}

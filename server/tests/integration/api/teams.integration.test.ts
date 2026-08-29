@@ -26,9 +26,7 @@ describe('team API routes', () => {
   });
 
   it('GET /api/teams/:id returns 404 when missing', async () => {
-    vi.mocked(teamsService.getTeamById).mockRejectedValueOnce(
-      AppError.notFound('team', 'missing'),
-    );
+    vi.mocked(teamsService.getTeamById).mockRejectedValueOnce(AppError.notFound('team', 'missing'));
 
     const response = await request(app).get('/api/teams/missing').expect(404);
 

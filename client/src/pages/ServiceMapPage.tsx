@@ -1,5 +1,7 @@
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, MapIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 import { Badge } from '../components/common/Badge';
+import { EmptyState } from '../components/common/EmptyState';
 import { ErrorState } from '../components/common/ErrorState';
 import { PageHeader } from '../components/common/PageHeader';
 import { Spinner } from '../components/common/Spinner';
@@ -7,6 +9,7 @@ import { useServices } from '../hooks/useServices';
 import { ServiceGrid } from '../components/service/ServiceGrid';
 import { BlastRadiusPanel } from '../components/blast-radius/BlastRadiusPanel';
 import { useUI } from '../store/uiStore';
+import { FirstRunChecklist } from '../components/start/FirstRunChecklist';
 
 export function ServiceMapPage(): JSX.Element {
   const servicesQuery = useServices();
@@ -30,12 +33,21 @@ export function ServiceMapPage(): JSX.Element {
           </p>
         </section>
 
+        {/* First-run journey checklist */}
+        <div className="mb-6 max-w-5xl">
+          <FirstRunChecklist />
+        </div>
+
         <section className="animate-slide-in-up">
           <PageHeader
             title="Service Grid"
-            subtitle="Explore microservices and simulate their blast radius."
+            subtitle={
+              servicesQuery.isLoading
+                ? 'Reading dependency graph — this takes just a moment...'
+                : 'Click any service card to simulate its blast radius.'
+            }
             badge={<Badge color="blue">{services.length || '...'} nodes</Badge>}
-            actions={servicesQuery.isFetching ? <Spinner label="Refreshing" /> : null}
+            actions={servicesQuery.isFetching ? <Spinner label="Reading dependency graph" /> : null}
           />
 
           <div className="mt-6">
@@ -51,8 +63,22 @@ export function ServiceMapPage(): JSX.Element {
                     Retry Connection
                   </button>
                 }
-                description="The service map could not be loaded from the API."
+                description="The service map could not be loaded from the API. Check that the backend is running."
                 title="SYS_ERR: Connection Lost"
+              />
+            ) : servicesQuery.isSuccess && services.length === 0 ? (
+              <EmptyState
+                icon={MapIcon}
+                title="No services in the graph yet"
+                description="Run the seed script to populate the demo workspace with 40 services and 84+ dependency edges, then refresh this page."
+                action={
+                  <Link
+                    to="/start"
+                    className="text-xs font-mono font-bold uppercase tracking-widest text-hud-cyan hover:underline"
+                  >
+                    ← Back to start
+                  </Link>
+                }
               />
             ) : (
               <ServiceGrid services={services} isLoading={servicesQuery.isLoading} />
@@ -61,10 +87,7 @@ export function ServiceMapPage(): JSX.Element {
         </section>
       </div>
 
-      <BlastRadiusPanel
-        serviceId={selectedServiceId}
-        onClose={() => setSelectedServiceId(null)}
-      />
+      <BlastRadiusPanel serviceId={selectedServiceId} onClose={() => setSelectedServiceId(null)} />
     </div>
   );
 }

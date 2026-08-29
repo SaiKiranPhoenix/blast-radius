@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { serviceAuth, serviceGateway, servicePostgres } from '../../fixtures/services.fixture';
 import { teamIdentity, teamPlatform } from '../../fixtures/teams.fixture';
-import { createMockDriver, createMockNode, createMockRecord, createMockSession } from '../__mocks__/neo4j';
+import {
+  createMockDriver,
+  createMockNode,
+  createMockRecord,
+  createMockSession,
+} from '../__mocks__/neo4j';
 import type { AppError } from '../../../src/utils/AppError';
 
 vi.mock('../../../src/config/neo4j', () => ({

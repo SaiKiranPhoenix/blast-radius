@@ -7,7 +7,12 @@ type EmptyStateProps = {
   title: string;
 };
 
-export function EmptyState({ action, description, icon: Icon, title }: EmptyStateProps): JSX.Element {
+export function EmptyState({
+  action,
+  description,
+  icon: Icon,
+  title,
+}: EmptyStateProps): JSX.Element {
   return (
     <div className="flex min-h-80 flex-col items-center justify-center rounded-lg border border-dashed border-slate-700 bg-slate-900/60 px-6 text-center">
       <Icon className="mb-4 h-10 w-10 text-slate-500" aria-hidden="true" />

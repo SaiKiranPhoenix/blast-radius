@@ -5,7 +5,7 @@ import {
   type PageFont,
   type PageInlineStyleOverride,
   type PageTypographyRecipe,
-} from "./pageTypography";
+} from './pageTypography';
 
 /* ═══════════════════════════════════════════════════════════════════════
    One recipe per packaged page.
@@ -28,126 +28,130 @@ const px = (value: number) => `${n(value)}px`;
 const unit = (value: number) => `calc(${n(value)} * var(--u))`;
 
 function withAlpha(hex: string, alpha: number) {
-  const [red, green, blue] = [1, 3, 5].map((index) => Number.parseInt(hex.slice(index, index + 2), 16));
+  const [red, green, blue] = [1, 3, 5].map((index) =>
+    Number.parseInt(hex.slice(index, index + 2), 16),
+  );
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
 /* ── the authored faces ──────────────────────────────────────────────── */
 
 const ONEST: PageFont = {
-  value: "onest",
-  label: "Onest",
+  value: 'onest',
+  label: 'Onest',
   stack: "'Onest', system-ui, -apple-system, 'Helvetica Neue', sans-serif",
 };
 
 const LEXEND: PageFont = {
-  value: "lexend",
-  label: "Lexend",
+  value: 'lexend',
+  label: 'Lexend',
   stack: "'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };
 
 const OUTFIT: PageFont = {
-  value: "outfit",
-  label: "Outfit",
-  stack: "Outfit, 'Outfit Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+  value: 'outfit',
+  label: 'Outfit',
+  stack:
+    "Outfit, 'Outfit Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
 };
 
 const SPACE_GROTESK: PageFont = {
-  value: "space-grotesk",
-  label: "Space Grotesk",
+  value: 'space-grotesk',
+  label: 'Space Grotesk',
   stack: '"Space Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif',
 };
 
 const QUESTRIAL: PageFont = {
-  value: "questrial",
-  label: "Questrial",
+  value: 'questrial',
+  label: 'Questrial',
   stack: '"Questrial", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
 };
 
 const ANTHRA_DISPLAY: PageFont = {
-  value: "avenir-next",
-  label: "Avenir Next",
+  value: 'avenir-next',
+  label: 'Avenir Next',
   stack: "'Avenir Next', 'Futura', 'Century Gothic', 'Helvetica Neue', Arial, sans-serif",
 };
 
 const ANTHRA_UI: PageFont = {
-  value: "avenir-next",
-  label: "Avenir Next",
+  value: 'avenir-next',
+  label: 'Avenir Next',
   stack: "'Avenir Next', 'Helvetica Neue', Arial, sans-serif",
 };
 
 /** attune embeds both of its faces, so neither one needs fetching. */
 const INSTRUMENT_EMBEDDED: PageFont = {
-  value: "instrument-serif",
-  label: "Instrument Serif",
+  value: 'instrument-serif',
+  label: 'Instrument Serif',
   stack: "'InstrumentEmb', 'Instrument Serif', Georgia, serif",
 };
 
 const INTER_EMBEDDED: PageFont = {
-  value: "inter",
-  label: "Inter",
+  value: 'inter',
+  label: 'Inter',
   stack: "'InterEmb', Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };
 
 const IOWAN_OLD_STYLE: PageFont = {
-  value: "iowan-old-style",
-  label: "Iowan Old Style",
+  value: 'iowan-old-style',
+  label: 'Iowan Old Style',
   stack: '"Iowan Old Style", Baskerville, "Times New Roman", serif',
 };
 
 const INTER_LOADED: PageFont = {
-  value: "inter",
-  label: "Inter",
+  value: 'inter',
+  label: 'Inter',
   stack: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
 };
 
 const GEIST_LOADED: PageFont = {
-  value: "geist",
-  label: "Geist",
+  value: 'geist',
+  label: 'Geist',
   stack: "Geist, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
 };
 
 const INSTRUMENT_SERIF_LOADED: PageFont = {
-  value: "instrument-serif",
-  label: "Instrument Serif",
+  value: 'instrument-serif',
+  label: 'Instrument Serif',
   stack: '"Instrument Serif", Georgia, "Times New Roman", serif',
 };
 
 /** Sketchbook packages Newsreader as a local variable face. */
 const NEWSREADER_LOADED: PageFont = {
-  value: "newsreader",
-  label: "Newsreader",
+  value: 'newsreader',
+  label: 'Newsreader',
   stack: '"Newsreader", Georgia, "Times New Roman", serif',
 };
 
 const FIGTREE: PageFont = {
-  value: "figtree",
-  label: "Figtree",
+  value: 'figtree',
+  label: 'Figtree',
   stack: 'Figtree, system-ui, -apple-system, "Segoe UI", sans-serif',
 };
 
 const HANKEN_GROTESK: PageFont = {
-  value: "hanken-grotesk",
-  label: "Hanken Grotesk",
+  value: 'hanken-grotesk',
+  label: 'Hanken Grotesk',
   stack: '"Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif',
 };
 
 const MULISH: PageFont = {
-  value: "mulish",
-  label: "Mulish",
+  value: 'mulish',
+  label: 'Mulish',
   stack: "Mulish, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };
 
 const DM_SANS: PageFont = {
-  value: "dm-sans",
-  label: "DM Sans",
+  value: 'dm-sans',
+  label: 'DM Sans',
   stack: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };
 
 const ROBOTO_FLEX_LOADED: PageFont = {
-  value: "roboto-flex",
-  label: "Roboto Flex",
-  stack: '"Roboto Flex", "Roboto Condensed", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
+  value: 'roboto-flex',
+  label: 'Roboto Flex',
+  stack:
+    '"Roboto Flex", "Roboto Condensed", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
 };
 
 /* ── Anima ────────────────────────────────────────────────────────────────
@@ -159,11 +163,11 @@ const ROBOTO_FLEX_LOADED: PageFont = {
 export const ANIMA_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [GEIST_LOADED, INSTRUMENT_SERIF, NEWSREADER],
   bodyFonts: [GEIST_LOADED, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600"],
-  headingWeight: "400",
-  bodyWeights: ["400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#ededf0",
+  headingWeights: ['400', '500', '600'],
+  headingWeight: '400',
+  bodyWeights: ['400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#ededf0',
   headingSize: [38, 62, 88],
   bodySize: [12, 15.6, 22],
   headingLetterSpacing: [-0.08, -0.022, 0.1],
@@ -171,7 +175,7 @@ export const ANIMA_TYPOGRAPHY: PageTypographyRecipe = {
 :root {
   --sans: ${type.body};
   --accent: ${type.primary};
-  --accent-soft: ${type.retone("#9c9ca4")};
+  --accent-soft: ${type.retone('#9c9ca4')};
 }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 .lede, .wordmark {
@@ -185,7 +189,7 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 }
 .sub { font-size: ${px(type.bodySize)}; font-weight: ${type.bodyWeight}; }
 .brand .mark path { stroke: ${type.primary}; }
-.brand .mark circle { fill: ${type.retone("#9c9ca4")}; }
+.brand .mark circle { fill: ${type.retone('#9c9ca4')}; }
 #gl { filter: ${type.filter()}; }
 @media (max-width: 1180px) {
   .lede { font-size: ${px((type.headingSize * 50) / 62)}; line-height: ${px((type.headingSize * 57) / 62)}; }
@@ -212,11 +216,11 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const ASTER_HALFTONE_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [ROBOTO_FLEX_LOADED, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [ROBOTO_FLEX_LOADED, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#ff570e",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#ff570e',
   headingSize: [64, 140, 176],
   bodySize: [14, 21, 30],
   headingLetterSpacing: [-0.08, 0, 0.12],
@@ -249,11 +253,11 @@ h1 {
 export const SKYFIELD_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [GEIST_LOADED, INSTRUMENT_SERIF, NEWSREADER],
   bodyFonts: [GEIST_LOADED, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600"],
-  headingWeight: "500",
-  bodyWeights: ["400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#c6f19d",
+  headingWeights: ['400', '500', '600'],
+  headingWeight: '500',
+  bodyWeights: ['400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#c6f19d',
   headingSize: [42, 74, 104],
   bodySize: [12, 15.5, 22],
   headingLetterSpacing: [-0.08, -0.05, 0.08],
@@ -261,7 +265,7 @@ export const SKYFIELD_TYPOGRAPHY: PageTypographyRecipe = {
 :root {
   --sans: ${type.body};
   --lime: ${type.primary};
-  --lime-hot: ${type.retone("#a8e063")};
+  --lime-hot: ${type.retone('#a8e063')};
 }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 h1, h1 .ln b, #outro h2 {
@@ -290,62 +294,63 @@ h1 {
 };
 
 const INTER_TIGHT: PageFont = {
-  value: "inter-tight",
-  label: "Inter Tight",
+  value: 'inter-tight',
+  label: 'Inter Tight',
   stack: "'Inter Tight', sans-serif",
 };
 
 const DM_MONO: PageFont = {
-  value: "dm-mono",
-  label: "DM Mono",
+  value: 'dm-mono',
+  label: 'DM Mono',
   stack: "'DM Mono', monospace",
 };
 
 const SYSTEM_UI: PageFont = {
-  value: "system-ui",
-  label: "System UI",
-  stack: "ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  value: 'system-ui',
+  label: 'System UI',
+  stack:
+    "ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
 };
 
 const BIG_SHOULDERS_DISPLAY: PageFont = {
-  value: "big-shoulders-display",
-  label: "Big Shoulders Display",
+  value: 'big-shoulders-display',
+  label: 'Big Shoulders Display',
   stack: "'Big Shoulders Display', sans-serif",
 };
 
 const BEBAS_NEUE: PageFont = {
-  value: "bebas-neue",
-  label: "Bebas Neue",
+  value: 'bebas-neue',
+  label: 'Bebas Neue',
   stack: "'Bebas Neue', sans-serif",
 };
 
 const IMPACT: PageFont = {
-  value: "impact",
-  label: "Impact",
+  value: 'impact',
+  label: 'Impact',
   stack: "Impact, 'Arial Narrow', sans-serif",
 };
 
 const ARCHIVO: PageFont = {
-  value: "archivo",
-  label: "Archivo",
+  value: 'archivo',
+  label: 'Archivo',
   stack: "Archivo, 'Helvetica Neue', Helvetica, Arial, sans-serif",
 };
 
 const JETBRAINS_MONO: PageFont = {
-  value: "jetbrains-mono",
-  label: "JetBrains Mono",
+  value: 'jetbrains-mono',
+  label: 'JetBrains Mono',
   stack: "'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
 };
 
 const UNBOUNDED: PageFont = {
-  value: "unbounded",
-  label: "Unbounded",
+  value: 'unbounded',
+  label: 'Unbounded',
   stack: "'Unbounded', sans-serif",
 };
 
 const MANROPE: PageFont = {
-  value: "manrope",
-  label: "Manrope",
+  value: 'manrope',
+  label: 'Manrope',
   stack: "'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
 };
 
@@ -357,18 +362,18 @@ const MANROPE: PageFont = {
 export const KAGE_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [ONEST, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [ONEST, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "300",
-  primaryColor: "#e0231c",
+  headingWeights: ['400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '300',
+  primaryColor: '#e0231c',
   headingSize: [30, 46, 72],
   bodySize: [13, 17, 24],
   headingLetterSpacing: [-0.06, -0.012, 0.12],
   css: (type) => `
 :root {
   --vermilion: ${type.primary};
-  --ember: ${type.retone("#ff5a3c")};
+  --ember: ${type.retone('#ff5a3c')};
 }
 body { font-family: ${type.body}; }
 body, .body, .body-lg, .num { font-weight: ${type.bodyWeight}; }
@@ -392,11 +397,11 @@ h1:not(.jp), h2:not(.jp), h3:not(.jp), .display:not(.jp) {
 export const SYLVA_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [LEXEND, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [LEXEND, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["200", "300", "400", "500", "600"],
-  headingWeight: "300",
-  bodyWeights: ["200", "300", "400", "500"],
-  bodyWeight: "300",
-  primaryColor: "#ffffff",
+  headingWeights: ['200', '300', '400', '500', '600'],
+  headingWeight: '300',
+  bodyWeights: ['200', '300', '400', '500'],
+  bodyWeight: '300',
+  primaryColor: '#ffffff',
   headingSize: [40, 63, 92],
   bodySize: [12, 16.5, 24],
   headingLetterSpacing: [-0.06, -0.006, 0.12],
@@ -442,11 +447,11 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const MENG_TO_SKETCHBOOK_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [INSTRUMENT_SERIF_LOADED, NEWSREADER_LOADED, GEIST],
   bodyFonts: [NEWSREADER_LOADED, GEIST, INSTRUMENT_SERIF_LOADED],
-  headingWeights: ["300", "400", "500", "600"],
-  headingWeight: "400",
-  bodyWeights: ["200", "300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#2b2721",
+  headingWeights: ['300', '400', '500', '600'],
+  headingWeight: '400',
+  bodyWeights: ['200', '300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#2b2721',
   headingSize: [20, 30, 48],
   bodySize: [14, 20, 30],
   headingLetterSpacing: [-0.06, 0.01, 0.12],
@@ -469,13 +474,13 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
   font-size: clamp(${px((type.headingSize * 19) / 30)}, calc(${n(type.headingSize / 30)} * 2.1vw), ${px((type.headingSize * 26) / 30)});
   letter-spacing: ${n(type.headingLetterSpacing - 0.01)}em;
 }
-.top nav { font-size: ${px((type.bodySize * 15) / 20)}; font-weight: ${type.bodyWeight === "400" ? "300" : type.bodyWeight}; }
+.top nav { font-size: ${px((type.bodySize * 15) / 20)}; font-weight: ${type.bodyWeight === '400' ? '300' : type.bodyWeight}; }
 .hero-kicker { font-size: ${px((type.bodySize * 12) / 20)}; font-weight: ${type.bodyWeight}; }
 .sb-caption { font-size: ${px((type.bodySize * 13) / 20)}; }
 .sb-hint, .section-label, .zoom-read { font-size: ${px((type.bodySize * 11) / 20)}; }
 .bio {
   font-size: clamp(${px((type.bodySize * 17) / 20)}, calc(${n(type.bodySize / 20)} * 1.7vw), ${px(type.bodySize)});
-  font-weight: ${type.bodyWeight === "400" ? "300" : type.bodyWeight};
+  font-weight: ${type.bodyWeight === '400' ? '300' : type.bodyWeight};
 }
 .plate .n { font-size: ${px((type.bodySize * 12) / 20)}; }
 .plate .p { font-size: ${px((type.bodySize * 12.5) / 20)}; }
@@ -501,11 +506,11 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const ECHO_VALE_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [UNBOUNDED, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [MANROPE, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600"],
-  headingWeight: "500",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#e44b3c",
+  headingWeights: ['300', '400', '500', '600'],
+  headingWeight: '500',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#e44b3c',
   headingSize: [56, 107.2, 144],
   bodySize: [12, 16, 24],
   headingLetterSpacing: [-0.1, -0.07, 0.06],
@@ -601,7 +606,7 @@ body {
 .timeline-item p, .footer-brand p { font-size: ${px(type.bodySize * 0.8)}; }
 .price-list li { font-size: ${px(type.bodySize * 0.82)}; }
 .footer-col a { font-size: ${px(type.bodySize * 0.79)}; }
-.show-step .step-no { color: ${type.retone("#b53b31")}; }
+.show-step .step-no { color: ${type.retone('#b53b31')}; }
 #webgl { filter: ${type.filter()}; }
 .feature-card:nth-child(2) .feature-symbol::after {
   box-shadow: 0 0 25px ${withAlpha(type.primary, 0.35)};
@@ -627,11 +632,11 @@ body {
 export const ANTHRA_A40_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [ANTHRA_DISPLAY, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [ANTHRA_UI, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "500",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#c2a26a",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '500',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#c2a26a',
   headingSize: [34, 52, 76],
   bodySize: [13, 18, 24],
   headingLetterSpacing: [-0.08, -0.01, 0.08],
@@ -677,11 +682,11 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const NOEMA_N1_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [INTER_TIGHT, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [INTER_TIGHT, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["400", "500", "600", "700"],
-  bodyWeight: "500",
-  primaryColor: "#6c4cf1",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['400', '500', '600', '700'],
+  bodyWeight: '500',
+  primaryColor: '#6c4cf1',
   headingSize: [34, 50, 76],
   bodySize: [12, 15, 22],
   headingLetterSpacing: [-0.07, -0.028, 0.08],
@@ -719,11 +724,11 @@ h1, h2, h3 {
 export const MK78_KEYBOARD_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [SYSTEM_UI, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [SYSTEM_UI, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600", "650", "700"],
-  headingWeight: "650",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#f4581c",
+  headingWeights: ['400', '500', '600', '650', '700'],
+  headingWeight: '650',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#f4581c',
   headingSize: [40, 60, 88],
   bodySize: [13, 16.5, 23],
   headingLetterSpacing: [-0.07, -0.03, 0.06],
@@ -758,11 +763,11 @@ h1, h2, h3 {
 export const MARA_VOSS_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [BIG_SHOULDERS_DISPLAY, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [INTER_LOADED, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600", "700", "800"],
-  headingWeight: "600",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "300",
-  primaryColor: "#d4552b",
+  headingWeights: ['400', '500', '600', '700', '800'],
+  headingWeight: '600',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '300',
+  primaryColor: '#d4552b',
   headingSize: [56, 83.2, 124],
   bodySize: [14, 17.6, 24],
   headingLetterSpacing: [-0.04, 0.02, 0.1],
@@ -798,19 +803,19 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const AURELLO_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [BEBAS_NEUE, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [DM_SANS, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#f04a24",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#f04a24',
   headingSize: [92, 145, 210],
   bodySize: [14, 18, 25],
   headingLetterSpacing: [-0.06, 0, 0.08],
   css: (type) => `
 :root {
   --red: ${type.primary};
-  --ink: ${type.retone("#c92f19")};
-  --wine: ${type.retone("#731f17")};
+  --ink: ${type.retone('#c92f19')};
+  --wine: ${type.retone('#731f17')};
 }
 body, button, input { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 .hero h1 span:first-child, .intro h2, .social h2, .gas h2, .eyebrow,
@@ -849,11 +854,11 @@ body, button, input { font-family: ${type.body}; font-weight: ${type.bodyWeight}
 export const RENDERLAB_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [IMPACT, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [INTER_LOADED, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "500",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#02ff6f",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '500',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#02ff6f',
   headingSize: [128, 192, 280],
   bodySize: [12, 14, 20],
   headingLetterSpacing: [-0.09, -0.05, 0.04],
@@ -861,21 +866,68 @@ export const RENDERLAB_TYPOGRAPHY: PageTypographyRecipe = {
 .renderlab-site-header nav > a { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 `,
   inlineStyles: (type): readonly PageInlineStyleOverride[] => [
-    { selector: "body", styles: { "font-family": type.body, "font-size": px(type.bodySize), "font-weight": type.bodyWeight, "--acid": type.primary } },
-    { selector: '[style*="font-family:Impact"]', styles: { "font-family": type.heading } },
-    { selector: '[style*="font-family:Impact"][style*="font-weight:500"]', styles: { "font-weight": type.headingWeight } },
-    { selector: '[style*="font-family:Impact"][style*="font-size:clamp(3.5rem,8vw,8rem)"]', styles: { "font-size": `clamp(3.5rem, 8vw, ${px((type.headingSize * 128) / 192)})` } },
-    { selector: '[style*="font-family:Impact"][style*="font-size:clamp(8rem,20vw,12rem)"]', styles: { "font-size": `clamp(8rem, 20vw, ${px(type.headingSize)})` } },
-    { selector: '[style*="font-family:Impact"][style*="font-size:clamp(6rem,13vw,13rem)"]', styles: { "font-size": `clamp(6rem, 13vw, ${px((type.headingSize * 208) / 192)})` } },
-    { selector: '[style*="font-family:Impact"][style*="font-size:clamp(5rem,14vw,15rem)"]', styles: { "font-size": `clamp(5rem, 14vw, ${px((type.headingSize * 240) / 192)})` } },
-    { selector: '[style*="font-family:Impact"][style*="font-size:clamp(4.8rem,11vw,12rem)"]', styles: { "font-size": `clamp(4.8rem, 11vw, ${px(type.headingSize)})` } },
-    { selector: '[style*="font-family:Impact"][style*="font-size:clamp(8rem,22vw,24rem)"]', styles: { "font-size": `clamp(8rem, 22vw, ${px(type.headingSize * 2)})` } },
-    { selector: '[style*="font-family:Impact"][style*="font-size:clamp(3rem,8vw,8rem)"]', styles: { "font-size": `clamp(3rem, 8vw, ${px((type.headingSize * 128) / 192)})` } },
-    { selector: '[style*="font-family:Impact"][style*="letter-spacing:-.05em"]', styles: { "letter-spacing": `${type.headingLetterSpacing}em` } },
-    { selector: '[style*="font-family:Impact"][style*="letter-spacing:-.055em"]', styles: { "letter-spacing": `${n(type.headingLetterSpacing - 0.005)}em` } },
-    { selector: '[style*="font-family:Impact"][style*="letter-spacing:-.08em"]', styles: { "letter-spacing": `${n(type.headingLetterSpacing - 0.03)}em` } },
-    { selector: '[style*="font-family:Impact"][style*="letter-spacing:-.035em"]', styles: { "letter-spacing": `${n(type.headingLetterSpacing + 0.015)}em` } },
-    { selector: '[style*="font-family:Impact"][style*="letter-spacing:-.04em"]', styles: { "letter-spacing": `${n(type.headingLetterSpacing + 0.01)}em` } },
+    {
+      selector: 'body',
+      styles: {
+        'font-family': type.body,
+        'font-size': px(type.bodySize),
+        'font-weight': type.bodyWeight,
+        '--acid': type.primary,
+      },
+    },
+    { selector: '[style*="font-family:Impact"]', styles: { 'font-family': type.heading } },
+    {
+      selector: '[style*="font-family:Impact"][style*="font-weight:500"]',
+      styles: { 'font-weight': type.headingWeight },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="font-size:clamp(3.5rem,8vw,8rem)"]',
+      styles: { 'font-size': `clamp(3.5rem, 8vw, ${px((type.headingSize * 128) / 192)})` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="font-size:clamp(8rem,20vw,12rem)"]',
+      styles: { 'font-size': `clamp(8rem, 20vw, ${px(type.headingSize)})` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="font-size:clamp(6rem,13vw,13rem)"]',
+      styles: { 'font-size': `clamp(6rem, 13vw, ${px((type.headingSize * 208) / 192)})` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="font-size:clamp(5rem,14vw,15rem)"]',
+      styles: { 'font-size': `clamp(5rem, 14vw, ${px((type.headingSize * 240) / 192)})` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="font-size:clamp(4.8rem,11vw,12rem)"]',
+      styles: { 'font-size': `clamp(4.8rem, 11vw, ${px(type.headingSize)})` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="font-size:clamp(8rem,22vw,24rem)"]',
+      styles: { 'font-size': `clamp(8rem, 22vw, ${px(type.headingSize * 2)})` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="font-size:clamp(3rem,8vw,8rem)"]',
+      styles: { 'font-size': `clamp(3rem, 8vw, ${px((type.headingSize * 128) / 192)})` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="letter-spacing:-.05em"]',
+      styles: { 'letter-spacing': `${type.headingLetterSpacing}em` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="letter-spacing:-.055em"]',
+      styles: { 'letter-spacing': `${n(type.headingLetterSpacing - 0.005)}em` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="letter-spacing:-.08em"]',
+      styles: { 'letter-spacing': `${n(type.headingLetterSpacing - 0.03)}em` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="letter-spacing:-.035em"]',
+      styles: { 'letter-spacing': `${n(type.headingLetterSpacing + 0.015)}em` },
+    },
+    {
+      selector: '[style*="font-family:Impact"][style*="letter-spacing:-.04em"]',
+      styles: { 'letter-spacing': `${n(type.headingLetterSpacing + 0.01)}em` },
+    },
   ],
 };
 
@@ -886,11 +938,11 @@ export const RENDERLAB_TYPOGRAPHY: PageTypographyRecipe = {
 export const VOLTA_ATELIER_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [ARCHIVO, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [JETBRAINS_MONO, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["500", "600", "700", "800", "900"],
-  headingWeight: "800",
-  bodyWeights: ["300", "400", "500", "600", "700"],
-  bodyWeight: "400",
-  primaryColor: "#fb3732",
+  headingWeights: ['500', '600', '700', '800', '900'],
+  headingWeight: '800',
+  bodyWeights: ['300', '400', '500', '600', '700'],
+  bodyWeight: '400',
+  primaryColor: '#fb3732',
   headingSize: [120, 184, 260],
   bodySize: [10, 13, 20],
   headingLetterSpacing: [-0.09, -0.045, 0.04],
@@ -899,8 +951,8 @@ export const VOLTA_ATELIER_TYPOGRAPHY: PageTypographyRecipe = {
   --font-display: ${type.heading};
   --font-mono: ${type.body};
   --signal: ${type.primary};
-  --amber: ${type.retone("#ffa31a")};
-  --volt: ${type.retone("#3b49e4")};
+  --amber: ${type.retone('#ffa31a')};
+  --volt: ${type.retone('#3b49e4')};
 }
 body { font-family: var(--font-mono); font-weight: ${type.bodyWeight}; }
 h1, h2, h3, h4, .d-mega, .d-xl, .d-lg, .d-md, .d-sm { font-weight: ${type.headingWeight}; }
@@ -925,18 +977,18 @@ h1, h2, h3, h4, .d-mega, .d-xl, .d-lg, .d-md, .d-sm { font-weight: ${type.headin
 export const KAIRO_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [MANROPE, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [MANROPE, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["500", "600", "700", "800"],
-  headingWeight: "800",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#b4261a",
+  headingWeights: ['500', '600', '700', '800'],
+  headingWeight: '800',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#b4261a',
   headingSize: [112, 192, 280],
   bodySize: [12, 16, 24],
   headingLetterSpacing: [-0.1, -0.06, 0.02],
   css: (type) => `
 :root {
   --red: ${type.primary};
-  --bright: ${type.retone("#c8392a")};
+  --bright: ${type.retone('#c8392a')};
   --sans: ${type.body};
   --serif: ${type.heading};
   --mono: ${type.bodyWeight} ${px(type.bodySize * 0.72)}/1.5 ${type.body};
@@ -973,11 +1025,11 @@ h2 em, h3 em, .serif { font-family: ${type.heading}; font-weight: ${Math.max(300
 export const INKBOUND_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [IOWAN_OLD_STYLE, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [IOWAN_OLD_STYLE, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#b34f3e",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#b34f3e',
   headingSize: [96, 166, 240],
   bodySize: [14, 21, 30],
   headingLetterSpacing: [-0.1, -0.062, 0.02],
@@ -985,10 +1037,10 @@ export const INKBOUND_TYPOGRAPHY: PageTypographyRecipe = {
 :root {
   --display: ${type.heading};
   --seal: ${type.primary};
-  --seal-dark: ${type.retone("#8d372c")};
+  --seal-dark: ${type.retone('#8d372c')};
 }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
-.red-moon { background-color: ${type.retone("#ad4a3b")}; }
+.red-moon { background-color: ${type.retone('#ad4a3b')}; }
 .hero-title, .chapter-title, .epilogue-title {
   font-family: ${type.heading};
   font-weight: ${type.headingWeight};
@@ -1030,21 +1082,21 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const HALVORSEN_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [OUTFIT, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [OUTFIT, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["200", "300", "400", "500", "600"],
-  headingWeight: "400",
-  bodyWeights: ["200", "300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#ecebe7",
+  headingWeights: ['200', '300', '400', '500', '600'],
+  headingWeight: '400',
+  bodyWeights: ['200', '300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#ecebe7',
   headingSize: [56, 96, 136],
   bodySize: [12, 17, 24],
   headingLetterSpacing: [-0.08, -0.031, 0.08],
   css: (type) => `
 :root {
   --ink: ${type.primary};
-  --ink-soft: ${type.retone("#c3c1bb")};
-  --muted: ${type.retone("#85837d")};
-  --muted-dim: ${type.retone("#6a6964")};
-  --pill-ink: ${type.retone("#c6c3bc")};
+  --ink-soft: ${type.retone('#c3c1bb')};
+  --muted: ${type.retone('#85837d')};
+  --muted-dim: ${type.retone('#6a6964')};
+  --pill-ink: ${type.retone('#c6c3bc')};
   --font: ${type.body};
 }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
@@ -1101,11 +1153,11 @@ h2 {
 export const BETAWISE_HERO_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [OUTFIT, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [OUTFIT, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600", "700"],
-  headingWeight: "500",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#1278ff",
+  headingWeights: ['400', '500', '600', '700'],
+  headingWeight: '500',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#1278ff',
   headingSize: [32, 48.8, 76],
   bodySize: [12, 15.9, 24],
   headingLetterSpacing: [-0.06, 0.006, 0.12],
@@ -1158,18 +1210,18 @@ h1 {
 export const AXONIS_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [SPACE_GROTESK, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [SPACE_GROTESK, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["320", "400", "500", "600", "700"],
-  headingWeight: "320",
-  bodyWeights: ["400", "500", "600", "700"],
-  bodyWeight: "400",
-  primaryColor: "#ff6427",
+  headingWeights: ['320', '400', '500', '600', '700'],
+  headingWeight: '320',
+  bodyWeights: ['400', '500', '600', '700'],
+  bodyWeight: '400',
+  primaryColor: '#ff6427',
   headingSize: [14, 25, 34],
   bodySize: [15, 22, 30],
   headingLetterSpacing: [-0.02, 0.112, 0.2],
   css: (type) => `
 :root {
   --orange: ${type.primary};
-  --orange-soft: ${type.retone("#ffad78")};
+  --orange-soft: ${type.retone('#ffad78')};
   --font: ${type.body};
   --wm: ${n(type.headingSize)}vw;
   --wmw: ${type.headingWeight};
@@ -1179,16 +1231,16 @@ body { font-weight: ${type.bodyWeight}; }
 .wordmark { font-family: ${type.heading}; }
 .wordmark span {
   background: linear-gradient(180deg,
-    ${type.retoneRgba("rgba(255,100,39,0)")} 4%,
-    ${type.retoneRgba("rgba(255,100,39,.22)")} 34%,
-    ${type.retone("#ff6b2d")} 84%);
+    ${type.retoneRgba('rgba(255,100,39,0)')} 4%,
+    ${type.retoneRgba('rgba(255,100,39,.22)')} 34%,
+    ${type.retone('#ff6b2d')} 84%);
   -webkit-background-clip: text;
   background-clip: text;
 }
 .lede {
   font-size: ${px(type.bodySize)};
   line-height: ${px((type.bodySize * 36) / 22)};
-  background: linear-gradient(90deg, #fff7f0 4%, ${type.retoneRgba("rgba(255,173,120,.68)")} 98%);
+  background: linear-gradient(90deg, #fff7f0 4%, ${type.retoneRgba('rgba(255,173,120,.68)')} 98%);
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -1222,20 +1274,20 @@ body { font-weight: ${type.bodyWeight}; }
 export const ATTUNE_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [INSTRUMENT_EMBEDDED, NEWSREADER, GEIST],
   bodyFonts: [INTER_EMBEDDED, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600", "700"],
-  bodyWeight: "400",
-  primaryColor: "#ff7a14",
+  headingWeights: ['400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600', '700'],
+  bodyWeight: '400',
+  primaryColor: '#ff7a14',
   headingSize: [40, 66, 96],
   bodySize: [12, 16, 22],
   headingLetterSpacing: [-0.06, -0.02, 0.12],
   css: (type) => `
 :root {
   --accent: ${type.primary};
-  --accent-hi: ${type.retone("#ffa347")};
-  --accent-lo: ${type.retone("#f2610a")};
-  --hair-warm: ${type.retoneRgba("rgba(255,138,40,.34)")};
+  --accent-hi: ${type.retone('#ffa347')};
+  --accent-lo: ${type.retone('#f2610a')};
+  --hair-warm: ${type.retoneRgba('rgba(255,138,40,.34)')};
 }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 h1, #bigword {
@@ -1265,11 +1317,11 @@ h1 {
 export const BETAWISE_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [QUESTRIAL, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [QUESTRIAL, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["400", "500", "600", "700"],
-  bodyWeight: "400",
-  primaryColor: "#1a4dff",
+  headingWeights: ['400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['400', '500', '600', '700'],
+  bodyWeight: '400',
+  primaryColor: '#1a4dff',
   headingSize: [26, 40.4, 60],
   bodySize: [9, 12.66, 20],
   headingLetterSpacing: [-0.06, -0.01, 0.12],
@@ -1305,11 +1357,11 @@ h1 {
 export const COMPLETE_SHELF_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [IOWAN_OLD_STYLE, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [INTER_LOADED, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600"],
-  headingWeight: "400",
-  bodyWeights: ["400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#c87046",
+  headingWeights: ['400', '500', '600'],
+  headingWeight: '400',
+  bodyWeights: ['400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#c87046',
   headingSize: [32, 60, 88],
   bodySize: [10, 12, 18],
   headingLetterSpacing: [-0.1, -0.055, 0.08],
@@ -1346,19 +1398,19 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const BESTSELLERS_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [IOWAN_OLD_STYLE, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [IOWAN_OLD_STYLE, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["400", "500", "600", "700"],
-  headingWeight: "500",
-  bodyWeights: ["400", "500", "600", "700"],
-  bodyWeight: "400",
-  primaryColor: "#c3a47b",
+  headingWeights: ['400', '500', '600', '700'],
+  headingWeight: '500',
+  bodyWeights: ['400', '500', '600', '700'],
+  bodyWeight: '400',
+  primaryColor: '#c3a47b',
   headingSize: [184, 325, 420],
   bodySize: [12, 17, 24],
   headingLetterSpacing: [-0.12, -0.085, 0.08],
   css: (type) => `
 :root {
   --pink: ${type.primary};
-  --pink-bright: ${type.retone("#dbc39c")};
-  --periwinkle: ${type.retone("#b7976c")};
+  --pink-bright: ${type.retone('#dbc39c')};
+  --periwinkle: ${type.retone('#b7976c')};
 }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 .brand, .hero-word, .detail-title, .cover-title {
@@ -1391,16 +1443,16 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const CORTEXA_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [INSTRUMENT_SERIF_LOADED, NEWSREADER, GEIST_LOADED],
   bodyFonts: [GEIST_LOADED, NEWSREADER, INSTRUMENT_SERIF_LOADED],
-  headingWeights: ["300", "400", "500", "600"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#7f97ba",
+  headingWeights: ['300', '400', '500', '600'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#7f97ba',
   headingSize: [36, 60, 88],
   bodySize: [12, 15, 21],
   headingLetterSpacing: [-0.08, -0.004, 0.1],
   css: (type) => `
-:root { --dim: ${type.primary}; --dim-2: ${type.retone("#6d86a8")}; }
+:root { --dim: ${type.primary}; --dim-2: ${type.retone('#6d86a8')}; }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 h1, .bigtag, .brand span { font-family: ${type.heading}; font-weight: ${type.headingWeight}; }
 h1, .bigtag {
@@ -1446,11 +1498,11 @@ h1, .bigtag {
 export const CATHODE_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [INTER_LOADED, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [INTER_LOADED, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#f1f1f1",
+  headingWeights: ['300', '400', '500', '600'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#f1f1f1',
   headingSize: [40, 64, 92],
   bodySize: [14, 19, 26],
   headingLetterSpacing: [-0.08, -0.016, 0.1],
@@ -1473,16 +1525,16 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const CADENCE_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [GEIST_LOADED, INSTRUMENT_SERIF, NEWSREADER],
   bodyFonts: [GEIST_LOADED, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#1e3e86",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#1e3e86',
   headingSize: [48, 84, 116],
   bodySize: [12, 16, 24],
   headingLetterSpacing: [-0.08, -0.031, 0.08],
   css: (type) => `
-:root { --blue: ${type.primary}; --blue-hot: ${type.retone("#a6d2ff")}; }
+:root { --blue: ${type.primary}; --blue-hot: ${type.retone('#a6d2ff')}; }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 .h1, .statement, .sc-head h2, .pf-title, .chain .t1, .chain .t2, .whatis h2, .f-head h2 {
   font-family: ${type.heading};
@@ -1518,18 +1570,18 @@ body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 export const VELLA_BANK_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [FIGTREE, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [FIGTREE, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "300",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#dd8940",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '300',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#dd8940',
   headingSize: [44, 76, 104],
   bodySize: [13, 17.1, 24],
   headingLetterSpacing: [-0.08, -0.038, 0.08],
   css: (type) => {
     const baseWeight = Number(type.headingWeight);
     return `
-:root { --amber: ${type.primary}; --moss: ${type.retone("#93a476")}; }
+:root { --amber: ${type.primary}; --moss: ${type.retone('#93a476')}; }
 body { font-family: ${type.body}; font-weight: ${type.bodyWeight}; }
 h1 {
   font-family: ${type.heading};
@@ -1555,11 +1607,11 @@ h1 .w6 { font-weight: ${Math.min(900, baseWeight + 300)}; }
 export const TIDECREST_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [FIGTREE, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [HANKEN_GROTESK, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600"],
-  headingWeight: "300",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#ffffff",
+  headingWeights: ['300', '400', '500', '600'],
+  headingWeight: '300',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#ffffff',
   headingSize: [30, 46, 72],
   bodySize: [10, 12.8, 20],
   headingLetterSpacing: [-0.1, -0.04, 0.1],
@@ -1598,16 +1650,16 @@ h1 {
 export const NOCTURNE_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [MULISH, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [MULISH, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "600"],
-  headingWeight: "300",
-  bodyWeights: ["300", "400", "600"],
-  bodyWeight: "600",
-  primaryColor: "#8ea6cc",
+  headingWeights: ['300', '400', '600'],
+  headingWeight: '300',
+  bodyWeights: ['300', '400', '600'],
+  bodyWeight: '600',
+  primaryColor: '#8ea6cc',
   headingSize: [36, 58.4, 84],
   bodySize: [12, 15.7, 22],
   headingLetterSpacing: [-0.08, 0, 0.1],
   css: (type) => `
-:root { --ink-dim: ${type.primary}; --ink-dimmer: ${type.retone("#7d94b8")}; }
+:root { --ink-dim: ${type.primary}; --ink-dimmer: ${type.retone('#7d94b8')}; }
 body { font-family: ${type.body}; }
 h1, .bigtag { font-family: ${type.heading}; font-weight: ${type.headingWeight}; letter-spacing: ${type.headingLetterSpacing}em; }
 h1 { font-size: ${px(type.headingSize)}; line-height: ${px((type.headingSize * 60) / 58.4)}; }
@@ -1651,11 +1703,11 @@ h1 { font-size: ${px(type.headingSize)}; line-height: ${px((type.headingSize * 6
 export const VEYRA_TYPOGRAPHY: PageTypographyRecipe = {
   headingFonts: [DM_SANS, INSTRUMENT_SERIF, NEWSREADER, GEIST],
   bodyFonts: [DM_SANS, GEIST, NEWSREADER, INSTRUMENT_SERIF],
-  headingWeights: ["300", "400", "500", "600", "700"],
-  headingWeight: "400",
-  bodyWeights: ["300", "400", "500", "600"],
-  bodyWeight: "400",
-  primaryColor: "#2a00ad",
+  headingWeights: ['300', '400', '500', '600', '700'],
+  headingWeight: '400',
+  bodyWeights: ['300', '400', '500', '600'],
+  bodyWeight: '400',
+  primaryColor: '#2a00ad',
   headingSize: [40, 64, 92],
   bodySize: [12, 16.5, 24],
   headingLetterSpacing: [-0.08, -0.0205, 0.1],
@@ -1668,7 +1720,7 @@ h1 {
 }
 .lede { font-size: ${px(type.bodySize)}; font-weight: ${type.bodyWeight}; }
 .cta {
-  background: linear-gradient(97deg, ${type.retone("#07071c")} 0%, ${type.retone("#0f0341")} 42%, ${type.retone("#1e0090")} 78%, ${type.primary} 100%);
+  background: linear-gradient(97deg, ${type.retone('#07071c')} 0%, ${type.retone('#0f0341')} 42%, ${type.retone('#1e0090')} 78%, ${type.primary} 100%);
 }
 #gl { filter: ${type.filter()}; }
 @media (max-width: 860px) {

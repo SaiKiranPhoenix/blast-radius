@@ -37,7 +37,7 @@ export function DownstreamList({ services }: DownstreamListProps) {
           </div>
         ) : (
           <ul className="space-y-3">
-            {services.map(service => (
+            {services.map((service) => (
               <li key={service.id}>
                 <Link
                   to={`/services/${service.id}`}
@@ -49,7 +49,9 @@ export function DownstreamList({ services }: DownstreamListProps) {
                   </div>
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-800/50">
                     <ServiceTypeBadge type={service.type} />
-                    <span className="text-xs text-slate-400">{service.team?.name || 'Unassigned'}</span>
+                    <span className="text-xs text-slate-400">
+                      {service.team?.name || 'Unassigned'}
+                    </span>
                   </div>
                 </Link>
               </li>

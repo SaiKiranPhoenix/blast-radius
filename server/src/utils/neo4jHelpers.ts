@@ -58,9 +58,7 @@ export function normalizeNeo4jValue(value: unknown): unknown {
   return value;
 }
 
-export function nodeProps<T = Record<string, unknown>>(
-  node: unknown,
-): T {
+export function nodeProps<T = Record<string, unknown>>(node: unknown): T {
   const properties =
     typeof node === 'object' && node !== null && 'properties' in node
       ? ((node as Neo4jNodeLike).properties ?? {})

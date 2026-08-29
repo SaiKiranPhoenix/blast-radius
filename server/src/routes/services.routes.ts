@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { getServices, getServiceById, getBlastRadius, getDependencies } from '../controllers/services.controller';
+import {
+  getServices,
+  getServiceById,
+  getBlastRadius,
+  getDependencies,
+} from '../controllers/services.controller';
 import { asyncWrapper } from '../middleware/asyncWrapper';
 
 const router = Router();
