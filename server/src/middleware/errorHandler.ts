@@ -22,7 +22,7 @@ export const errorHandler = (
   err: unknown,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void => {
   let statusCode = 500;
   let code = 'INTERNAL_ERROR';

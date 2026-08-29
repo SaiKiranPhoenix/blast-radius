@@ -1,10 +1,7 @@
 import { getDriver } from '../config/neo4j';
 import { env } from '../config/env';
 import { Q_BLAST_RADIUS, Q_SERVICE_DEPENDENCIES } from '../utils/cypher';
-import type {
-  ServiceSummary,
-  ServiceDetail,
-} from '../types/service.types';
+import type { ServiceSummary, ServiceDetail } from '../types/service.types';
 import type { BlastRadiusResult, DependencyResult } from '../types/graph.types';
 import { AppError } from '../utils/AppError';
 import { nodeProps, toInt } from '../utils/neo4jHelpers';
@@ -104,7 +101,10 @@ export const getServiceById = async (id: string): Promise<ServiceDetail> => {
   }
 };
 
-export const getBlastRadius = async (id: string, maxHops: number = 5): Promise<BlastRadiusResult> => {
+export const getBlastRadius = async (
+  id: string,
+  maxHops: number = 5,
+): Promise<BlastRadiusResult> => {
   const driver = getDriver();
   const session = driver.session({ database: env.NEO4J_DATABASE });
   try {
@@ -188,7 +188,7 @@ export const getDependencies = async (id: string): Promise<DependencyResult> => 
     const teamNode = record.get('team');
     const upstreamNodes = record.get('upstream');
     const downstreamNodes = record.get('downstream');
-    
+
     const upstream = upstreamNodes.map((n: unknown) => nodeProps<ServiceSummary>(n));
     const downstream = downstreamNodes.map((n: unknown) => nodeProps<ServiceSummary>(n));
 

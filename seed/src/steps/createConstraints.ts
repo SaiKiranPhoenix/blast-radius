@@ -24,7 +24,9 @@ FOR (i:Incident) ON (i.severity)`,
 
 export async function createConstraints(): Promise<number> {
   if (env.DRY_RUN) {
-    console.log(`[createConstraints] DRY RUN: would run ${schemaStatements.length} schema statements.`);
+    console.log(
+      `[createConstraints] DRY RUN: would run ${schemaStatements.length} schema statements.`,
+    );
     return schemaStatements.length;
   }
 

@@ -15,14 +15,12 @@ export function ServiceSkeleton({ variant = 'default', className = '' }: Service
           <div className={`bg-slate-700/50 rounded ${isCompact ? 'h-4 w-3/4' : 'h-5 w-2/3'}`} />
           <div className="bg-slate-700/30 rounded h-3 w-1/2 mt-2" />
         </div>
-        {!isCompact && (
-          <div className="bg-slate-700/50 rounded h-5 w-16 shrink-0" />
-        )}
+        {!isCompact && <div className="bg-slate-700/50 rounded h-5 w-16 shrink-0" />}
       </div>
 
       <div className="flex items-center justify-between mt-auto pt-2 border-t border-slate-700/50">
         <div className="bg-slate-700/50 rounded h-6 w-20" />
-        
+
         <div className="flex items-center gap-3">
           <div className="bg-slate-700/30 rounded h-4 w-8" />
           <div className="bg-slate-700/30 rounded h-4 w-8" />

@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom';
 import type { TeamSummaryWithCounts } from '../../types/team.types';
 import { Card } from '../common/Card';
-import { HashtagIcon, ClockIcon, ServerStackIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import {
+  HashtagIcon,
+  ClockIcon,
+  ServerStackIcon,
+  ExclamationCircleIcon,
+} from '@heroicons/react/24/outline';
 
 interface TeamCardProps {
   team: TeamSummaryWithCounts;
@@ -12,7 +17,10 @@ export function TeamCard({ team }: TeamCardProps): JSX.Element {
 
   return (
     <Link to={`/teams/${team.id}`} className="block h-full group">
-      <Card interactive className="h-full flex flex-col p-5 border-slate-700/50 hover:border-slate-600 transition-colors">
+      <Card
+        interactive
+        className="h-full flex flex-col p-5 border-slate-700/50 hover:border-slate-600 transition-colors"
+      >
         <div className="flex items-start justify-between gap-4 mb-4">
           <h3 className="text-lg font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">
             {team.name}
@@ -45,7 +53,7 @@ export function TeamCard({ team }: TeamCardProps): JSX.Element {
             <span className="font-medium">{team.serviceCount}</span>
             <span className="text-slate-500">services</span>
           </div>
-          
+
           {hasIncidents && (
             <div className="flex items-center gap-1.5 text-xs text-red-400/80 font-medium">
               <ExclamationCircleIcon className="w-4 h-4" />

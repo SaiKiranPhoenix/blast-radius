@@ -18,7 +18,7 @@ export const getTeams = async (): Promise<TeamSummaryWithCounts[]> => {
       ORDER BY team.name ASC
     `;
     const result = await session.run(query);
-    
+
     return result.records.map((record) => {
       const team = nodeProps<TeamSummary>(record.get('team'));
       return {
@@ -50,9 +50,7 @@ export const getTeamById = async (id: string): Promise<TeamDetail> => {
 
     const record = result.records[0];
     const team = nodeProps<TeamSummary>(record.get('team'));
-    const services = record
-      .get('services')
-      .map((node: unknown) => nodeProps<ServiceSummary>(node));
+    const services = record.get('services').map((node: unknown) => nodeProps<ServiceSummary>(node));
     const activeIncidents = record
       .get('activeIncidents')
       .map((node: unknown) => nodeProps<IncidentSummary>(node));

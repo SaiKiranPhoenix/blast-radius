@@ -7,7 +7,11 @@ interface AffectedServiceCardProps {
   animationDelay: number;
 }
 
-export function AffectedServiceCard({ service, isVisible, animationDelay }: AffectedServiceCardProps) {
+export function AffectedServiceCard({
+  service,
+  isVisible,
+  animationDelay,
+}: AffectedServiceCardProps) {
   return (
     <ServiceCard
       service={service}

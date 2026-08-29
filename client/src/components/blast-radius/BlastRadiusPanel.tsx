@@ -6,6 +6,31 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Spinner } from '../common/Spinner';
 import { ErrorState } from '../common/ErrorState';
 
+/** Contextual phrases that cycle while the blast radius query is running. */
+const LOADING_PHRASES = [
+  'Reading dependency graph...',
+  'Finding owners...',
+  'Preparing plan...',
+] as const;
+
+/** Cycles through LOADING_PHRASES every 900 ms while a query is in-flight. */
+function LoadingPhrase(): JSX.Element {
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIdx((prev) => (prev + 1) % LOADING_PHRASES.length);
+    }, 900);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <p className="animate-fade-in text-[10px] font-mono uppercase tracking-widest text-slate-500 transition-all">
+      {LOADING_PHRASES[idx]}
+    </p>
+  );
+}
+
 interface BlastRadiusPanelProps {
   serviceId: string | null;
   onClose: () => void;
@@ -76,8 +101,9 @@ export function BlastRadiusPanel({
       {/* Body */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-8">
         {isLoading && (
-          <div className="flex justify-center py-12">
+          <div className="flex flex-col items-center justify-center gap-3 py-12">
             <Spinner />
+            <LoadingPhrase />
           </div>
         )}
 
@@ -98,8 +124,11 @@ export function BlastRadiusPanel({
         )}
 
         {data && (!data.hops || data.hops.length === 0) && (
-          <div className="text-center py-12 text-slate-400 text-sm">
-            This service has no downstream dependents.
+          <div className="py-12 text-center">
+            <p className="text-sm text-slate-400">No downstream dependents found.</p>
+            <p className="mt-2 text-xs text-slate-600">
+              This service has no services that depend on it — it sits at the edge of the graph.
+            </p>
           </div>
         )}
 

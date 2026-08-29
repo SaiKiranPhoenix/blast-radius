@@ -6,7 +6,8 @@ export const serviceKeys = {
   list: (filters?: ServiceFilters) => [...serviceKeys.lists(), filters ?? {}] as const,
   details: () => [...serviceKeys.all, 'detail'] as const,
   detail: (id: string) => [...serviceKeys.details(), id] as const,
-  blastRadius: (id: string, maxHops?: number) => [...serviceKeys.detail(id), 'blast-radius', maxHops] as const,
+  blastRadius: (id: string, maxHops?: number) =>
+    [...serviceKeys.detail(id), 'blast-radius', maxHops] as const,
   dependencies: (id: string) => [...serviceKeys.detail(id), 'dependencies'] as const,
 };
 

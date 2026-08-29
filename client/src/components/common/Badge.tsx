@@ -27,7 +27,13 @@ const dotClasses: Record<BadgeColor, string> = {
   emerald: 'bg-emerald-400',
 };
 
-export function Badge({ children, color = 'slate', dot = false, dotAnimate = false, size = 'md' }: BadgeProps): JSX.Element {
+export function Badge({
+  children,
+  color = 'slate',
+  dot = false,
+  dotAnimate = false,
+  size = 'md',
+}: BadgeProps): JSX.Element {
   return (
     <span
       className={[
@@ -36,7 +42,11 @@ export function Badge({ children, color = 'slate', dot = false, dotAnimate = fal
         size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-sm',
       ].join(' ')}
     >
-      {dot ? <span className={`h-1.5 w-1.5 rounded-full ${dotClasses[color]} ${dotAnimate ? 'animate-pulse' : ''}`} /> : null}
+      {dot ? (
+        <span
+          className={`h-1.5 w-1.5 rounded-full ${dotClasses[color]} ${dotAnimate ? 'animate-pulse' : ''}`}
+        />
+      ) : null}
       <span className="truncate">{children}</span>
     </span>
   );

@@ -31,7 +31,7 @@ function getDurationString(start: string, end: string | null): string {
   const diffMs = endDate.getTime() - startDate.getTime();
   const diffMinutes = Math.round(diffMs / (1000 * 60));
   const diffHours = Math.floor(diffMinutes / 60);
-  
+
   if (diffHours > 0) {
     const remainingMins = diffMinutes % 60;
     return `${diffHours}h ${remainingMins}m`;
@@ -41,12 +41,17 @@ function getDurationString(start: string, end: string | null): string {
 
 export function IncidentCard({ incident, variant = 'default' }: IncidentCardProps): JSX.Element {
   const isCompact = variant === 'compact';
-  
+
   return (
     <Link to={`/incidents/${incident.id}`} className="block group h-full">
-      <Card interactive className={`h-full flex flex-col ${isCompact ? 'p-4' : 'p-5'} border-slate-700/50 hover:border-slate-600 transition-colors`}>
+      <Card
+        interactive
+        className={`h-full flex flex-col ${isCompact ? 'p-4' : 'p-5'} border-slate-700/50 hover:border-slate-600 transition-colors`}
+      >
         <div className="flex items-start justify-between gap-4 mb-3">
-          <h3 className={`font-semibold text-slate-100 group-hover:text-blue-400 transition-colors line-clamp-2 ${isCompact ? 'text-base' : 'text-lg'}`}>
+          <h3
+            className={`font-semibold text-slate-100 group-hover:text-blue-400 transition-colors line-clamp-2 ${isCompact ? 'text-base' : 'text-lg'}`}
+          >
             {incident.title}
           </h3>
           <div className="flex items-center gap-2 shrink-0">
@@ -67,19 +72,20 @@ export function IncidentCard({ incident, variant = 'default' }: IncidentCardProp
         </div>
 
         {!isCompact && (
-          <p className="text-sm text-slate-400 mb-6 line-clamp-2 flex-1">
-            {incident.description}
-          </p>
+          <p className="text-sm text-slate-400 mb-6 line-clamp-2 flex-1">{incident.description}</p>
         )}
 
-        <div className={`mt-auto pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4 ${isCompact ? 'text-xs' : 'text-sm'}`}>
+        <div
+          className={`mt-auto pt-4 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4 ${isCompact ? 'text-xs' : 'text-sm'}`}
+        >
           <div className="flex items-center gap-2 text-slate-300">
             <ServerStackIcon className="w-4 h-4 text-slate-500" />
             <span>
-              <span className="font-medium text-slate-200">{incident.affectedServiceCount}</span> affected
+              <span className="font-medium text-slate-200">{incident.affectedServiceCount}</span>{' '}
+              affected
             </span>
           </div>
-          
+
           {incident.rootCauseService && (
             <div className="flex items-center gap-1.5 text-slate-300 max-w-[50%]">
               <ExclamationTriangleIcon className="w-4 h-4 text-red-400/80 shrink-0" />

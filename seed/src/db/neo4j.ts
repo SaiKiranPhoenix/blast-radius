@@ -1,4 +1,4 @@
-import neo4j, { Driver } from 'neo4j-driver';
+import neo4j, { type Driver } from 'neo4j-driver';
 import { env } from './env';
 
 let driver: Driver | null = null;
@@ -23,15 +23,11 @@ function getEncryptionConfig(uri: string): Record<string, string> {
 
 export function getDriver(): Driver {
   if (!driver) {
-    driver = neo4j.driver(
-      env.NEO4J_URI,
-      neo4j.auth.basic(env.NEO4J_USERNAME, env.NEO4J_PASSWORD),
-      {
-        maxConnectionPoolSize: 10,
-        connectionAcquisitionTimeout: 5000,
-        ...getEncryptionConfig(env.NEO4J_URI),
-      },
-    );
+    driver = neo4j.driver(env.NEO4J_URI, neo4j.auth.basic(env.NEO4J_USERNAME, env.NEO4J_PASSWORD), {
+      maxConnectionPoolSize: 10,
+      connectionAcquisitionTimeout: 5000,
+      ...getEncryptionConfig(env.NEO4J_URI),
+    });
   }
 
   return driver;

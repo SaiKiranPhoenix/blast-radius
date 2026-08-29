@@ -18,7 +18,7 @@ app.use(
     origin: env.CLIENT_ORIGIN ?? 'http://localhost:5173',
     methods: ['GET'],
     allowedHeaders: ['Content-Type'],
-  })
+  }),
 );
 
 app.use(express.json());

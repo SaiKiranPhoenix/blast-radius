@@ -33,7 +33,11 @@ export class AppError extends Error {
   public static dbError(error: unknown): AppError {
     const message = error instanceof Error ? error.message : 'Database connection failed';
 
-    return new AppError(`Database is currently unavailable: ${message}`, 503, 'DB_CONNECTION_ERROR');
+    return new AppError(
+      `Database is currently unavailable: ${message}`,
+      503,
+      'DB_CONNECTION_ERROR',
+    );
   }
 
   public static validationError(message: string): AppError {
