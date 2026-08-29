@@ -29,7 +29,8 @@ export const incidentsData: IncidentData[] = [
     status: 'resolved',
     started_at: '2024-09-12T02:14:00.000Z',
     resolved_at: '2024-09-12T04:47:00.000Z',
-    description: 'Redis cache exhaustion caused auth token validation to fail across user-facing services.',
+    description:
+      'Redis cache exhaustion caused auth token validation to fail across user-facing services.',
     rootCauseServiceId: 'svc-auth',
     affectedServiceIds: authWide,
   },
@@ -42,7 +43,13 @@ export const incidentsData: IncidentData[] = [
     resolved_at: '2024-08-21T20:10:00.000Z',
     description: 'Payment authorization timed out after the processor queue saturated.',
     rootCauseServiceId: 'svc-payment-gateway',
-    affectedServiceIds: ['svc-payment-gateway', 'svc-checkout', 'svc-api-gateway', 'svc-bff-web', 'svc-bff-mobile'],
+    affectedServiceIds: [
+      'svc-payment-gateway',
+      'svc-checkout',
+      'svc-api-gateway',
+      'svc-bff-web',
+      'svc-bff-mobile',
+    ],
   },
   {
     id: 'inc-003',
@@ -142,7 +149,14 @@ export const incidentsData: IncidentData[] = [
     resolved_at: '2024-08-11T04:36:00.000Z',
     description: 'Redis evictions increased latency across cache-backed services.',
     rootCauseServiceId: 'svc-redis-cache',
-    affectedServiceIds: ['svc-redis-cache', 'svc-auth', 'svc-session-store', 'svc-cart', 'svc-search-api', 'svc-catalog'],
+    affectedServiceIds: [
+      'svc-redis-cache',
+      'svc-auth',
+      'svc-session-store',
+      'svc-cart',
+      'svc-search-api',
+      'svc-catalog',
+    ],
   },
   {
     id: 'inc-011',
@@ -255,3 +269,24 @@ export const incidentsData: IncidentData[] = [
     affectedServiceIds: ['svc-push-worker', 'svc-notification-api'],
   },
 ];
+
+// Generate 50 programmatic incidents
+const severities: ('SEV1' | 'SEV2' | 'SEV3' | 'SEV4')[] = ['SEV1', 'SEV2', 'SEV3', 'SEV4'];
+for (let i = 1; i <= 50; i++) {
+  const isZeroAffected = i % 10 === 0; // Edge case: root cause but no affected downstream
+  const isActive = i % 5 === 0;
+
+  incidentsData.push({
+    id: `inc-gen-${i}`,
+    title: `Programmatic Incident ${i}`,
+    severity: severities[i % severities.length],
+    status: isActive ? 'active' : 'resolved',
+    started_at: '2024-11-18T15:40:00.000Z',
+    resolved_at: isActive ? null : '2024-11-18T16:00:00.000Z',
+    description: `A generated incident to test scale. IsZeroAffected=${isZeroAffected}`,
+    rootCauseServiceId: `svc-gen-${i}`,
+    affectedServiceIds: isZeroAffected
+      ? [`svc-gen-${i}`]
+      : [`svc-gen-${i}`, `svc-gen-${i + 1}`, `svc-gen-${i + 2}`],
+  });
+}

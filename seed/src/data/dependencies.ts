@@ -23,7 +23,12 @@ export const dependenciesData: DependencyData[] = [
   { from: 'svc-graphql-gateway', to: 'svc-auth', criticality: 'hard', latency_ms: 16 },
   { from: 'svc-graphql-gateway', to: 'svc-catalog', criticality: 'hard', latency_ms: 18 },
   { from: 'svc-graphql-gateway', to: 'svc-search-api', criticality: 'hard', latency_ms: 20 },
-  { from: 'svc-graphql-gateway', to: 'svc-recommendation-api', criticality: 'soft', latency_ms: 35 },
+  {
+    from: 'svc-graphql-gateway',
+    to: 'svc-recommendation-api',
+    criticality: 'soft',
+    latency_ms: 35,
+  },
   { from: 'svc-auth', to: 'svc-postgres-main', criticality: 'hard', latency_ms: 3 },
   { from: 'svc-auth', to: 'svc-session-store', criticality: 'hard', latency_ms: 2 },
   { from: 'svc-auth', to: 'svc-redis-cache', criticality: 'soft', latency_ms: 1 },
@@ -95,3 +100,30 @@ export const dependenciesData: DependencyData[] = [
   { from: 'svc-feature-store', to: 'svc-postgres-main', criticality: 'hard', latency_ms: 6 },
   { from: 'svc-ranking', to: 'svc-feature-store', criticality: 'hard', latency_ms: 18 },
 ];
+
+// Generate dependencies for the 120 programmatic services
+// Nodes that are multiples of 15 are isolated (no dependencies).
+for (let i = 1; i <= 120; i++) {
+  if (i % 15 === 0) continue; // Isolated
+
+  // Each non-isolated node depends on 2-5 other nodes
+  const numDeps = (i % 4) + 2;
+
+  for (let j = 0; j < numDeps; j++) {
+    // Pick target: mostly other generated nodes, but sometimes core nodes
+    const targetId =
+      j === 0
+        ? `svc-${['api-gateway', 'postgres-main', 'redis-cache', 'auth'][i % 4]}`
+        : `svc-gen-${((i + j * 7) % 120) + 1}`;
+
+    // Prevent self-loops
+    if (targetId === `svc-gen-${i}`) continue;
+
+    dependenciesData.push({
+      from: `svc-gen-${i}`,
+      to: targetId,
+      criticality: j % 2 === 0 ? 'hard' : 'soft',
+      latency_ms: 5 + (i % 25),
+    });
+  }
+}

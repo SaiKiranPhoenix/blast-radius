@@ -404,3 +404,35 @@ export const servicesData: ServiceData[] = [
     teamId: 'team-ml',
   },
 ];
+
+// Generate 120 additional services
+const serviceTypes: ('api' | 'worker' | 'database' | 'cache' | 'queue' | 'gateway')[] = [
+  'api',
+  'worker',
+  'database',
+  'cache',
+  'queue',
+  'gateway',
+];
+const serviceTiers: ('critical' | 'high' | 'medium' | 'low')[] = [
+  'critical',
+  'high',
+  'medium',
+  'low',
+];
+const languages = ['TypeScript', 'Python', 'Go', 'Java', 'Rust', 'N/A'];
+
+for (let i = 1; i <= 120; i++) {
+  const isOrphaned = i % 12 === 0; // Some services have no team
+
+  servicesData.push({
+    id: `svc-gen-${i}`,
+    name: `Generated Node ${i}`,
+    type: serviceTypes[i % serviceTypes.length],
+    tier: serviceTiers[i % serviceTiers.length],
+    description: `A programmatic service node generated to test large-scale resilience. Node index: ${i}`,
+    language: languages[i % languages.length],
+    repo_url: repo(`gen-node-${i}`),
+    teamId: isOrphaned ? (null as unknown as string) : `team-gen-${(i % 40) + 1}`, // Distribute across the 40 generated teams
+  });
+}
