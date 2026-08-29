@@ -16,7 +16,7 @@ every team that needs to be paged, and every historical incident that followed t
 
 ## Live Demo
 
-> 🚀 **[blast-radius.vercel.app](https://blast-radius.vercel.app)** — _link placeholder_
+> 🚀 **[blast-radius-client.vercel.app](https://blast-radius-client.vercel.app)** — _link placeholder_
 
 ---
 
